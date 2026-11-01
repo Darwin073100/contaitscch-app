@@ -18,6 +18,7 @@ export { Logo } from './Logo';
 export { Button } from './Button';
 export { ChoiceCard, type ChoiceState } from './ChoiceCard';
 export { IconButton } from './IconButton';
+export { Tappable } from './Tappable';
 
 // Contenedores y composición
 export { AppHeader } from './AppHeader';

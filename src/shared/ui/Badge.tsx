@@ -7,8 +7,9 @@ import { Icon, type IconName } from './Icon';
 // Etiquetas pequeñas: estado (EN CURSO, BLOQUEADO), nivel (Básico), chips de temas, globo "¡Toca para continuar!".
 const badge = tv({
   slots: {
-    container: 'flex-row items-center gap-1 self-start rounded-full',
-    label: 'font-display',
+    // max-w-full + shrink: si no cabe, el texto se recorta con "…" (etiquetas del temario)
+    container: 'max-w-full flex-row items-center gap-1 self-start rounded-full',
+    label: 'shrink font-display',
   },
   variants: {
     tone: {
@@ -99,7 +100,9 @@ export function Badge({
   return (
     <View className={container()}>
       {icon && <Icon name={icon} color={color} size="xs" />}
-      <Text className={labelStyle()}>{label}</Text>
+      <Text className={labelStyle()} numberOfLines={1}>
+        {label}
+      </Text>
     </View>
   );
 }

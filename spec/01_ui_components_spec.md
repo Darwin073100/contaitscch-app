@@ -101,7 +101,7 @@ Un solo set: **MaterialCommunityIcons** (`@expo/vector-icons`) vía `<Icon>`, pa
 | Info / correo / reloj  | `information-outline` / `email-check-outline` / `clock-outline`      |
 | Ranking                | `trophy-outline`, `crown`, `medal-outline`, `trending-up`            |
 
-Las pestañas (`src/app/(tabs)/_layout.tsx`) aún usan Ionicons; migrarlas a `Icon` es opcional.
+Las pestañas (`src/app/(tabs)/_layout.tsx`) también usan `Icon`.
 
 ## 4. Inventario de componentes (`src/shared/ui`)
 
@@ -120,20 +120,21 @@ Todo se importa desde `@/shared/ui`. Ningún componente acepta colores hex: los 
 
 ### 4.2 Iconografía e identidad
 
-| Componente | Props clave                                                                                                                                                       | Notas                                                                                                                    |
-| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `Icon`     | `name: IconName`, `color?: ColorToken`, `size?: xs \| sm \| md \| lg \| xl \| 2xl`                                                                                | Decorativo: oculto a lectores de pantalla.                                                                               |
-| `IconBox`  | `icon`, `tone` (`primary`, `primarySoft`, `accent`, `accentSoft`, `info`, `infoSoft`, `streakSoft`, `neutral`), `size` (`sm`–`xl`), `shape` (`rounded`, `circle`) | Icono sobre fondo. El color del icono se deriva del tono. También sirve como **nodo del temario** (`xl` + `circle`).     |
-| `Avatar`   | `label?` (iniciales o número), `icon?`, `tone` (`primary`, `soft`, `neutral`, `gold`, `silver`, `bronze`), `size` (`xs`–`xl`), `ring?`                            | Usuarios del ranking y **medallas 1/2/3** del podio (`size="xs"` + `gold/silver/bronze`). Iniciales con `getInitials()`. |
-| `Logo`     | `size` (`sm`, `md`, `lg`), `shape` (`rounded`, `circle`), `verified?`                                                                                             | Temporal: usa `assets/images/icon.png` hasta tener el logotipo oficial.                                                  |
+| Componente | Props clave                                                                                                                                                                      | Notas                                                                                                                    |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `Icon`     | `name: IconName`, `color?: ColorToken`, `size?: xs \| sm \| md \| lg \| xl \| 2xl`                                                                                               | Decorativo: oculto a lectores de pantalla.                                                                               |
+| `IconBox`  | `icon`, `tone` (`primary`, `primarySoft`, `accent`, `accentSoft`, `info`, `infoSoft`, `streakSoft`, `neutral`), `size` (`sm`–`xl`), `shape` (`rounded`, `circle`), `cornerIcon?` | Icono sobre fondo. El color del icono se deriva del tono. También sirve como **nodo del temario** (`xl` + `circle`).     |
+| `Avatar`   | `label?` (iniciales o número), `icon?`, `tone` (`primary`, `soft`, `neutral`, `gold`, `silver`, `bronze`), `size` (`xs`–`xl`), `ring?`                                           | Usuarios del ranking y **medallas 1/2/3** del podio (`size="xs"` + `gold/silver/bronze`). Iniciales con `getInitials()`. |
+| `Logo`     | `size` (`sm`, `md`, `lg`), `shape` (`rounded`, `circle`), `verified?`                                                                                                            | Temporal: usa `assets/images/icon.png` hasta tener el logotipo oficial.                                                  |
 
 ### 4.3 Acciones
 
-| Componente   | Props clave                                                                                                                              | Notas                                                                                                |
-| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `Button`     | `label`, `variant` (`primary`, `soft`, `secondary`, `ghost`, `locked`), `size` (`sm`, `md`, `lg`), `leftIcon?`, `rightIcon?`, `loading?` | `locked` siempre está deshabilitado. `loading` muestra spinner y bloquea toques (PBKDF2 tarda ~1 s). |
-| `IconButton` | `icon`, `accessibilityLabel` (obligatorio), `variant` (`surface`, `ghost`, `soft`), `size`, `shape`                                      | Atrás, perfil, chevron, "paso anterior".                                                             |
-| `ChoiceCard` | `label`, `marker` ("A"), `state` (`idle`, `selected`, `correct`, `incorrect`), `onPress`, `disabled`                                     | Opción de examen de opción múltiple (propuesta, sin captura). `accessibilityRole="radio"`.           |
+| Componente   | Props clave                                                                                                                              | Notas                                                                                                 |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `Button`     | `label`, `variant` (`primary`, `soft`, `secondary`, `ghost`, `locked`), `size` (`sm`, `md`, `lg`), `leftIcon?`, `rightIcon?`, `loading?` | `locked` siempre está deshabilitado. `loading` muestra spinner y bloquea toques (PBKDF2 tarda ~1 s).  |
+| `IconButton` | `icon`, `accessibilityLabel` (obligatorio), `variant` (`surface`, `ghost`, `soft`), `size`, `shape`                                      | Atrás, perfil, chevron, "paso anterior".                                                              |
+| `Tappable`   | `onPress`, `disabled`, `accessibilityLabel`, `children`                                                                                  | Área táctil sin estilo para composiciones que no son `Card` ni `Button` (nodos del temario, spec 02). |
+| `ChoiceCard` | `label`, `marker` ("A"), `state` (`idle`, `selected`, `correct`, `incorrect`), `onPress`, `disabled`                                     | Opción de examen de opción múltiple (propuesta, sin captura). `accessibilityRole="radio"`.            |
 
 ### 4.4 Contenedores y composición
 
@@ -147,13 +148,13 @@ Todo se importa desde `@/shared/ui`. Ningún componente acepta colores hex: los 
 
 ### 4.5 Indicadores
 
-| Componente    | Props clave                                                                                                                                 | Notas                                                                                                                        |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `ProgressBar` | `value` (0–1, se recorta), `tone` (`primary`, `accent`, `streak`), `size`, `accessibilityLabel?`                                            | `accessibilityRole="progressbar"` con porcentaje.                                                                            |
-| `Badge`       | `label`, `tone` (`primary`, `accent`, `info`, `streak`, `danger`, `neutral`), `appearance` (`soft`, `solid`), `size`, `uppercase?`, `icon?` | EN CURSO, BLOQUEADO, Básico/Intermedio/Avanzado, chips de temas, "v1.0", globo "¡Toca para continuar!" (`accent` + `solid`). |
-| `StatPill`    | `icon`, `iconColor?`, `value` (número se formatea "1,250"), `accessibilityLabel`                                                            | Píldoras del encabezado.                                                                                                     |
-| `StatTile`    | `label`, `value?`, `icon?`, `iconColor?`                                                                                                    | Ocupa `flex-1`: se ponen 3 en un `Row gap="sm"`.                                                                             |
-| `Stepper`     | `steps: string[]`, `current` (índice desde 0)                                                                                               | Pasos completados muestran ✓ en verde.                                                                                       |
+| Componente    | Props clave                                                                                                                                 | Notas                                                                                                                                                           |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ProgressBar` | `value` (0–1, se recorta), `tone` (`primary`, `accent`, `streak`), `size`, `accessibilityLabel?`                                            | `accessibilityRole="progressbar"` con porcentaje.                                                                                                               |
+| `Badge`       | `label`, `tone` (`primary`, `accent`, `info`, `streak`, `danger`, `neutral`), `appearance` (`soft`, `solid`), `size`, `uppercase?`, `icon?` | EN CURSO, BLOQUEADO, Básico/Intermedio/Avanzado, chips de temas, "v1.0", globo "¡Toca para continuar!" (`accent` + `solid`). Siempre una línea: trunca con "…". |
+| `StatPill`    | `icon`, `iconColor?`, `value` (número se formatea "1,250"), `accessibilityLabel`                                                            | Píldoras del encabezado.                                                                                                                                        |
+| `StatTile`    | `label`, `value?`, `icon?`, `iconColor?`                                                                                                    | Ocupa `flex-1`: se ponen 3 en un `Row gap="sm"`.                                                                                                                |
+| `Stepper`     | `steps: string[]`, `current` (índice desde 0)                                                                                               | Pasos completados muestran ✓ en verde.                                                                                                                          |
 
 ### 4.6 Formularios
 
@@ -243,12 +244,12 @@ Tonos por nivel (para `Badge` y `LevelCard`): Básico → `neutral`, Intermedio 
 
 ## 10. Decisiones y pendientes
 
-| #   | Tema                                       | Decisión / pendiente                                                                                                                                  |
-| --- | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | Degradado cian→verde de las barras         | Se usa color sólido. Si se quiere el degradado, agregar `expo-linear-gradient` (`npx expo install`) y una variante `gradient` en `ProgressBar`.       |
-| 2   | Logotipo oficial                           | Falta el archivo (las capturas muestran "img"). Al tenerlo, ponerlo en `assets/images/logo.png` y cambiar `logoSource` en `Logo.tsx`.                 |
-| 3   | Captura de pregunta de examen              | No existe; `ChoiceCard` es propuesta y se ajusta cuando llegue la captura. Sugerido: renombrar `examen-pregunta.png` → `mapa-temario.png`.            |
-| 4   | "+150 XP hoy", corazones/vidas             | Solo visual hasta confirmar con el cliente (observación 3 de ARCHITECTURE.md). `AppHeader` muestra vidas ∞ por defecto (`showLives`).                 |
-| 5   | Animaciones (halo del tema activo, barras) | Fuera de este spec. Hacerlas con Reanimated en los componentes de feature, manteniendo las mismas props.                                              |
-| 6   | Iconos de las pestañas                     | Siguen en Ionicons; migrar a `Icon` (MaterialCommunityIcons: `map-marker-path`, `layers-outline`, `chart-bar`, `cog-outline`) para igualar el diseño. |
-| 7   | Modo claro                                 | No contemplado: la app es solo oscura (`StatusBar style="light"`).                                                                                    |
+| #   | Tema                                       | Decisión / pendiente                                                                                                                            |
+| --- | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Degradado cian→verde de las barras         | Se usa color sólido. Si se quiere el degradado, agregar `expo-linear-gradient` (`npx expo install`) y una variante `gradient` en `ProgressBar`. |
+| 2   | Logotipo oficial                           | Falta el archivo (las capturas muestran "img"). Al tenerlo, ponerlo en `assets/images/logo.png` y cambiar `logoSource` en `Logo.tsx`.           |
+| 3   | Captura de pregunta de examen              | No existe; `ChoiceCard` es propuesta y se ajusta cuando llegue la captura. Sugerido: renombrar `examen-pregunta.png` → `mapa-temario.png`.      |
+| 4   | "+150 XP hoy", corazones/vidas             | Solo visual hasta confirmar con el cliente (observación 3 de ARCHITECTURE.md). `AppHeader` muestra vidas ∞ por defecto (`showLives`).           |
+| 5   | Animaciones (halo del tema activo, barras) | Fuera de este spec. Hacerlas con Reanimated en los componentes de feature, manteniendo las mismas props.                                        |
+| 6   | Iconos de las pestañas                     | **Resuelto en spec 02:** migrados a `Icon` (`map-marker-path`, `layers-outline`, `chart-bar`, `cog-outline`).                                   |
+| 7   | Modo claro                                 | No contemplado: la app es solo oscura (`StatusBar style="light"`).                                                                              |
