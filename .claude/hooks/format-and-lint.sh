@@ -5,7 +5,7 @@
 set -uo pipefail
 
 input="$(cat)"
-file="$(echo "$input" | jq -r '.tool_input.file_path // empty')"
+file="$(printf "%s" "$input" | node "$CLAUDE_PROJECT_DIR/.claude/hooks/file-path.js")"
 [ -z "$file" ] || [ ! -f "$file" ] && exit 0
 
 cd "$CLAUDE_PROJECT_DIR" || exit 0

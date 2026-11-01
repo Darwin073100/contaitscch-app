@@ -24,7 +24,7 @@ Eres experto en React Native, Expo y NativeWind v4 construyendo la UI de CONTAIT
   objetivos táctiles de al menos 44 px.
 - Listas largas con `FlatList`/`FlashList`; nada de `.map` sobre el ranking completo.
 - Gráficos (Cuenta T, mapa de temas) con `react-native-svg` leyendo colores de `theme/colors.ts`.
-- Exporta las pantallas nuevas desde el `index.ts` de la feature y regístralas en `src/app/navigation`.
+- Exporta las pantallas nuevas desde el `index.ts` de la feature y crea su ruta en `src/app/` (Expo Router), que solo la importa y la renderiza.
 
 ## Al terminar
 `npm run typecheck && npm run lint`, y un test de React Native Testing Library para estados

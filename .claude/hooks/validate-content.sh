@@ -4,7 +4,7 @@
 set -uo pipefail
 
 input="$(cat)"
-file="$(echo "$input" | jq -r '.tool_input.file_path // empty')"
+file="$(printf "%s" "$input" | node "$CLAUDE_PROJECT_DIR/.claude/hooks/file-path.js")"
 
 case "$file" in
   */src/core/database/seed/content/*.json) ;;

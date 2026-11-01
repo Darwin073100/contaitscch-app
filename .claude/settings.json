@@ -34,6 +34,9 @@
       "Bash(supabase db push *)",
       "Bash(supabase functions deploy *)",
       "Bash(supabase secrets *)",
+      "Bash(pnpm add *)",
+      "Bash(pnpm install *)",
+      "Bash(pnpm approve-builds *)",
       "Bash(eas *)"
     ],
     "deny": [
@@ -46,6 +49,7 @@
       "Bash(rm -rf *)",
       "Bash(git reset --hard *)",
       "Bash(git push --force *)",
+      "Bash(npm install)",
       "Bash(npm publish *)"
     ]
   },

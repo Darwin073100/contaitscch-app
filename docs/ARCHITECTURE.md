@@ -10,7 +10,7 @@ Decisiones clave:
 
 1. **Offline-first real.** Todo el flujo de aprendizaje (niveles, temas, subtemas, exámenes, XP, racha) lee y escribe solo en SQLite. Ninguna pantalla de estudio depende de la red.
 2. **Supabase como "tablero público".** Solo guarda `profile`, `xp_event` y `daily_activity`. El contenido del curso nunca sale del dispositivo.
-3. **Sincronización por Outbox.** Cada XP y cada día activo se escriben localmente con `synced_at = NULL`. Al entrar a *Ranking* se suben los pendientes, se marcan y luego se pide el leaderboard.
+3. **Sincronización por Outbox.** Cada XP y cada día activo se escriben localmente con `synced_at = NULL`. Al entrar a _Ranking_ se suben los pendientes, se marcan y luego se pide el leaderboard.
 4. **Datos solo-se-agregan (append-only).** XP y actividad diaria nunca se actualizan ni se borran; las llaves únicas hacen la sincronización idempotente y segura entre varios dispositivos.
 5. **Valores derivados, no almacenados.** XP total, racha, nivel desbloqueado y progreso se calculan con consultas o funciones puras, así nunca se desincronizan.
 6. **Features desacopladas.** Una feature solo consume la API pública (`index.ts`) de otra, o se comunica por eventos de dominio. Nunca importa sus carpetas internas.
@@ -19,36 +19,42 @@ Decisiones clave:
 
 Propuesta basada en Expo (managed workflow) para acelerar el desarrollo sin perder acceso a módulos nativos.
 
-| Necesidad | Librería propuesta | Por qué |
-| --- | --- | --- |
-| Base de la app | Expo SDK + TypeScript estricto | Builds sencillos, OTA updates, tipado fuerte |
-| Navegación | Expo Router (o React Navigation 7) | Tabs + stacks + modales, deep links |
-| Estilos | **Tailwind CSS v3 vía NativeWind v4** | Clases `className` de Tailwind en componentes RN; los colores del diseño viven en `tailwind.config.js` |
-| BD local | `expo-sqlite` + Drizzle ORM | Consultas tipadas, migraciones versionadas, transacciones |
-| API remota | **SDK `@supabase/supabase-js`** (solo `supabase.rpc()`; sin Supabase Auth) | Un solo cliente; las tablas se acceden únicamente por funciones RPC |
-| Hash de contraseña | `@noble/hashes` (PBKDF2-SHA256) + `expo-crypto` (sal aleatoria) | JavaScript puro: funciona en Expo Go, sin módulos nativos ni costo |
-| Contenido del curso | JSON en el bundle + Zod | Temas, subtemas, exámenes y preguntas validados antes de sembrar SQLite |
-| Estado local de UI | Zustand | Stores pequeños por feature, sin boilerplate |
-| Estado remoto | TanStack Query | Caché, reintentos y estado de carga del leaderboard |
-| Formularios | React Hook Form + Zod | Validaciones del registro (mínimos, @, requeridos) |
-| Credenciales | `expo-secure-store` | Guarda `user_id` + `api_token` cifrados |
-| Conectividad | `@react-native-community/netinfo` | Saber si se puede sincronizar |
-| Fechas | `date-fns` + `date-fns-tz` | Día local del usuario para la racha |
-| Gráficos y animación | `react-native-svg` + Reanimated | Cuentas T, mapa de temas, barras de progreso |
-| Contenido de subtemas | Bloques JSON tipados (ver sección de contenido) | Cada bloque se pinta con su componente (texto, Cuenta T, regla, ejemplo) |
-| Pruebas | Jest + React Native Testing Library | Unitarias de dominio y de pantallas |
+| Necesidad             | Librería propuesta                                                         | Por qué                                                                                                |
+| --------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Base de la app        | Expo SDK + TypeScript estricto                                             | Builds sencillos, OTA updates, tipado fuerte                                                           |
+| Navegación            | Expo Router (o React Navigation 7)                                         | Tabs + stacks + modales, deep links                                                                    |
+| Estilos               | **Tailwind CSS v3 vía NativeWind v4**                                      | Clases `className` de Tailwind en componentes RN; los colores del diseño viven en `tailwind.config.js` |
+| BD local              | `expo-sqlite` + Drizzle ORM                                                | Consultas tipadas, migraciones versionadas, transacciones                                              |
+| API remota            | **SDK `@supabase/supabase-js`** (solo `supabase.rpc()`; sin Supabase Auth) | Un solo cliente; las tablas se acceden únicamente por funciones RPC                                    |
+| Hash de contraseña    | `@noble/hashes` (PBKDF2-SHA256) + `expo-crypto` (sal aleatoria)            | JavaScript puro: funciona en Expo Go, sin módulos nativos ni costo                                     |
+| Contenido del curso   | JSON en el bundle + Zod                                                    | Temas, subtemas, exámenes y preguntas validados antes de sembrar SQLite                                |
+| Estado local de UI    | Zustand                                                                    | Stores pequeños por feature, sin boilerplate                                                           |
+| Estado remoto         | TanStack Query                                                             | Caché, reintentos y estado de carga del leaderboard                                                    |
+| Formularios           | React Hook Form + Zod                                                      | Validaciones del registro (mínimos, @, requeridos)                                                     |
+| Credenciales          | `expo-secure-store`                                                        | Guarda `user_id` + `api_token` cifrados                                                                |
+| Conectividad          | `@react-native-community/netinfo`                                          | Saber si se puede sincronizar                                                                          |
+| Fechas                | `date-fns` + `date-fns-tz`                                                 | Día local del usuario para la racha                                                                    |
+| Gráficos y animación  | `react-native-svg` + Reanimated                                            | Cuentas T, mapa de temas, barras de progreso                                                           |
+| Contenido de subtemas | Bloques JSON tipados (ver sección de contenido)                            | Cada bloque se pinta con su componente (texto, Cuenta T, regla, ejemplo)                               |
+| Pruebas               | Jest + React Native Testing Library                                        | Unitarias de dominio y de pantallas                                                                    |
 
 ## Estructura de carpetas
 
-Tres zonas: `app/` arma todo (composition root), `core/` y `shared/` son infraestructura y UI reutilizable, y `features/` contiene el negocio. Una feature nunca importa de otra salvo por su `index.ts`.
+Cuatro zonas: `app/` son las rutas de Expo Router, `composition/` arma todo (composition root), `core/` y `shared/` son infraestructura y UI reutilizable, y `features/` contiene el negocio. Una feature nunca importa de otra salvo por su `index.ts`.
+
+Expo Router convierte en pantalla cada archivo de `src/app/`, por eso el composition root vive aparte en `src/composition/`.
 
 ```text
 src/
-├── app/                          # Composition root
+├── app/                          # Rutas de Expo Router (navegación por archivos)
+│   ├── _layout.tsx               # Raíz: fuentes, providers, guard de sesión
+│   ├── (auth)/                   # Welcome, Register, VerifyEmail, Login
+│   └── (tabs)/                   # Aprender, Niveles, Ranking, Ajustes
+│
+├── composition/                  # Composition root
 │   ├── bootstrap.ts              # Migraciones, seed de contenido, sesión
 │   ├── container.ts              # Inyección de dependencias (instancia repos y use cases)
-│   ├── providers/                # QueryClient, Theme, DI, SafeArea
-│   └── navigation/               # RootNavigator, AuthStack, MainTabs, guards
+│   └── providers/                # QueryClient, DI (useContainer), SafeArea
 │
 ├── core/                         # Infraestructura sin reglas de negocio
 │   ├── database/
@@ -119,11 +125,11 @@ flowchart LR
 
 El dominio no conoce React, SQLite ni Supabase; por eso se prueba con Jest puro y se puede cambiar de motor de BD sin tocar reglas de negocio.
 
-| Capa | Contiene | Puede importar | No puede importar |
-| --- | --- | --- | --- |
-| `domain` | Entidades, use cases, interfaces de repositorio, policies | `core/result`, `core/clock` (interfaz), `index.ts` de otras features | React, SQLite, Supabase, `data`, `presentation` |
-| `data` | Repositorios concretos, data sources, mappers | Su `domain`, `core/database`, `core/network` | `presentation` |
-| `presentation` | Screens, componentes, viewmodels | Sus use cases (vía DI), `shared/ui`, pantallas exportadas por otras features | `data`, SQL o `rpc()` directo |
+| Capa           | Contiene                                                  | Puede importar                                                               | No puede importar                               |
+| -------------- | --------------------------------------------------------- | ---------------------------------------------------------------------------- | ----------------------------------------------- |
+| `domain`       | Entidades, use cases, interfaces de repositorio, policies | `core/result`, `core/clock` (interfaz), `index.ts` de otras features         | React, SQLite, Supabase, `data`, `presentation` |
+| `data`         | Repositorios concretos, data sources, mappers             | Su `domain`, `core/database`, `core/network`                                 | `presentation`                                  |
+| `presentation` | Screens, componentes, viewmodels                          | Sus use cases (vía DI), `shared/ui`, pantallas exportadas por otras features | `data`, SQL o `rpc()` directo                   |
 
 La regla se automatiza con `eslint-plugin-boundaries` (o `import/no-restricted-paths`) para que un import prohibido falle en CI.
 
@@ -135,10 +141,12 @@ export function useTopicSessionViewModel(topicId: number) {
   const { getTopicSession, completeTopic } = useLearningUseCases(); // DI
   const [state, setState] = useState<SessionState>({ status: 'loading' });
 
-  useEffect(() => { getTopicSession.execute(topicId).then(setState); }, [topicId]);
+  useEffect(() => {
+    getTopicSession.execute(topicId).then(setState);
+  }, [topicId]);
 
   const next = async () => {
-    if (!state.isLastStep) return setState(s => goToNextStep(s));
+    if (!state.isLastStep) return setState((s) => goToNextStep(s));
     const result = await completeTopic.execute({ topicId });
     if (result.ok) navigation.replace('TopicCompleted', result.value); // +5 XP
   };
@@ -150,18 +158,18 @@ export function useTopicSessionViewModel(topicId: number) {
 
 Se usan diez patrones, cada uno resolviendo un problema concreto del dominio; ninguno se agrega "por si acaso".
 
-| Patrón | Dónde se aplica | Problema que resuelve |
-| --- | --- | --- |
-| Repository | `TopicRepository`, `XpRepository`, `LeaderboardRepository`… | Ocultar si el dato viene de SQLite o de Supabase |
-| Use Case / Command | `CompleteTopic`, `SubmitExam`, `SyncAndFetchLeaderboard` | Una acción de negocio = una clase con `execute()` |
-| Dependency Injection + Composition Root | `app/container.ts` | Las capas reciben interfaces; se pueden cambiar por mocks en pruebas |
-| Unit of Work | `core/database/UnitOfWork.ts` | Completar tema + XP + actividad del día en una sola transacción |
-| Strategy | `QuestionGrader` (`MultipleChoiceGrader`, `ComplementaryGrader`), `StreakCalculator`, `XpRewardPolicy` | Cambiar reglas de calificación o de puntos sin tocar el flujo |
-| Registry / Factory | `QuestionTypeRegistry` (grader + componente por `question.type`) | Agregar un tipo de pregunta nuevo sin modificar el examen |
-| Observer (Event Bus) | `TopicCompleted`, `ExamPassed`, `XpAwarded`, `SyncCompleted` | Refrescar Home, header de XP y niveles sin acoplar features |
-| Outbox | `xp_event.synced_at`, `daily_activity.synced_at` | Subir lo pendiente cuando haya red, sin perder datos |
-| Adapter / Mapper | `data/mappers/*` | Fila SQLite ↔ entidad ↔ DTO de RPC (snake\_case ↔ camelCase, 0/1 ↔ boolean) |
-| Facade | `SyncEngine` | La pantalla de Ranking llama un solo método; dentro hay push, marcado y fetch |
+| Patrón                                  | Dónde se aplica                                                                                        | Problema que resuelve                                                         |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------- |
+| Repository                              | `TopicRepository`, `XpRepository`, `LeaderboardRepository`…                                            | Ocultar si el dato viene de SQLite o de Supabase                              |
+| Use Case / Command                      | `CompleteTopic`, `SubmitExam`, `SyncAndFetchLeaderboard`                                               | Una acción de negocio = una clase con `execute()`                             |
+| Dependency Injection + Composition Root | `composition/container.ts`                                                                             | Las capas reciben interfaces; se pueden cambiar por mocks en pruebas          |
+| Unit of Work                            | `core/database/UnitOfWork.ts`                                                                          | Completar tema + XP + actividad del día en una sola transacción               |
+| Strategy                                | `QuestionGrader` (`MultipleChoiceGrader`, `ComplementaryGrader`), `StreakCalculator`, `XpRewardPolicy` | Cambiar reglas de calificación o de puntos sin tocar el flujo                 |
+| Registry / Factory                      | `QuestionTypeRegistry` (grader + componente por `question.type`)                                       | Agregar un tipo de pregunta nuevo sin modificar el examen                     |
+| Observer (Event Bus)                    | `TopicCompleted`, `ExamPassed`, `XpAwarded`, `SyncCompleted`                                           | Refrescar Home, header de XP y niveles sin acoplar features                   |
+| Outbox                                  | `xp_event.synced_at`, `daily_activity.synced_at`                                                       | Subir lo pendiente cuando haya red, sin perder datos                          |
+| Adapter / Mapper                        | `data/mappers/*`                                                                                       | Fila SQLite ↔ entidad ↔ DTO de RPC (snake\_case ↔ camelCase, 0/1 ↔ boolean)   |
+| Facade                                  | `SyncEngine`                                                                                           | La pantalla de Ranking llama un solo método; dentro hay push, marcado y fetch |
 
 Cómo se cumple cada principio SOLID:
 
@@ -169,26 +177,31 @@ Cómo se cumple cada principio SOLID:
 - **O — Abierto/cerrado.** Un tipo de pregunta nuevo (ej. "ordenar asientos" o "arrastrar a la Cuenta T") se agrega registrando un `QuestionGrader` y un componente en `QuestionTypeRegistry`, sin editar `SubmitExamUseCase`.
 - **L — Sustitución de Liskov.** Cualquier `TopicRepository` (SQLite real, en memoria para tests) cumple el mismo contrato y devuelve los mismos tipos `Result`.
 - **I — Segregación de interfaces.** Interfaces pequeñas: `XpReader` (total, historial) separado de `XpWriter` (otorgar); `SyncableSource` solo pide `getPending()` y `markSynced()`.
-- **D — Inversión de dependencias.** Los use cases dependen de interfaces de `domain`; `app/container.ts` decide qué implementación concreta se inyecta.
+- **D — Inversión de dependencias.** Los use cases dependen de interfaces de `domain`; `composition/container.ts` decide qué implementación concreta se inyecta.
 
 Ejemplo del registro de tipos de pregunta (Open/Closed + Strategy):
 
 ```ts
 // features/exams/domain/grading/QuestionGrader.ts
 export interface QuestionGrader {
-  readonly type: QuestionType;              // 'multiple_choice' | 'complementary'
+  readonly type: QuestionType; // 'multiple_choice' | 'complementary'
   isCorrect(question: Question, answer: Answer): boolean;
 }
 
 export class ComplementaryGrader implements QuestionGrader {
   readonly type = 'complementary';
   isCorrect(q: Question, a: Answer) {
-    const normalize = (s: string) => s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    return q.options.some(o => o.isCorrect && normalize(o.text) === normalize(a.text));
+    const normalize = (s: string) =>
+      s
+        .trim()
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+    return q.options.some((o) => o.isCorrect && normalize(o.text) === normalize(a.text));
   }
 }
 
-// app/container.ts
+// composition/container.ts
 const graders = new QuestionTypeRegistry()
   .register(new MultipleChoiceGrader(), MultipleChoiceQuestionView)
   .register(new ComplementaryGrader(), ComplementaryQuestionView);
@@ -198,17 +211,17 @@ const graders = new QuestionTypeRegistry()
 
 Nueve features cubren las historias de usuario; solo `auth` y `leaderboard` hablan con Supabase, el resto trabaja 100% en SQLite.
 
-| Feature | Historia(s) | Pantallas | Use cases principales | Datos |
-| --- | --- | --- | --- | --- |
-| `auth` | Registro, Verificar correo | Register (paso 1), VerifyEmail (paso 2), Login | `RegisterUser`, `VerifyEmailCode`, `ResendCode`, `Login`, `RestoreProgress`, `Logout` | RPC `register`, `verify_email`, `login`, `pull_activity`; tabla `user`; SecureStore |
-| `onboarding` | Introducción a la app | About (qué es, objetivos, equipo) | `GetAppInfo` | JSON estático en el bundle |
-| `home` | Menú de inicio | Home / dashboard (racha, XP, nivel, progreso) | Compone use cases de `gamification` y `levels` (no tiene repositorio propio) | Lee vía APIs públicas |
-| `levels` | Niveles de contabilidad | LevelsList (tarjetas con candado y barra) | `GetLevelsOverview`, `IsLevelUnlocked` (`LevelUnlockPolicy`) | `level`, `topic`, `topic_progress`, `xp_event` |
-| `learning` | Temario, Desarrollo de un tema | SyllabusMap (camino de temas), TopicSession ("Paso 2 de 4"), TopicCompleted | `GetSyllabus`, `GetTopicSession`, `CompleteTopic` | `topic`, `subtopic`, `topic_progress` |
-| `exams` | Examen de cada módulo | ExamIntro, ExamSession ("7/10"), ExamResult | `StartExam`, `GradeAnswer`, `SubmitExam` | `exam`, `question`, `question_option`, `exam_attempt` |
-| `gamification` | Rachas, XP | Header (racha, XP), StreakBadge | `AwardXp`, `RecordDailyActivity`, `GetUserStats` (XP total, racha) | `xp_event`, `daily_activity`; implementa `SyncableSource` |
-| `leaderboard` | Usuarios / Ranking | Ranking (podio top 3, lista, "Tu posición") | `SyncAndFetchLeaderboard`, `GetMyRank` | RPC `sync_activity`, `get_leaderboard`; caché del último snapshot |
-| `settings` | Configuraciones avanzadas | Settings (perfil, cerrar sesión, forzar sincronización) | `UpdateProfile`, `Logout`, `ForceSync` | `user`, SecureStore |
+| Feature        | Historia(s)                    | Pantallas                                                                   | Use cases principales                                                                 | Datos                                                                               |
+| -------------- | ------------------------------ | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `auth`         | Registro, Verificar correo     | Register (paso 1), VerifyEmail (paso 2), Login                              | `RegisterUser`, `VerifyEmailCode`, `ResendCode`, `Login`, `RestoreProgress`, `Logout` | RPC `register`, `verify_email`, `login`, `pull_activity`; tabla `user`; SecureStore |
+| `onboarding`   | Introducción a la app          | About (qué es, objetivos, equipo)                                           | `GetAppInfo`                                                                          | JSON estático en el bundle                                                          |
+| `home`         | Menú de inicio                 | Home / dashboard (racha, XP, nivel, progreso)                               | Compone use cases de `gamification` y `levels` (no tiene repositorio propio)          | Lee vía APIs públicas                                                               |
+| `levels`       | Niveles de contabilidad        | LevelsList (tarjetas con candado y barra)                                   | `GetLevelsOverview`, `IsLevelUnlocked` (`LevelUnlockPolicy`)                          | `level`, `topic`, `topic_progress`, `xp_event`                                      |
+| `learning`     | Temario, Desarrollo de un tema | SyllabusMap (camino de temas), TopicSession ("Paso 2 de 4"), TopicCompleted | `GetSyllabus`, `GetTopicSession`, `CompleteTopic`                                     | `topic`, `subtopic`, `topic_progress`                                               |
+| `exams`        | Examen de cada módulo          | ExamIntro, ExamSession ("7/10"), ExamResult                                 | `StartExam`, `GradeAnswer`, `SubmitExam`                                              | `exam`, `question`, `question_option`, `exam_attempt`                               |
+| `gamification` | Rachas, XP                     | Header (racha, XP), StreakBadge                                             | `AwardXp`, `RecordDailyActivity`, `GetUserStats` (XP total, racha)                    | `xp_event`, `daily_activity`; implementa `SyncableSource`                           |
+| `leaderboard`  | Usuarios / Ranking             | Ranking (podio top 3, lista, "Tu posición")                                 | `SyncAndFetchLeaderboard`, `GetMyRank`                                                | RPC `sync_activity`, `get_leaderboard`; caché del último snapshot                   |
+| `settings`     | Configuraciones avanzadas      | Settings (perfil, cerrar sesión, forzar sincronización)                     | `UpdateProfile`, `Logout`, `ForceSync`                                                | `user`, SecureStore                                                                 |
 
 Use case central del aprendizaje. Muestra cómo una feature (`learning`) usa la API pública de otra (`gamification`) dentro de una sola transacción:
 
@@ -218,7 +231,7 @@ export class CompleteTopicUseCase {
   constructor(
     private readonly uow: UnitOfWork,
     private readonly topics: TopicRepository,
-    private readonly awardXp: AwardXpUseCase,               // de gamification/index.ts
+    private readonly awardXp: AwardXpUseCase, // de gamification/index.ts
     private readonly recordActivity: RecordDailyActivityUseCase,
     private readonly session: SessionStore,
     private readonly events: DomainEventBus,
@@ -228,14 +241,14 @@ export class CompleteTopicUseCase {
     const userId = this.session.requireUserId();
     if (await this.topics.isCompleted(userId, topicId)) return ok({ topicId, xp: 0 }); // idempotente
 
-    const xp = await this.uow.run(async tx => {
-      await this.topics.markCompleted(userId, topicId, tx);           // topic_progress
+    const xp = await this.uow.run(async (tx) => {
+      await this.topics.markCompleted(userId, topicId, tx); // topic_progress
       const points = await this.awardXp.forTopic(userId, topicId, tx); // xp_event (+5, synced_at NULL)
-      await this.recordActivity.today(userId, tx);                    // daily_activity (INSERT OR IGNORE)
+      await this.recordActivity.today(userId, tx); // daily_activity (INSERT OR IGNORE)
       return points;
     });
 
-    this.events.publish({ type: 'TopicCompleted', topicId, xp });     // refresca Home, niveles, header
+    this.events.publish({ type: 'TopicCompleted', topicId, xp }); // refresca Home, niveles, header
     return ok({ topicId, xp });
   }
 }
@@ -247,13 +260,13 @@ export class CompleteTopicUseCase {
 
 La app deriva el hash con PBKDF2-SHA256 y una sal aleatoria por usuario; Supabase solo recibe y compara ese hash mediante funciones RPC llamadas con el SDK, sin usar Supabase Auth. La contraseña en texto plano nunca sale del teléfono ni se guarda en SQLite.
 
-| Paso | En la app | En Supabase (RPC vía `supabase.rpc`) |
-| --- | --- | --- |
-| Registro | Genera sal de 16 bytes (`expo-crypto`), calcula `PBKDF2(password, sal, 60 000 iteraciones, 32 bytes)` | `register(email, nombres, país, estado, ciudad, hash, sal, iteraciones)` guarda el perfil y devuelve `id` + `api_token` |
-| Enviar código | Llama `supabase.functions.invoke('send-verification')` | Edge Function genera código de 6 dígitos, guarda su hash con vencimiento de 10 min y envía el correo con la API de Gmail |
-| Verificar | Envía el código escrito | `verify_email(id, token, code)` marca `email_verified = true`; máximo 5 intentos, reenvío cada 45 s |
-| Login | Pide la sal, recalcula el hash con la contraseña escrita | `get_login_params(email)` devuelve sal + iteraciones; `login(email, hash)` compara y devuelve `id`, `api_token` y perfil |
-| Sesión | Guarda `id` + `api_token` en SecureStore; ya no pide login, ni siquiera offline | Cada RPC posterior valida `id` + `api_token` |
+| Paso          | En la app                                                                                             | En Supabase (RPC vía `supabase.rpc`)                                                                                     |
+| ------------- | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Registro      | Genera sal de 16 bytes (`expo-crypto`), calcula `PBKDF2(password, sal, 60 000 iteraciones, 32 bytes)` | `register(email, nombres, país, estado, ciudad, hash, sal, iteraciones)` guarda el perfil y devuelve `id` + `api_token`  |
+| Enviar código | Llama `supabase.functions.invoke('send-verification')`                                                | Edge Function genera código de 6 dígitos, guarda su hash con vencimiento de 10 min y envía el correo con la API de Gmail |
+| Verificar     | Envía el código escrito                                                                               | `verify_email(id, token, code)` marca `email_verified = true`; máximo 5 intentos, reenvío cada 45 s                      |
+| Login         | Pide la sal, recalcula el hash con la contraseña escrita                                              | `get_login_params(email)` devuelve sal + iteraciones; `login(email, hash)` compara y devuelve `id`, `api_token` y perfil |
+| Sesión        | Guarda `id` + `api_token` en SecureStore; ya no pide login, ni siquiera offline                       | Cada RPC posterior valida `id` + `api_token`                                                                             |
 
 Tres protecciones que no cuestan nada y conviene incluir:
 
@@ -352,9 +365,9 @@ Se usa la API de Gmail (HTTPS) en lugar de SMTP porque las Edge Functions de Sup
 **Configurar Google (una sola vez, con la cuenta Gmail del proyecto):**
 
 1. En Google Cloud Console, crear un proyecto y habilitar **Gmail API**.
-2. En *Pantalla de consentimiento de OAuth*: tipo Externo, agregar el permiso `https://www.googleapis.com/auth/gmail.send` y cambiar el estado a **En producción**. En modo "Prueba" el refresh token caduca a los 7 días y los correos dejarían de salir. Google mostrará "app no verificada"; se acepta porque solo tú la autorizas.
-3. En *Credenciales*: crear un ID de cliente OAuth de tipo "Aplicación web" con URI de redirección `https://developers.google.com/oauthplayground`.
-4. En OAuth 2.0 Playground: engrane → *Use your own OAuth credentials*, autorizar el permiso `gmail.send` con la cuenta del proyecto e intercambiar el código por un **refresh token**.
+2. En _Pantalla de consentimiento de OAuth_: tipo Externo, agregar el permiso `https://www.googleapis.com/auth/gmail.send` y cambiar el estado a **En producción**. En modo "Prueba" el refresh token caduca a los 7 días y los correos dejarían de salir. Google mostrará "app no verificada"; se acepta porque solo tú la autorizas.
+3. En _Credenciales_: crear un ID de cliente OAuth de tipo "Aplicación web" con URI de redirección `https://developers.google.com/oauthplayground`.
+4. En OAuth 2.0 Playground: engrane → _Use your own OAuth credentials_, autorizar el permiso `gmail.send` con la cuenta del proyecto e intercambiar el código por un **refresh token**.
 5. Guardar los secretos en Supabase (nunca en la app ni en el repositorio):
 
 ```bash
@@ -408,8 +421,10 @@ const admin = createClient(env('SUPABASE_URL'), env('SUPABASE_SERVICE_ROLE_KEY')
 
 Deno.serve(async (req) => {
   const { userId, apiToken } = await req.json();
-  const { data, error } = await admin.rpc('create_verification_code',
-    { p_user_id: userId, p_token: apiToken });
+  const { data, error } = await admin.rpc('create_verification_code', {
+    p_user_id: userId,
+    p_token: apiToken,
+  });
   if (error) return Response.json({ error: error.message }, { status: 400 }); // cooldown, invalid…
 
   await sendGmail(data.email, data.code);
@@ -437,7 +452,7 @@ async function sendGmail(to: string, code: string) {
   const mime = [
     `From: CONTAITSCCH <${env('GMAIL_SENDER')}>`,
     `To: ${to}`,
-    `Subject: =?UTF-8?B?${b64('Tu código de verificación')}?=`,  // asunto con acentos
+    `Subject: =?UTF-8?B?${b64('Tu código de verificación')}?=`, // asunto con acentos
     'MIME-Version: 1.0',
     'Content-Type: text/html; charset=UTF-8',
     '',
@@ -448,7 +463,10 @@ async function sendGmail(to: string, code: string) {
 
   const res = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
     method: 'POST',
-    headers: { Authorization: `Bearer ${await getAccessToken()}`, 'Content-Type': 'application/json' },
+    headers: {
+      Authorization: `Bearer ${await getAccessToken()}`,
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify({ raw: b64url(mime) }),
   });
   if (!res.ok) throw new Error(`gmail_send_failed ${res.status}`);
@@ -511,14 +529,14 @@ async execute(code: string): Promise<Result<void>> {
 }
 ```
 
-| Respuesta | Mensaje en pantalla | Acción |
-| --- | --- | --- |
-| `ok` | — | Entra al curso sin volver a iniciar sesión |
-| `invalid_code` | "Código incorrecto, revisa tu correo" | Limpiar las 6 casillas |
-| `expired` | "El código venció, te enviamos uno nuevo" | Llamar `RequestVerificationCode` |
-| `too_many_attempts` | "Demasiados intentos, solicita otro código" | Habilitar "Reenviar" al terminar el contador |
-| `cooldown` (al reenviar) | "Espera unos segundos para reenviar" | Mantener el contador de 45 s |
-| `NETWORK` / `SEND_FAILED` | "Necesitas conexión para verificar tu correo" | Botón de reintentar |
+| Respuesta                 | Mensaje en pantalla                           | Acción                                       |
+| ------------------------- | --------------------------------------------- | -------------------------------------------- |
+| `ok`                      | —                                             | Entra al curso sin volver a iniciar sesión   |
+| `invalid_code`            | "Código incorrecto, revisa tu correo"         | Limpiar las 6 casillas                       |
+| `expired`                 | "El código venció, te enviamos uno nuevo"     | Llamar `RequestVerificationCode`             |
+| `too_many_attempts`       | "Demasiados intentos, solicita otro código"   | Habilitar "Reenviar" al terminar el contador |
+| `cooldown` (al reenviar)  | "Espera unos segundos para reenviar"          | Mantener el contador de 45 s                 |
+| `NETWORK` / `SEND_FAILED` | "Necesitas conexión para verificar tu correo" | Botón de reintentar                          |
 
 ## Contenido del curso en JSON
 
@@ -553,12 +571,27 @@ Estructura de un nivel. El contenido de cada subtema es una lista de **bloques t
           "title": "¿Qué es una Cuenta T y cómo funciona?",
           "sortOrder": 2,
           "blocks": [
-            { "type": "paragraph", "text": "El esquema de mayor o **Cuenta T** es la herramienta gráfica…" },
-            { "type": "t_account",
-              "debit":  { "label": "Lado izquierdo • Cargos", "items": ["+ Activo", "+ Gasto", "− Pasivo"] },
-              "credit": { "label": "Lado derecho • Abonos",   "items": ["+ Pasivo", "+ Capital / Ingreso", "− Activo"] } },
-            { "type": "callout", "icon": "scale", "title": "Regla de Oro de la Partida Doble",
-              "text": "A todo cargo corresponde un abono equivalente." }
+            {
+              "type": "paragraph",
+              "text": "El esquema de mayor o **Cuenta T** es la herramienta gráfica…"
+            },
+            {
+              "type": "t_account",
+              "debit": {
+                "label": "Lado izquierdo • Cargos",
+                "items": ["+ Activo", "+ Gasto", "− Pasivo"]
+              },
+              "credit": {
+                "label": "Lado derecho • Abonos",
+                "items": ["+ Pasivo", "+ Capital / Ingreso", "− Activo"]
+              }
+            },
+            {
+              "type": "callout",
+              "icon": "scale",
+              "title": "Regla de Oro de la Partida Doble",
+              "text": "A todo cargo corresponde un abono equivalente."
+            }
           ]
         }
       ]
@@ -576,7 +609,11 @@ Estructura de un nivel. El contenido de cada subtema es una lista de **bloques t
         "statement": "La empresa adquiere mobiliario de oficina por $15,000 MXN en efectivo. ¿Cómo se registra?",
         "options": [
           { "id": 100101, "text": "Cargar a Mobiliario, abonar a Bancos", "isCorrect": true },
-          { "id": 100102, "text": "Abonar a Mobiliario, cargar a Capital Social", "isCorrect": false }
+          {
+            "id": 100102,
+            "text": "Abonar a Mobiliario, cargar a Capital Social",
+            "isCorrect": false
+          }
         ],
         "feedback": "El mobiliario aumenta el Activo por el DEBE y el efectivo lo disminuye por el HABER."
       },
@@ -585,7 +622,7 @@ Estructura de un nivel. El contenido de cada subtema es una lista de **bloques t
         "type": "complementary",
         "sortOrder": 2,
         "statement": "El lado izquierdo de una Cuenta T se llama ____.",
-        "options": [ { "id": 100201, "text": "Debe", "isCorrect": true } ]
+        "options": [{ "id": 100201, "text": "Debe", "isCorrect": true }]
       }
     ]
   }
@@ -607,9 +644,9 @@ export class ContentSeeder {
     const manifest = ManifestSchema.parse(require('./content/manifest.json'));
     if ((await this.meta.getContentVersion()) >= manifest.version) return;
 
-    const levels = LEVEL_FILES.map(file => LevelContentSchema.parse(file)); // falla si el JSON está mal
-    await this.uow.run(async tx => {
-      for (const l of levels) await this.writer.upsertLevel(l, tx);        // level, topic, subtopic, exam, question, option
+    const levels = LEVEL_FILES.map((file) => LevelContentSchema.parse(file)); // falla si el JSON está mal
+    await this.uow.run(async (tx) => {
+      for (const l of levels) await this.writer.upsertLevel(l, tx); // level, topic, subtopic, exam, question, option
       await this.meta.setContentVersion(manifest.version, tx);
     });
   }
@@ -630,12 +667,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        bg:      '#0A1628',   // fondo azul noche
-        card:    '#14213A',   // tarjetas
-        primary: '#00E676',   // verde de botones y progreso
-        accent:  '#4DD0E1',   // cian de "HABER" y tema activo
-        streak:  '#FBBF24',   // fuego de racha y oro del podio
-        muted:   '#8A9BB5',   // textos secundarios
+        bg: '#0A1628', // fondo azul noche
+        card: '#14213A', // tarjetas
+        primary: '#00E676', // verde de botones y progreso
+        accent: '#4DD0E1', // cian de "HABER" y tema activo
+        streak: '#FBBF24', // fuego de racha y oro del podio
+        muted: '#8A9BB5', // textos secundarios
       },
       fontFamily: { display: ['PlusJakartaSans_700Bold'] },
     },
@@ -652,12 +689,12 @@ Reglas para que escale:
 ```tsx
 // shared/ui/Button.tsx
 const button = tv({
-  base: 'h-14 rounded-2xl items-center justify-center flex-row gap-2',
+  base: 'h-14 flex-row items-center justify-center gap-2 rounded-2xl',
   variants: {
     variant: {
       primary: 'bg-primary',
-      ghost:   'bg-card',
-      locked:  'bg-card opacity-50',
+      ghost: 'bg-card',
+      locked: 'bg-card opacity-50',
     },
   },
 });
@@ -746,17 +783,17 @@ end $$;
 
 Todas las reglas viven en `domain` como funciones o policies puras, se calculan desde SQLite y nunca se guardan como columnas.
 
-| Regla | Definición | Dónde vive |
-| --- | --- | --- |
-| XP por tema | +5 XP la primera vez que se completa (índice único `user_id, topic_id`) | `gamification/domain/XpRewardPolicy` |
-| XP por examen | +100 XP la primera vez que se aprueba (`score >= passing_score`); reintentos no suman | `XpRewardPolicy` + `SubmitExamUseCase` |
-| XP total | `SUM(points)` de `xp_event` del usuario | `XpRepository.getTotal()` |
-| Racha | Días consecutivos en `daily_activity` que terminan hoy o ayer; si el último día activo es anteayer o antes, la racha es 0 | `gamification/domain/StreakCalculator` |
-| Tema bloqueado | Bloqueado si el tema con `sort_order - 1` del mismo nivel no está en `topic_progress` | `learning/domain/TopicLockPolicy` |
-| Examen disponible | Todos los temas del nivel completados | `levels/domain/LevelUnlockPolicy` |
-| Nivel desbloqueado | Nivel 1 siempre; los demás si existe `xp_event` del examen del nivel anterior | `LevelUnlockPolicy` |
-| Progreso del nivel | Temas completados / total de temas del nivel (100% si aprobó el examen) | `GetLevelsOverview` |
-| Nivel del usuario (ranking) | El nivel más alto desbloqueado | Vista `leaderboard` en Postgres |
+| Regla                       | Definición                                                                                                                | Dónde vive                             |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| XP por tema                 | +5 XP la primera vez que se completa (índice único `user_id, topic_id`)                                                   | `gamification/domain/XpRewardPolicy`   |
+| XP por examen               | +100 XP la primera vez que se aprueba (`score >= passing_score`); reintentos no suman                                     | `XpRewardPolicy` + `SubmitExamUseCase` |
+| XP total                    | `SUM(points)` de `xp_event` del usuario                                                                                   | `XpRepository.getTotal()`              |
+| Racha                       | Días consecutivos en `daily_activity` que terminan hoy o ayer; si el último día activo es anteayer o antes, la racha es 0 | `gamification/domain/StreakCalculator` |
+| Tema bloqueado              | Bloqueado si el tema con `sort_order - 1` del mismo nivel no está en `topic_progress`                                     | `learning/domain/TopicLockPolicy`      |
+| Examen disponible           | Todos los temas del nivel completados                                                                                     | `levels/domain/LevelUnlockPolicy`      |
+| Nivel desbloqueado          | Nivel 1 siempre; los demás si existe `xp_event` del examen del nivel anterior                                             | `LevelUnlockPolicy`                    |
+| Progreso del nivel          | Temas completados / total de temas del nivel (100% si aprobó el examen)                                                   | `GetLevelsOverview`                    |
+| Nivel del usuario (ranking) | El nivel más alto desbloqueado                                                                                            | Vista `leaderboard` en Postgres        |
 
 Cálculo de racha como función pura (fácil de probar con un `Clock` falso):
 
@@ -818,24 +855,24 @@ RootNavigator (guard: ¿hay user_id + api_token + email_verified = 1?)
     └── About             (modal)       (onboarding)
 ```
 
-Cada feature exporta sus pantallas desde su `index.ts`, y solo `app/navigation` las ensambla; así agregar una feature nueva no obliga a tocar las existentes. Tras verificar el correo, `VerifyEmailCode` guarda la sesión y el guard cambia a `AppStack` sin pedir login otra vez, como pide la historia.
+Cada feature exporta sus pantallas desde su `index.ts`, y solo las rutas de `src/app/` (Expo Router) las ensamblan; así agregar una feature nueva no obliga a tocar las existentes. Tras verificar el correo, `VerifyEmailCode` guarda la sesión y el guard cambia a `AppStack` sin pedir login otra vez, como pide la historia.
 
 ## Observaciones sobre los modelos de datos
 
 Los modelos están bien orientados (append-only, valores derivados, ids compartidos). La autenticación ya quedó decidida (hash en la app, sin Supabase Auth); falta confirmar qué significan los "+20 XP" y las vidas del diseño.
 
-| # | Hallazgo | Riesgo | Recomendación |
-| --- | --- | --- | --- |
-| 1 | El modelo SQLite menciona Supabase Auth y el de Postgres no | Dos diseños de autenticación incompatibles | **Resuelto:** sin Supabase Auth, hash PBKDF2 en la app y doble hash en Postgres (ver sección de autenticación). Corregir la nota de la tabla `user` en el DBML de SQLite |
-| 2 | La historia pide código de verificación por correo y `profile` no tenía dónde guardarlo | Sin Supabase Auth no hay envío de correos | **Resuelto:** `profile.email_verified`, tabla `email_verification` y Edge Function `send-verification` invocada con el SDK |
-| 3 | Las capturas muestran "+20 XP" por pregunta y vidas (corazones), pero la regla es 5 por tema / 100 por examen y Postgres tiene `CHECK` de 5 o 100 | El XP de la UI no coincide con el del ranking | Confirmar con el cliente: o se quitan los "+20 XP" del diseño, o se agrega un tipo de evento (`source`: topic, exam, question) y se ajusta el `CHECK`. Las vidas infinitas se tratan solo como elemento visual |
-| 4 | El registro necesita internet (el id lo genera el servidor) | El usuario no puede empezar sin red | Dejarlo explícito en la UI ("Necesitas conexión para registrarte"); después todo funciona offline |
-| 5 | No se guarda en qué subtema se quedó el usuario (el mapa muestra "2/3") | Al cerrar la app, el tema reinicia en el paso 1 | Tabla local `subtopic_progress (user_id, subtopic_id, viewed_at)` o una fila en `app_state` con el último paso |
-| 6 | `topic_progress` no existe en Supabase | En un dispositivo nuevo no se ven los temas completados | Al iniciar sesión, `RestoreProgress` reconstruye `topic_progress` desde los `xp_event` con `topic_id` (ya marcados como sincronizados) |
-| 7 | Los ids del contenido viven en Supabase sin llave foránea | Si una versión nueva del JSON renumera temas, el XP apunta a otro tema | Ids de contenido **inmutables** en los JSON; tabla `content_meta (version)` y siembra por versión |
-| 8 | La racha del leaderboard se calcula con la fecha del servidor (UTC) | En México, después de las 18:00 el servidor ya está en "mañana" y puede mostrar racha 0 | Usar `profile.timezone` y calcular "hoy" con `now() AT TIME ZONE profile.timezone` |
-| 9 | El XP es autoridad del cliente | Alguien podría inflar su XP | Para un proyecto escolar es aceptable; mínimo validar en la RPC que `topic_id`/`exam_id` existan en un catálogo de ids permitidos y limitar eventos por día |
-| 10 | Sin caché del ranking | Sin red, la pantalla de Ranking queda vacía | Guardar el último snapshot (`leaderboard_cache` con JSON y `fetched_at`) y mostrar "Actualizado hace X" |
+| #   | Hallazgo                                                                                                                                          | Riesgo                                                                                  | Recomendación                                                                                                                                                                                                  |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | El modelo SQLite menciona Supabase Auth y el de Postgres no                                                                                       | Dos diseños de autenticación incompatibles                                              | **Resuelto:** sin Supabase Auth, hash PBKDF2 en la app y doble hash en Postgres (ver sección de autenticación). Corregir la nota de la tabla `user` en el DBML de SQLite                                       |
+| 2   | La historia pide código de verificación por correo y `profile` no tenía dónde guardarlo                                                           | Sin Supabase Auth no hay envío de correos                                               | **Resuelto:** `profile.email_verified`, tabla `email_verification` y Edge Function `send-verification` invocada con el SDK                                                                                     |
+| 3   | Las capturas muestran "+20 XP" por pregunta y vidas (corazones), pero la regla es 5 por tema / 100 por examen y Postgres tiene `CHECK` de 5 o 100 | El XP de la UI no coincide con el del ranking                                           | Confirmar con el cliente: o se quitan los "+20 XP" del diseño, o se agrega un tipo de evento (`source`: topic, exam, question) y se ajusta el `CHECK`. Las vidas infinitas se tratan solo como elemento visual |
+| 4   | El registro necesita internet (el id lo genera el servidor)                                                                                       | El usuario no puede empezar sin red                                                     | Dejarlo explícito en la UI ("Necesitas conexión para registrarte"); después todo funciona offline                                                                                                              |
+| 5   | No se guarda en qué subtema se quedó el usuario (el mapa muestra "2/3")                                                                           | Al cerrar la app, el tema reinicia en el paso 1                                         | Tabla local `subtopic_progress (user_id, subtopic_id, viewed_at)` o una fila en `app_state` con el último paso                                                                                                 |
+| 6   | `topic_progress` no existe en Supabase                                                                                                            | En un dispositivo nuevo no se ven los temas completados                                 | Al iniciar sesión, `RestoreProgress` reconstruye `topic_progress` desde los `xp_event` con `topic_id` (ya marcados como sincronizados)                                                                         |
+| 7   | Los ids del contenido viven en Supabase sin llave foránea                                                                                         | Si una versión nueva del JSON renumera temas, el XP apunta a otro tema                  | Ids de contenido **inmutables** en los JSON; tabla `content_meta (version)` y siembra por versión                                                                                                              |
+| 8   | La racha del leaderboard se calcula con la fecha del servidor (UTC)                                                                               | En México, después de las 18:00 el servidor ya está en "mañana" y puede mostrar racha 0 | Usar `profile.timezone` y calcular "hoy" con `now() AT TIME ZONE profile.timezone`                                                                                                                             |
+| 9   | El XP es autoridad del cliente                                                                                                                    | Alguien podría inflar su XP                                                             | Para un proyecto escolar es aceptable; mínimo validar en la RPC que `topic_id`/`exam_id` existan en un catálogo de ids permitidos y limitar eventos por día                                                    |
+| 10  | Sin caché del ranking                                                                                                                             | Sin red, la pantalla de Ranking queda vacía                                             | Guardar el último snapshot (`leaderboard_cache` con JSON y `fetched_at`) y mostrar "Actualizado hace X"                                                                                                        |
 
 Ajustes sugeridos al esquema SQLite:
 
@@ -861,13 +898,13 @@ Nota: en SQLite, `user` no es palabra reservada estricta pero conviene citarla (
 
 La mayor parte de la lógica es pura (policies, use cases con repos falsos), así que la pirámide de pruebas se apoya en unitarias rápidas.
 
-| Nivel de prueba | Qué se prueba | Herramienta |
-| --- | --- | --- |
-| Unitarias de dominio | `StreakCalculator`, `TopicLockPolicy`, `LevelUnlockPolicy`, graders, use cases con repos en memoria | Jest |
-| Integración de datos | Repositorios SQLite contra una BD real en memoria; idempotencia del Outbox | Jest + `better-sqlite3` |
-| Contrato remoto | RPC `sync_activity` con eventos duplicados no duplica XP | Supabase local (CLI) + pgTAP |
-| UI | Pantallas con ViewModels mockeados (candados, barras, "7/10") | React Native Testing Library |
-| E2E | Registro → tema → examen → ranking, con y sin red | Maestro |
+| Nivel de prueba      | Qué se prueba                                                                                       | Herramienta                  |
+| -------------------- | --------------------------------------------------------------------------------------------------- | ---------------------------- |
+| Unitarias de dominio | `StreakCalculator`, `TopicLockPolicy`, `LevelUnlockPolicy`, graders, use cases con repos en memoria | Jest                         |
+| Integración de datos | Repositorios SQLite contra una BD real en memoria; idempotencia del Outbox                          | Jest + `better-sqlite3`      |
+| Contrato remoto      | RPC `sync_activity` con eventos duplicados no duplica XP                                            | Supabase local (CLI) + pgTAP |
+| UI                   | Pantallas con ViewModels mockeados (candados, barras, "7/10")                                       | React Native Testing Library |
+| E2E                  | Registro → tema → examen → ranking, con y sin red                                                   | Maestro                      |
 
 Cómo escala la arquitectura:
 

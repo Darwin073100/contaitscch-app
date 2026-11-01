@@ -4,10 +4,10 @@
 set -euo pipefail
 
 input="$(cat)"
-file="$(echo "$input" | jq -r '.tool_input.file_path // empty')"
-[ -z "$file" ] && exit 0
+rel="$(printf "%s" "$input" | node "$CLAUDE_PROJECT_DIR/.claude/hooks/file-path.js" --relative)"
+[ -z "$rel" ] && exit 0
+file="$CLAUDE_PROJECT_DIR/$rel"
 
-rel="${file#"$CLAUDE_PROJECT_DIR"/}"
 
 case "$rel" in
   .env|.env.*|*/.env|*/.env.*)

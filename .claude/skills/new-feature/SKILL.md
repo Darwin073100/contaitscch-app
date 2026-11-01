@@ -25,8 +25,8 @@ Features existentes:
    index.ts                  # API pública: pantallas, tipos y use cases que otras features pueden usar
    ```
 3. Crea solo los archivos que la descripción realmente necesita (no archivos vacíos de relleno).
-4. Registra repositorios y use cases en `src/app/container.ts` (inyección por constructor).
-5. Si tiene pantallas, regístralas en `src/app/navigation`.
+4. Registra repositorios y use cases en `src/composition/container.ts` (inyección por constructor).
+5. Si tiene pantallas, crea su ruta en `src/app/` (Expo Router) que solo importe la pantalla desde el `index.ts` de la feature.
 6. Si la feature reacciona a otras (ej. al completar un tema), suscríbete a eventos de
    `DomainEventBus` en lugar de importar internals de otra feature.
 7. Agrega al menos un test de dominio.

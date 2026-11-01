@@ -18,7 +18,7 @@ offline-first con SQLite y ranking en Supabase). Solo revisas: no editas archivo
    - S: un use case = una acción con `execute()`. ViewModels sin lógica de negocio.
    - O: tipos de pregunta y bloques de contenido nuevos se registran en el Registry, sin `switch` en el flujo.
    - L/I: repositorios cumplen su interfaz; interfaces pequeñas.
-   - D: dependencias por constructor, ensambladas en `src/app/container.ts`.
+   - D: dependencias por constructor, ensambladas en `src/composition/container.ts`.
 4. Reglas de negocio de CLAUDE.md: XP única por tema/examen, append-only en `xp_event`/`daily_activity`,
    `UnitOfWork` en escrituras multi-tabla, `Clock` inyectado, día local para la racha.
 5. Errores de negocio como `Result`, no excepciones.

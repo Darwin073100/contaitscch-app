@@ -5,8 +5,10 @@ niveles, temas, subtemas, exámenes, XP, rachas y ranking online.
 Proyecto escolar: priorizar soluciones gratuitas y simples.
 
 ## Stack
-- Expo SDK + TypeScript estricto, Expo Router (tabs: Aprender, Niveles, Ranking, Ajustes)
-- Estilos: Tailwind vía **NativeWind v4** (`className`). Colores solo desde `tailwind.config.js`
+
+- Expo SDK 58 + TypeScript 6 estricto, Expo Router (tabs: Aprender, Niveles, Ranking, Ajustes)
+- Gestor de paquetes: **pnpm**. Instalar SIEMPRE con `npx expo install <pkg>` (dev: `-- --save-dev`); nunca `npm install` (crearía `package-lock.json`)
+- Estilos: Tailwind v3 vía **NativeWind v4** (`className`) + `tailwind-variants` (`tv`). Colores solo como tokens en `src/shared/theme/colors.js` (los consume `tailwind.config.js`; en SVG usar `colors` de `@/shared/theme`)
 - BD local: `expo-sqlite` + Drizzle ORM (fuente de verdad del dispositivo, offline-first)
 - Remoto: `@supabase/supabase-js` **solo con `supabase.rpc()` y `supabase.functions.invoke()`**. NO usar Supabase Auth ni `.from('tabla')`
 - Estado: Zustand (UI) + TanStack Query (leaderboard). Formularios: React Hook Form + Zod
@@ -15,26 +17,41 @@ Proyecto escolar: priorizar soluciones gratuitas y simples.
 - Correo de verificación: Edge Function `send-verification` + API de Gmail (HTTPS)
 
 ## Comandos
+
 - `npm run start` — Expo dev server (no ejecutarlo tú: bloquea la terminal; pídeselo al usuario)
 - `npm run typecheck` — `tsc --noEmit`
 - `npm run lint` / `npm run lint:fix`
 - `npm test` — Jest; un archivo: `npx jest ruta/al/archivo.test.ts`
 - `npm run content:validate` — valida los JSON de contenido
 - `npm run db:generate` — genera migración Drizzle tras cambiar `src/core/database/schema/`
+- `npm run format` — Prettier en todo el proyecto
+- `npx expo install --check` — verifica versiones compatibles con el SDK
+- `npx expo export --platform android` — compila el bundle sin dev server (verifica Babel/Metro/NativeWind)
 - `supabase start` / `supabase db reset` — Supabase local (Docker)
 
 Antes de decir que algo está terminado: `npm run typecheck && npm run lint && npm test`.
 
+Notas del entorno:
+
+- TS 6 no carga `@types/*` solo: si se agrega uno, añadirlo a `compilerOptions.types` en `tsconfig.json`.
+- `react-native-css-interop` es dependencia directa a propósito (pnpm no lo expone); su versión debe ser la que pide `nativewind`.
+- ESLint se queda en v9 hasta que `eslint-plugin-react` (de `eslint-config-expo`) soporte v10.
+- Variables públicas en `.env.local` (no la leas): `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
+
 ## Arquitectura (features + Clean Architecture)
+
 ```
-src/app/        composition root: bootstrap, container.ts (DI), navigation
-src/core/       infraestructura: database, network (RpcClient), sync, session, events, clock, result
-src/shared/     ui (componentes con Tailwind), theme, hooks
+src/app/          SOLO rutas de Expo Router (cada archivo es pantalla): delgadas, importan de features/<x>
+src/composition/  composition root: container.ts (DI), bootstrap, providers/ (useContainer)
+src/core/         infraestructura: database, network (RpcClient), sync, session, events, clock, result
+src/shared/       ui (componentes con Tailwind), theme (tokens), hooks
 src/features/<feature>/{domain,data,presentation}/ + index.ts
 ```
+
 Features: auth, onboarding, home, levels, learning, exams, gamification, leaderboard, settings.
 
 Reglas de dependencias (OBLIGATORIAS):
+
 - `domain` no importa React, SQLite, Supabase, `data` ni `presentation`.
 - `presentation` usa use cases inyectados; nunca SQL ni `supabase` directo.
 - Una feature solo importa de otra vía su `index.ts`. Nunca rutas internas ajenas.
@@ -47,6 +64,7 @@ Patrones en uso: Repository, Use Case (`execute()`), DI, Unit of Work, Strategy
 Observer (`DomainEventBus`), Outbox (`synced_at IS NULL`), Mapper, Facade (`SyncEngine`).
 
 ## Reglas de negocio
+
 - Tema completado: +5 XP una sola vez. Examen aprobado (`score >= passing_score`): +100 XP una sola vez.
 - XP total = `SUM(xp_event.points)`. Racha = días consecutivos en `daily_activity` que terminan hoy o ayer.
 - `daily_activity.activity_date` = día LOCAL del usuario (`YYYY-MM-DD`), nunca `CURRENT_TIMESTAMP`.
@@ -56,23 +74,27 @@ Observer (`DomainEventBus`), Outbox (`synced_at IS NULL`), Mapper, Facade (`Sync
 - Sincronización: solo al entrar a Ranking → subir pendientes → marcar `synced_at` → pedir leaderboard.
 
 ## Contenido JSON
+
 - Ids inmutables: tema = nivel×100 + orden; subtema = tema×100 + orden; pregunta = examen×1000 + orden.
 - Supabase guarda `topic_id`/`exam_id`: cambiar un id existente corrompe el XP de los usuarios.
 - Subir `manifest.version` cuando cambie el contenido.
 
 ## Seguridad
+
 - Nunca leer ni escribir `.env*`. Secretos de Gmail/Supabase solo con `supabase secrets set`.
 - La contraseña en texto plano nunca se guarda ni se loguea. Postgres guarda `digest(hash_app,'sha256')`.
 - Funciones RPC: `security definer`, validan `id + api_token`; RLS activo sin políticas.
 - El MCP de Supabase apunta al proyecto de DESARROLLO y en solo lectura.
 
 ## Estilo de código
+
 - Nombres de código en inglés; textos de UI y comentarios de negocio en español.
 - Componentes funcionales; un componente por archivo; props tipadas con `type`.
 - Clases Tailwind solo en `src/shared/ui` (con `tailwind-variants`); las pantallas usan esos componentes.
 - Tests junto al archivo: `Foo.ts` → `Foo.test.ts`. Dominio con repos en memoria.
 
 ## Documentos de referencia
+
 - Guía de Expo para agentes (generada por create-expo-app, versión del SDK del proyecto): @AGENTS.md
 - Arquitectura completa: @docs/ARCHITECTURE.md
 - Modelos de datos: @docs/database/sqlite.dbml y @docs/database/postgres.dbml

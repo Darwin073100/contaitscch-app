@@ -26,7 +26,7 @@ export class <Nombre>UseCase {
 1. Lee el `index.ts` y `domain/` de la feature para reutilizar entidades e interfaces existentes.
 2. Si hace falta, agrega métodos a la interfaz del repositorio (ISP: interfaces pequeñas).
 3. Implementa el método en `data/repositories/` y su consulta en `data/datasources/`.
-4. Registra el use case en `src/app/container.ts`.
+4. Registra el use case en `src/composition/container.ts`.
 5. Escribe `<Nombre>UseCase.test.ts` con repositorios en memoria y `FakeClock`,
    cubriendo el caso feliz, la idempotencia y los errores esperados.
 6. `npx jest <archivo de test> && npm run typecheck`.

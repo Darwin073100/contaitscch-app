@@ -1,7 +1,14 @@
 {
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll": "explicit",
     "source.organizeImports": "explicit",
     "source.sortMembers": "explicit"
-  }
+  },
+  "tailwindCSS.classFunctions": [
+    "tv"
+  ],
+  "tailwindCSS.experimental.configFile": "tailwind.config.js",
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

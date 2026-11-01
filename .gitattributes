@@ -1,0 +1,2 @@
+# Los hooks de Claude Code se ejecutan con bash: con CRLF fallan ($'\r': command not found)
+*.sh text eol=lf
