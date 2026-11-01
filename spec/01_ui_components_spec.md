@@ -1,6 +1,6 @@
 # 01 — Sistema de diseño y componentes reutilizables (`shared/ui`)
 
-- **Estado:** implementado (componentes base). Componentes de feature: `learning` (spec 02), `levels`/`home` (spec 03) y `onboarding` (spec 04) implementados; el resto pendiente (sección 6).
+- **Estado:** implementado (componentes base). Componentes de feature: `learning` (spec 02), `levels`/`home` (spec 03), `onboarding` (spec 04) y `auth` (spec 05, maquetación) implementados; el resto pendiente (sección 6).
 - **Fecha:** 1 de noviembre de 2026
 - **Fuente:** capturas en `docs/design/`, `docs/ARCHITECTURE.md` (sección "Estilos con Tailwind") y `docs/USER_STORIES.md`.
 - **Código:** `src/shared/ui/`, `src/shared/theme/colors.js`, `src/shared/utils/`.
@@ -109,14 +109,14 @@ Todo se importa desde `@/shared/ui`. Ningún componente acepta colores hex: los 
 
 ### 4.1 Layout y tipografía
 
-| Componente | Props clave                                                                    | Notas                                                                                                                                                                                              |
-| ---------- | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Screen`   | `header?`, `footer?`, `scroll?`, `safeBottom?`, `align?: top \| center`        | Fondo, safe area superior, header fijo, contenido con scroll (gap 24) y barra fija inferior. `safeBottom` solo en pantallas completas fuera de las pestañas (TopicSession, ExamSession, registro). |
-| `Row`      | `gap`, `align` (por defecto `center`), `justify`, `grow`, `wrap` + `ViewProps` | Fila horizontal. Es la forma en que las features hacen layout sin `className`.                                                                                                                     |
-| `Column`   | igual que `Row`                                                                | Columna vertical.                                                                                                                                                                                  |
-| `Divider`  | `orientation?: horizontal \| vertical`                                         | Separadores de la fila de beneficios del registro.                                                                                                                                                 |
-| `AppText`  | `variant`, `tone`, `weight`, `align` + `TextProps`                             | Ver 3.2.                                                                                                                                                                                           |
-| `RichText` | `text`, `emphasisTone?` + props de `AppText`                                   | Convierte `**negrita**` (formato de los JSON) en texto en negrita. Usa `parseEmphasis()` (probada).                                                                                                |
+| Componente | Props clave                                                                                  | Notas                                                                                                                                                                                                                                            |
+| ---------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `Screen`   | `header?`, `footer?`, `scroll?`, `safeBottom?`, `keyboardAvoiding?`, `align?: top \| center` | Fondo, safe area superior, header fijo, contenido con scroll (gap 24) y barra fija inferior. `safeBottom` solo en pantallas completas fuera de las pestañas (TopicSession, ExamSession, registro). `keyboardAvoiding` en formularios (registro). |
+| `Row`      | `gap`, `align` (por defecto `center`), `justify`, `grow`, `wrap` + `ViewProps`               | Fila horizontal. Es la forma en que las features hacen layout sin `className`.                                                                                                                                                                   |
+| `Column`   | igual que `Row`                                                                              | Columna vertical.                                                                                                                                                                                                                                |
+| `Divider`  | `orientation?: horizontal \| vertical`                                                       | Separadores de la fila de beneficios del registro.                                                                                                                                                                                               |
+| `AppText`  | `variant`, `tone`, `weight`, `align` + `TextProps`                                           | Ver 3.2.                                                                                                                                                                                                                                         |
+| `RichText` | `text`, `emphasisTone?` + props de `AppText`                                                 | Convierte `**negrita**` (formato de los JSON) en texto en negrita. Usa `parseEmphasis()` (probada).                                                                                                                                              |
 
 ### 4.2 Iconografía e identidad
 
@@ -150,7 +150,7 @@ Todo se importa desde `@/shared/ui`. Ningún componente acepta colores hex: los 
 
 | Componente    | Props clave                                                                                                                                 | Notas                                                                                                                                                           |
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ProgressBar` | `value` (0–1, se recorta), `tone` (`primary`, `accent`, `streak`), `size`, `accessibilityLabel?`                                            | `accessibilityRole="progressbar"` con porcentaje.                                                                                                               |
+| `ProgressBar` | `value` (0–1, se recorta), `tone` (`primary`, `accent`, `streak`, `danger`), `size`, `accessibilityLabel?`                                  | `accessibilityRole="progressbar"` con porcentaje.                                                                                                               |
 | `Badge`       | `label`, `tone` (`primary`, `accent`, `info`, `streak`, `danger`, `neutral`), `appearance` (`soft`, `solid`), `size`, `uppercase?`, `icon?` | EN CURSO, BLOQUEADO, Básico/Intermedio/Avanzado, chips de temas, "v1.0", globo "¡Toca para continuar!" (`accent` + `solid`). Siempre una línea: trunca con "…". |
 | `StatPill`    | `icon`, `iconColor?`, `value` (número se formatea "1,250"), `accessibilityLabel`                                                            | Píldoras del encabezado.                                                                                                                                        |
 | `StatTile`    | `label`, `value?`, `icon?`, `iconColor?`                                                                                                    | Ocupa `flex-1`: se ponen 3 en un `Row gap="sm"`.                                                                                                                |
@@ -167,6 +167,7 @@ Todo se importa desde `@/shared/ui`. Ningún componente acepta colores hex: los 
 
 - `formatNumber(1250)` → `"1,250"` (locale `es-MX`).
 - `getInitials('Carlos Méndez')` → `"CM"`.
+- `useCountdown(45)` y `formatCountdown(45)` → `"00:45"` (`src/shared/hooks`): reenvío del código de verificación.
 
 ## 5. Mapa pantalla → componentes
 

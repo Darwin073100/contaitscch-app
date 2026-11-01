@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { ScrollView, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { tv, type VariantProps } from 'tailwind-variants';
 
@@ -30,6 +30,8 @@ type ScreenProps = VariantProps<typeof screen> & {
   scroll?: boolean;
   /** Pantallas completas fuera de las pestañas: deja espacio para la barra del sistema. */
   safeBottom?: boolean;
+  /** Formularios: el contenido se recorre para que el teclado no tape el campo activo. */
+  keyboardAvoiding?: boolean;
 };
 
 export function Screen({
@@ -39,14 +41,14 @@ export function Screen({
   footer,
   scroll = false,
   safeBottom = false,
+  keyboardAvoiding = false,
 }: ScreenProps) {
   const insets = useSafeAreaInsets();
   const s = screen({ align });
   const bottomInset = safeBottom ? insets.bottom : 0;
 
-  return (
-    <View className={s.root()} style={{ paddingTop: insets.top }}>
-      {header && <View className={s.header()}>{header}</View>}
+  const content = (
+    <>
       {scroll ? (
         <ScrollView
           contentContainerClassName={s.content()}
@@ -65,6 +67,23 @@ export function Screen({
         <View className={s.footer()} style={{ paddingBottom: 12 + bottomInset }}>
           {footer}
         </View>
+      )}
+    </>
+  );
+
+  return (
+    <View className={s.root()} style={{ paddingTop: insets.top }}>
+      {header && <View className={s.header()}>{header}</View>}
+      {keyboardAvoiding ? (
+        // Guía de Expo: "padding" en iOS; en Android el sistema ya ajusta la ventana.
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        >
+          {content}
+        </KeyboardAvoidingView>
+      ) : (
+        content
       )}
     </View>
   );

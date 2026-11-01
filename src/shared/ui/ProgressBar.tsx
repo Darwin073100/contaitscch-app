@@ -11,6 +11,8 @@ const progress = tv({
       primary: { fill: 'bg-primary' },
       accent: { fill: 'bg-accent' },
       streak: { fill: 'bg-streak' },
+      // Contraseña débil en el medidor de seguridad del registro
+      danger: { fill: 'bg-danger' },
     },
     size: {
       sm: { track: 'h-1.5' },
