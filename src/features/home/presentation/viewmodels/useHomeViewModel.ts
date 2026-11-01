@@ -1,0 +1,42 @@
+import { router, useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
+
+import { useContainer } from '@/composition/providers/AppProviders';
+
+import { toHomeVm, type HomeVm } from './homeVm';
+
+export type HomeState =
+  { status: 'loading' } | { status: 'error'; message: string } | { status: 'ready'; home: HomeVm };
+
+export function useHomeViewModel() {
+  const { levels, gamification } = useContainer();
+  const [state, setState] = useState<HomeState>({ status: 'loading' });
+
+  // Se recarga al volver a la pestaña: completar un tema cambia XP, racha y progreso.
+  useFocusEffect(
+    useCallback(() => {
+      let active = true;
+      Promise.all([levels.getLevelsOverview.execute(), gamification.getUserStats.execute()]).then(
+        ([overview, stats]) => {
+          if (!active) return;
+          setState(
+            overview.ok
+              ? { status: 'ready', home: toHomeVm(overview.value, stats) }
+              : { status: 'error', message: 'Aún no hay niveles disponibles.' },
+          );
+        },
+      );
+      return () => {
+        active = false;
+      };
+    }, [levels, gamification]),
+  );
+
+  // Temporal: Aprender siempre muestra el nivel actual; abrir un nivel concreto queda pendiente.
+  const openLevel = useCallback((_levelId: number) => router.navigate('/'), []);
+  const openProfile = useCallback(() => router.navigate('/ajustes'), []);
+  // La pantalla Acerca de (feature onboarding) aún no existe.
+  const openAbout = useCallback(() => {}, []);
+
+  return { state, openLevel, openProfile, openAbout };
+}

@@ -1,6 +1,6 @@
 # 01 — Sistema de diseño y componentes reutilizables (`shared/ui`)
 
-- **Estado:** implementado (componentes base). Pendiente: componentes compuestos de cada feature (sección 6).
+- **Estado:** implementado (componentes base). Componentes de feature: `learning` (spec 02) y `levels`/`home` (spec 03) implementados; el resto pendiente (sección 6).
 - **Fecha:** 1 de noviembre de 2026
 - **Fuente:** capturas en `docs/design/`, `docs/ARCHITECTURE.md` (sección "Estilos con Tailwind") y `docs/USER_STORIES.md`.
 - **Código:** `src/shared/ui/`, `src/shared/theme/colors.js`, `src/shared/utils/`.
