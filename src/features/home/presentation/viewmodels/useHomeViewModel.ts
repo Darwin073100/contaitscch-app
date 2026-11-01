@@ -35,8 +35,7 @@ export function useHomeViewModel() {
   // Temporal: Aprender siempre muestra el nivel actual; abrir un nivel concreto queda pendiente.
   const openLevel = useCallback((_levelId: number) => router.navigate('/'), []);
   const openProfile = useCallback(() => router.navigate('/ajustes'), []);
-  // La pantalla Acerca de (feature onboarding) aún no existe.
-  const openAbout = useCallback(() => {}, []);
+  const openAbout = useCallback(() => router.push('/acerca-de'), []);
 
   return { state, openLevel, openProfile, openAbout };
 }

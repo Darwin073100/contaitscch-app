@@ -77,7 +77,7 @@ src/features/home/                               # solo presentation (no tiene r
 
 - `home` importa `LevelCard`, `toLevelCardVm` y los tipos desde `@/features/levels`, y `UserStats` desde `@/features/gamification`. Nunca rutas internas.
 - `useHomeViewModel` pide en paralelo `container.levels.getLevelsOverview` y `container.gamification.getUserStats` en cada `useFocusEffect`.
-- Navegación: perfil → `/ajustes`; "Continuar Nivel" → `/` (Aprender); Acerca de → pendiente.
+- Navegación: perfil → `/ajustes`; "Continuar Nivel" → `/` (Aprender); "Acerca de" e "Introducción a la app" → `/acerca-de` (spec 04).
 
 ## 5. Reglas de dominio
 
@@ -137,7 +137,7 @@ Aviso: `next` → `Callout plain accent information-outline`; `later` → `Callo
 | 3   | Textos del nivel en el contenido | `subtitle` y `description` (aquí) y `title` del módulo (spec 02) no existen en `contentSchema.ts`. Propuesta: `level: { id, name, sortOrder, title, subtitle, description }` y subir `manifest.version`. |
 | 4   | Usuario de la sesión             | Los repositorios no reciben `userId`; el saludo usa "Contador". Conectar con `SessionStore` (feature `auth`).                                                                                            |
 | 5   | Abrir un nivel concreto          | "Continuar/Repasar Nivel" lleva a Aprender, que siempre muestra el nivel 1 (`CURRENT_LEVEL_ID` en spec 02). Pasar `levelId` a la ruta `/` o usar `overview.currentLevel`.                                |
-| 6   | Acerca de                        | "Acerca de" e "Introducción a la app" no navegan todavía; dependen de la feature `onboarding`.                                                                                                           |
+| 6   | Acerca de                        | **Resuelto en spec 04:** "Acerca de" e "Introducción a la app" abren `/acerca-de` (feature `onboarding`).                                                                                                |
 | 7   | `levelTone`                      | Spec 01 sugiere un mapa de tono por nivel para badges del ranking; se creará en `levels` cuando `leaderboard` lo necesite.                                                                               |
 
 ## 10. Pruebas
