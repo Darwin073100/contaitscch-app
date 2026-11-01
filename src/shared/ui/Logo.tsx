@@ -3,27 +3,25 @@ import { tv, type VariantProps } from 'tailwind-variants';
 
 import { Icon } from './Icon';
 
-// Temporal: icono de la app hasta tener el logotipo oficial de CONTAITSCCH en assets/images/.
-const logoSource = require('../../../assets/images/icon.png');
+// Logotipo oficial recortado en círculo (fuente: assets/images/LogoCircle.png).
+const logoSource = require('../../../assets/images/logo.png');
 
 const logo = tv({
   slots: {
-    frame: 'items-center justify-center bg-card',
-    image: 'rounded-xl',
+    frame: 'items-center justify-center rounded-full',
+    image: 'rounded-full',
     badge: 'absolute -bottom-1 -right-1 rounded-full bg-bg',
   },
   variants: {
     size: {
-      sm: { frame: 'h-8 w-8 rounded-lg', image: 'h-8 w-8 rounded-lg' },
-      md: { frame: 'h-16 w-16 rounded-2xl', image: 'h-12 w-12' },
-      lg: { frame: 'h-28 w-28 rounded-3xl', image: 'h-20 w-20 rounded-2xl' },
+      sm: { image: 'h-8 w-8' },
+      md: { image: 'h-16 w-16' },
+      lg: { image: 'h-28 w-28' },
     },
-    shape: {
-      rounded: {},
-      circle: { frame: 'rounded-full border-8 border-surface' },
-    },
+    // Aro de superficie alrededor del círculo (hero del registro)
+    ring: { true: { frame: 'border-8 border-surface' } },
   },
-  defaultVariants: { size: 'md', shape: 'rounded' },
+  defaultVariants: { size: 'md' },
 });
 
 type LogoProps = VariantProps<typeof logo> & {
@@ -31,8 +29,8 @@ type LogoProps = VariantProps<typeof logo> & {
   verified?: boolean;
 };
 
-export function Logo({ size, shape, verified = false }: LogoProps) {
-  const s = logo({ size, shape });
+export function Logo({ size, ring, verified = false }: LogoProps) {
+  const s = logo({ size, ring });
   return (
     <View
       className={s.frame()}
