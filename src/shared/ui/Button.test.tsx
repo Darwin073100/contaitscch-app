@@ -22,4 +22,16 @@ describe('Button', () => {
     expect(screen.queryByText('Entrar')).toBeNull();
     expect(onPress).not.toHaveBeenCalled();
   });
+
+  it('la variante locked siempre está deshabilitada', async () => {
+    const onPress = jest.fn();
+    await render(
+      <Button variant="locked" label="Bloqueado" leftIcon="lock-outline" onPress={onPress} />,
+    );
+
+    await fireEvent.press(screen.getByRole('button'));
+
+    expect(onPress).not.toHaveBeenCalled();
+    expect(screen.getByRole('button')).toBeDisabled();
+  });
 });
