@@ -1,0 +1,173 @@
+// CONTAITSCCH - SQLite local (versión minimalista, con notas por atributo)
+// Fechas: TEXT ISO-8601 UTC | Booleanos: INTEGER 0/1 | PRAGMA foreign_keys = ON
+// SQLite no tiene tipo UUID: se guarda como TEXT (36 caracteres).
+// El contenido (level, topic, subtopic, exam, question, question_option)
+// se siembra desde un JSON incluido en la app en el primer arranque.
+//
+// COLUMNAS DE AUDITORÍA (en TODAS las tablas):
+//   created_at : cuándo se creó la fila (lo pone SQLite por default).
+//   updated_at : cuándo se modificó por última vez. SQLite NO lo actualiza solo:
+//                hay que ponerlo desde la app en cada UPDATE (o con un TRIGGER).
+
+Project contaitscch_sqlite_min {
+  database_type: 'SQLite'
+}
+
+// ====================== USUARIO ======================
+Table user {
+  id             text [pk, note: 'UUID del usuario. Es el MISMO id que genera Supabase (profile.id) al registrarse, así el usuario local y el remoto son el mismo y no hay colisiones entre dispositivos.']
+  first_name     text [not null, note: 'Nombre(s). Validar en la app: mínimo 3 caracteres.']
+  last_name      text [not null, note: 'Apellidos. Validar en la app: mínimo 3 caracteres.']
+  email          text [not null, unique, note: 'Correo electrónico. Debe contener @. Único: no puede haber dos usuarios con el mismo correo.']
+  country        text [not null, note: 'País (requerido en el registro).']
+  state          text [not null, note: 'Estado (requerido en el registro).']
+  city           text [null, note: 'Ciudad (opcional en el registro).']
+  email_verified integer [not null, default: 0, note: '0 = aún no valida el código enviado al correo; 1 = ya lo validó y puede entrar a la app.']
+  created_at     text [not null, default: `CURRENT_TIMESTAMP`, note: 'Fecha y hora en que se registró (creación de la fila).']
+  updated_at     text [not null, default: `CURRENT_TIMESTAMP`, note: 'Última modificación de la fila. Actualizar desde la app o trigger.']
+
+  Note: 'Datos del registro. La contraseña NO se guarda aquí: la app la convierte en hash PBKDF2 y Supabase guarda digest(hash) en profile (sin Supabase Auth). El XP total y la racha tampoco se guardan, se calculan.'
+}
+
+// ====================== CONTENIDO (solo lectura) ======================
+Table level {
+  id          integer [pk, note: 'Identificador del nivel (1, 2, 3).']
+  name        text [not null, note: 'Nombre visible: Básico, Intermedio o Avanzado.']
+  sort_order  integer [not null, unique, note: 'Orden del nivel: 1=Básico, 2=Intermedio, 3=Avanzado. Sirve para saber cuál es el "nivel anterior" al desbloquear.']
+  created_at  text [not null, default: `CURRENT_TIMESTAMP`, note: 'Creación de la fila (cuando se siembra).']
+  updated_at  text [not null, default: `CURRENT_TIMESTAMP`, note: 'Última modificación de la fila.']
+
+  Note: 'Los módulos de la app. Siempre son 3 filas.'
+}
+
+Table topic {
+  id          integer [pk, note: 'Identificador del tema.']
+  level_id    integer [not null, ref: > level.id, note: 'A qué nivel pertenece el tema (cada nivel tiene su propio temario).']
+  title       text [not null, note: 'Título del tema, ej. "Conceptos Básicos" o "La Partida Doble".']
+  sort_order  integer [not null, note: 'Posición dentro del temario del nivel. Un tema está bloqueado si el anterior (sort_order - 1) no está completado.']
+  created_at  text [not null, default: `CURRENT_TIMESTAMP`, note: 'Creación de la fila.']
+  updated_at  text [not null, default: `CURRENT_TIMESTAMP`, note: 'Última modificación de la fila.']
+
+  indexes {
+    (level_id, sort_order) [unique]
+  }
+
+  Note: 'Un tema = un elemento del temario de un nivel.'
+}
+
+Table subtopic {
+  id          integer [pk, note: 'Identificador del subtema.']
+  topic_id    integer [not null, ref: > topic.id, note: 'A qué tema pertenece. Un tema se divide en 5, 10 o n subtemas.']
+  title       text [not null, note: 'Título de esta parte, ej. "Parte 2: Cargos y abonos".']
+  content     text [not null, note: 'Contenido de la pantalla (texto, ejemplos, referencia a imágenes o gráficos). Se guarda como markdown o JSON.']
+  sort_order  integer [not null, note: 'Orden de la parte dentro del tema. Con esto se arma la barra "Paso 2 de 4".']
+  created_at  text [not null, default: `CURRENT_TIMESTAMP`, note: 'Creación de la fila.']
+  updated_at  text [not null, default: `CURRENT_TIMESTAMP`, note: 'Última modificación de la fila.']
+
+  indexes {
+    (topic_id, sort_order) [unique]
+  }
+
+  Note: 'Cada pantalla/parte en que se divide un tema.'
+}
+
+Table exam {
+  id             integer [pk, note: 'Identificador del examen.']
+  level_id       integer [not null, unique, ref: - level.id, note: 'Nivel al que pertenece. Es único: solo hay un examen por nivel.']
+  xp_reward      integer [not null, default: 100, note: 'XP que se gana al aprobarlo (100 según el requerimiento).']
+  passing_score  integer [not null, default: 70, note: 'Porcentaje mínimo para aprobar y desbloquear el siguiente nivel. El 70 es una sugerencia, tú lo defines.']
+  created_at     text [not null, default: `CURRENT_TIMESTAMP`, note: 'Creación de la fila.']
+  updated_at     text [not null, default: `CURRENT_TIMESTAMP`, note: 'Última modificación de la fila.']
+
+  Note: 'Examen final de cada nivel.'
+}
+
+Table question {
+  id          integer [pk, note: 'Identificador de la pregunta.']
+  exam_id     integer [not null, ref: > exam.id, note: 'Examen al que pertenece.']
+  type        text [not null, note: "Tipo de pregunta: 'multiple_choice' (opción múltiple) o 'complementary' (completar/escribir la respuesta)."]
+  statement   text [not null, note: 'Texto de la pregunta, ej. "¿Cómo se registra la compra de mobiliario en efectivo?"']
+  sort_order  integer [not null, note: 'Orden en que aparece. Con esto se muestra el avance "7/10".']
+  created_at  text [not null, default: `CURRENT_TIMESTAMP`, note: 'Creación de la fila.']
+  updated_at  text [not null, default: `CURRENT_TIMESTAMP`, note: 'Última modificación de la fila.']
+}
+
+Table question_option {
+  id           integer [pk, note: 'Identificador de la opción.']
+  question_id  integer [not null, ref: > question.id, note: 'Pregunta a la que pertenece.']
+  text         text [not null, note: 'Texto de la opción (opción múltiple) o respuesta aceptada (complementaria).']
+  is_correct   integer [not null, default: 0, note: '1 = respuesta correcta, 0 = incorrecta. En complementarias, todas las respuestas aceptadas valen 1.']
+  created_at   text [not null, default: `CURRENT_TIMESTAMP`, note: 'Creación de la fila.']
+  updated_at   text [not null, default: `CURRENT_TIMESTAMP`, note: 'Última modificación de la fila.']
+
+  Note: 'Opciones A/B/C/D de cada pregunta, o respuestas válidas si es complementaria.'
+}
+
+// ====================== PROGRESO ======================
+Table topic_progress {
+  user_id       text [not null, ref: > user.id, note: 'Usuario que completó el tema.']
+  topic_id      integer [not null, ref: > topic.id, note: 'Tema completado.']
+  completed_at  text [not null, note: 'Fecha y hora en que terminó el tema (dato de negocio).']
+  created_at    text [not null, default: `CURRENT_TIMESTAMP`, note: 'Creación de la fila.']
+  updated_at    text [not null, default: `CURRENT_TIMESTAMP`, note: 'Última modificación de la fila.']
+
+  indexes {
+    (user_id, topic_id) [pk]
+  }
+
+  Note: 'Si existe la fila, el tema está completado. La barra de progreso del nivel = filas del usuario en ese nivel / total de temas del nivel.'
+}
+
+Table exam_attempt {
+  id          integer [pk, increment, note: 'Identificador del intento (autonumérico).']
+  user_id     text [not null, ref: > user.id, note: 'Usuario que hizo el examen.']
+  exam_id     integer [not null, ref: > exam.id, note: 'Examen presentado.']
+  score       integer [not null, note: 'Porcentaje obtenido (0 a 100). Aprobado si score >= exam.passing_score. Si aprueba, desbloquea el siguiente nivel.']
+  taken_at    text [not null, default: `CURRENT_TIMESTAMP`, note: 'Fecha y hora en que se presentó el examen (dato de negocio).']
+  created_at  text [not null, default: `CURRENT_TIMESTAMP`, note: 'Creación de la fila.']
+  updated_at  text [not null, default: `CURRENT_TIMESTAMP`, note: 'Última modificación de la fila.']
+
+  Note: 'Historial de intentos. Permite reintentar un examen reprobado.'
+}
+
+// ====================== XP Y RACHA ======================
+Table xp_event {
+  id          integer [pk, increment, note: 'Identificador del movimiento de XP (autonumérico).']
+  user_id     text [not null, ref: > user.id, note: 'Usuario que ganó los puntos.']
+  topic_id    integer [null, ref: > topic.id, note: 'Si el XP vino de completar un tema (+5 XP), aquí va el tema. Si vino de un examen, queda NULL.']
+  exam_id     integer [null, ref: > exam.id, note: 'Si el XP vino de aprobar un examen (+100 XP), aquí va el examen. Si vino de un tema, queda NULL.']
+  points      integer [not null, note: 'Puntos otorgados en ese momento (5 o 100). Se guarda por si las reglas cambian a futuro.']
+  earned_at   text [not null, default: `CURRENT_TIMESTAMP`, note: 'Fecha y hora en que se ganaron los puntos (dato de negocio).']
+  synced_at   text [null, note: 'NULL = todavía no se sube a Supabase. Al entrar a Participantes se suben los NULL y se les pone la fecha.']
+  created_at  text [not null, default: `CURRENT_TIMESTAMP`, note: 'Creación de la fila.']
+  updated_at  text [not null, default: `CURRENT_TIMESTAMP`, note: 'Última modificación de la fila.']
+
+  indexes {
+    (user_id, topic_id) [unique, note: 'Un tema da XP una sola vez por usuario.']
+    (user_id, exam_id) [unique, note: 'Un examen da XP una sola vez por usuario.']
+  }
+
+  Note: 'Libro de movimientos de XP. El XP total = SUM(points) del usuario. Una fila debe tener topic_id o exam_id, no ambos.'
+}
+
+Table daily_activity {
+  user_id        text [not null, ref: > user.id, note: 'Usuario que estuvo activo.']
+  activity_date  text [not null, note: "Día en que completó un tema o examen, formato 'YYYY-MM-DD' (día local del usuario)."]
+  synced_at      text [null, note: 'NULL = todavía no se sube a Supabase.']
+  created_at     text [not null, default: `CURRENT_TIMESTAMP`, note: 'Creación de la fila.']
+  updated_at     text [not null, default: `CURRENT_TIMESTAMP`, note: 'Última modificación de la fila.']
+
+  indexes {
+    (user_id, activity_date) [pk, note: 'Un solo registro por usuario por día.']
+  }
+
+  Note: 'Base de la racha: días consecutivos que terminan hoy o ayer. Si ayer no hubo fila, la racha se reinicia.'
+}
+
+// ====================== CÁLCULOS (no se almacenan) ======================
+// XP total            = SUM(xp_event.points) del usuario
+// Racha               = días consecutivos en daily_activity que terminan hoy o ayer
+// Nivel desbloqueado  = existe un xp_event con el exam_id del nivel anterior (examen aprobado).
+//                       Se usa xp_event y no exam_attempt porque, al iniciar sesión en otro dispositivo,
+//                       los exámenes aprobados se restauran desde Supabase (que solo tiene xp_event).
+// Progreso del nivel  = temas completados / total de temas del nivel
