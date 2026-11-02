@@ -6,6 +6,10 @@
 //
 // COLUMNAS DE AUDITORÍA (en TODAS las tablas):
 //   created_at : cuándo se creó la fila (lo pone SQLite por default).
+//                En el esquema Drizzle el default real es strftime('%Y-%m-%dT%H:%M:%fZ','now')
+//                (ISO-8601 UTC); aquí se abrevia como CURRENT_TIMESTAMP.
+//   Las fechas de negocio (completed_at, viewed_at, taken_at, earned_at) no tienen default:
+//                las pone la app con el Clock inyectado.
 //   updated_at : cuándo se modificó por última vez. SQLite NO lo actualiza solo:
 //                hay que ponerlo desde la app en cada UPDATE (o con un TRIGGER).
 
@@ -88,8 +92,13 @@ Table question {
   type        text [not null, note: "Tipo de pregunta: 'multiple_choice' (opción múltiple) o 'complementary' (completar/escribir la respuesta)."]
   statement   text [not null, note: 'Texto de la pregunta, ej. "¿Cómo se registra la compra de mobiliario en efectivo?"']
   sort_order  integer [not null, note: 'Orden en que aparece. Con esto se muestra el avance "7/10".']
+  feedback    text [null, note: 'Mensaje opcional al responder (ej. "¡Excelente! …").']
   created_at  text [not null, default: `CURRENT_TIMESTAMP`, note: 'Creación de la fila.']
   updated_at  text [not null, default: `CURRENT_TIMESTAMP`, note: 'Última modificación de la fila.']
+
+  indexes {
+    (exam_id, sort_order) [unique]
+  }
 }
 
 Table question_option {
@@ -101,6 +110,15 @@ Table question_option {
   updated_at   text [not null, default: `CURRENT_TIMESTAMP`, note: 'Última modificación de la fila.']
 
   Note: 'Opciones A/B/C/D de cada pregunta, o respuestas válidas si es complementaria.'
+}
+
+Table content_meta {
+  id          integer [pk, note: 'Siempre 1 (CHECK): una sola fila.']
+  version     integer [not null, note: 'Versión del contenido sembrado. Si manifest.version es mayor, el ContentSeeder vuelve a sembrar.']
+  created_at  text [not null, default: `CURRENT_TIMESTAMP`, note: 'Creación de la fila.']
+  updated_at  text [not null, default: `CURRENT_TIMESTAMP`, note: 'Última modificación de la fila.']
+
+  Note: 'Control de la siembra del contenido JSON. El progreso del usuario no depende de esta tabla.'
 }
 
 // ====================== PROGRESO ======================
@@ -118,14 +136,32 @@ Table topic_progress {
   Note: 'Si existe la fila, el tema está completado. La barra de progreso del nivel = filas del usuario en ese nivel / total de temas del nivel.'
 }
 
+Table subtopic_progress {
+  user_id      text [not null, ref: > user.id, note: 'Usuario que vio el subtema.']
+  subtopic_id  integer [not null, ref: > subtopic.id, note: 'Subtema visto.']
+  viewed_at    text [not null, note: 'Primera vez que lo vio (dato de negocio).']
+  created_at   text [not null, default: `CURRENT_TIMESTAMP`, note: 'Creación de la fila.']
+  updated_at   text [not null, default: `CURRENT_TIMESTAMP`, note: 'Última modificación de la fila.']
+
+  indexes {
+    (user_id, subtopic_id) [pk]
+  }
+
+  Note: 'Pasos vistos de cada tema: el mapa muestra "2/3" y la sesión se retoma donde se quedó. Solo local (no se sincroniza).'
+}
+
 Table exam_attempt {
   id          integer [pk, increment, note: 'Identificador del intento (autonumérico).']
   user_id     text [not null, ref: > user.id, note: 'Usuario que hizo el examen.']
   exam_id     integer [not null, ref: > exam.id, note: 'Examen presentado.']
   score       integer [not null, note: 'Porcentaje obtenido (0 a 100). Aprobado si score >= exam.passing_score. Si aprueba, desbloquea el siguiente nivel.']
-  taken_at    text [not null, default: `CURRENT_TIMESTAMP`, note: 'Fecha y hora en que se presentó el examen (dato de negocio).']
+  taken_at    text [not null, note: 'Fecha y hora en que se presentó el examen (dato de negocio).']
   created_at  text [not null, default: `CURRENT_TIMESTAMP`, note: 'Creación de la fila.']
   updated_at  text [not null, default: `CURRENT_TIMESTAMP`, note: 'Última modificación de la fila.']
+
+  indexes {
+    (user_id, exam_id)
+  }
 
   Note: 'Historial de intentos. Permite reintentar un examen reprobado.'
 }
@@ -137,17 +173,18 @@ Table xp_event {
   topic_id    integer [null, ref: > topic.id, note: 'Si el XP vino de completar un tema (+5 XP), aquí va el tema. Si vino de un examen, queda NULL.']
   exam_id     integer [null, ref: > exam.id, note: 'Si el XP vino de aprobar un examen (+100 XP), aquí va el examen. Si vino de un tema, queda NULL.']
   points      integer [not null, note: 'Puntos otorgados en ese momento (5 o 100). Se guarda por si las reglas cambian a futuro.']
-  earned_at   text [not null, default: `CURRENT_TIMESTAMP`, note: 'Fecha y hora en que se ganaron los puntos (dato de negocio).']
-  synced_at   text [null, note: 'NULL = todavía no se sube a Supabase. Al entrar a Participantes se suben los NULL y se les pone la fecha.']
+  earned_at   text [not null, note: 'Fecha y hora en que se ganaron los puntos (dato de negocio).']
+  synced_at   text [null, note: 'NULL = todavía no se sube a Supabase. Al entrar a Ranking se suben los NULL y se les pone la fecha.']
   created_at  text [not null, default: `CURRENT_TIMESTAMP`, note: 'Creación de la fila.']
   updated_at  text [not null, default: `CURRENT_TIMESTAMP`, note: 'Última modificación de la fila.']
 
   indexes {
     (user_id, topic_id) [unique, note: 'Un tema da XP una sola vez por usuario.']
     (user_id, exam_id) [unique, note: 'Un examen da XP una sola vez por usuario.']
+    user_id [note: 'Índice parcial WHERE synced_at IS NULL (pendientes de sincronizar).']
   }
 
-  Note: 'Libro de movimientos de XP. El XP total = SUM(points) del usuario. Una fila debe tener topic_id o exam_id, no ambos.'
+  Note: 'Libro de movimientos de XP. El XP total = SUM(points) del usuario. CHECK: exactamente uno de topic_id / exam_id, y points > 0.'
 }
 
 Table daily_activity {
@@ -159,6 +196,7 @@ Table daily_activity {
 
   indexes {
     (user_id, activity_date) [pk, note: 'Un solo registro por usuario por día.']
+    user_id [note: 'Índice parcial WHERE synced_at IS NULL (pendientes de sincronizar).']
   }
 
   Note: 'Base de la racha: días consecutivos que terminan hoy o ayer. Si ayer no hubo fila, la racha se reinicia.'
