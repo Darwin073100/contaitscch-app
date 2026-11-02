@@ -5,6 +5,7 @@ import type { Clock } from '@/core/clock/Clock';
 import type { AppDatabase } from '../database';
 import {
   contentMeta,
+  levels,
   questionOptions,
   questions,
   subtopics,
@@ -36,6 +37,7 @@ describe('ContentSeeder', () => {
   it('siembra el contenido del bundle y guarda la versión', async () => {
     expect(await seeder.seedIfNeeded(course)).toBe(true);
 
+    expect(db.select().from(levels).all()).toHaveLength(3);
     expect(db.select().from(topics).all()).toHaveLength(6);
     expect(db.select().from(subtopics).all()).toHaveLength(20);
     expect(db.select().from(questions).all()).toHaveLength(10);
@@ -73,7 +75,8 @@ describe('ContentSeeder', () => {
       .run();
 
     const [basico] = course.levels;
-    const firstQuestion = basico.exam.questions[0];
+    const basicoExam = basico.exam!;
+    const firstQuestion = basicoExam.questions[0];
     const updated: Course = {
       version: course.version + 1,
       levels: [
@@ -83,10 +86,10 @@ describe('ContentSeeder', () => {
             t.id === 101 ? { ...t, title: 'Conceptos Básicos (revisado)' } : t,
           ),
           exam: {
-            ...basico.exam,
+            ...basicoExam,
             questions: [
               { ...firstQuestion, options: firstQuestion.options.slice(0, 2) },
-              ...basico.exam.questions.slice(1),
+              ...basicoExam.questions.slice(1),
             ],
           },
         },

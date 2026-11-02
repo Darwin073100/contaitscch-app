@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
 
 import { bootstrap } from '../bootstrap';
+import type { Container } from '../container';
 
-/** true cuando la base local está lista. Si el arranque falla, el error llega al ErrorBoundary. */
-export function useBootstrap(): boolean {
-  const [ready, setReady] = useState(false);
+/** El contenedor cuando la app está lista; null mientras arranca. Si falla, el error llega al ErrorBoundary. */
+export function useBootstrap(): Container | null {
+  const [container, setContainer] = useState<Container | null>(null);
   const [error, setError] = useState<unknown>(null);
 
   useEffect(() => {
-    bootstrap().then(() => setReady(true), setError);
+    bootstrap().then(setContainer, setError);
   }, []);
 
   if (error) throw error;
-  return ready;
+  return container;
 }

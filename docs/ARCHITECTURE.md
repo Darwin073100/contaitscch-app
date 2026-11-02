@@ -559,7 +559,15 @@ Estructura de un nivel. El contenido de cada subtema es una lista de **bloques t
 
 ```json
 {
-  "level": { "id": 1, "name": "Básico", "sortOrder": 1 },
+  "level": {
+    "id": 1,
+    "name": "Básico",
+    "sortOrder": 1,
+    "title": "Introducción a la Contabilidad",
+    "tagline": "Domina los cimientos financieros paso a paso.",
+    "subtitle": "Fundamentos y Cuentas",
+    "description": "Domina la estructura del Activo, Pasivo y Capital…"
+  },
   "topics": [
     {
       "id": 104,

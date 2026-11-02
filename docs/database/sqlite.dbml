@@ -38,6 +38,10 @@ Table level {
   id          integer [pk, note: 'Identificador del nivel (1, 2, 3).']
   name        text [not null, note: 'Nombre visible: Básico, Intermedio o Avanzado.']
   sort_order  integer [not null, unique, note: 'Orden del nivel: 1=Básico, 2=Intermedio, 3=Avanzado. Sirve para saber cuál es el "nivel anterior" al desbloquear.']
+  title       text [not null, note: 'Nombre del módulo en el temario, ej. "Introducción a la Contabilidad".']
+  tagline     text [not null, note: 'Frase corta bajo el nombre del módulo.']
+  subtitle    text [not null, note: 'Subtítulo de la tarjeta de Niveles, ej. "Fundamentos y Cuentas".']
+  description text [not null, note: 'Texto de la tarjeta de Niveles.']
   created_at  text [not null, default: `CURRENT_TIMESTAMP`, note: 'Creación de la fila (cuando se siembra).']
   updated_at  text [not null, default: `CURRENT_TIMESTAMP`, note: 'Última modificación de la fila.']
 

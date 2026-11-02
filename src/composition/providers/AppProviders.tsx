@@ -2,14 +2,13 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createContext, useContext, useState, type ReactNode } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { createContainer, type Container } from '../container';
+import type { Container } from '../container';
 
 const ContainerContext = createContext<Container | null>(null);
 
-type AppProvidersProps = { children: ReactNode };
+type AppProvidersProps = { container: Container; children: ReactNode };
 
-export function AppProviders({ children }: AppProvidersProps) {
-  const [container] = useState(createContainer);
+export function AppProviders({ container, children }: AppProvidersProps) {
   const [queryClient] = useState(() => new QueryClient());
 
   return (

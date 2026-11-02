@@ -61,9 +61,20 @@ function upsertLevel(db: AppDatabase, content: LevelContent, now: string): void 
     .values(level)
     .onConflictDoUpdate({
       target: levels.id,
-      set: { name: excluded(levels.name), sortOrder: excluded(levels.sortOrder), updatedAt: now },
+      set: {
+        name: excluded(levels.name),
+        sortOrder: excluded(levels.sortOrder),
+        title: excluded(levels.title),
+        tagline: excluded(levels.tagline),
+        subtitle: excluded(levels.subtitle),
+        description: excluded(levels.description),
+        updatedAt: now,
+      },
     })
     .run();
+
+  // Nivel en preparación: sin temas ni examen (el esquema garantiza que van juntos)
+  if (!exam) return;
 
   db.insert(topics)
     .values(

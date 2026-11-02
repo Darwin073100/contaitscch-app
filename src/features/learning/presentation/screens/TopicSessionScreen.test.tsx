@@ -2,7 +2,8 @@ import { fireEvent, render, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { createContainer, type Container } from '@/composition/container';
+import type { Container } from '@/composition/container';
+import { createTestContainer } from '@/composition/testing/createTestContainer';
 
 import { TopicSessionScreen } from './TopicSessionScreen';
 
@@ -10,7 +11,8 @@ jest.mock('expo-router', () => ({
   router: { back: jest.fn(), replace: jest.fn(), canGoBack: jest.fn(() => true) },
 }));
 
-// Contenedor real con los repositorios de ejemplo; uno nuevo por prueba (progreso limpio).
+// Contenedor real sobre SQLite en memoria; uno nuevo por prueba con el progreso de la captura:
+// temas 101–103 completados y el primer subtema del 104 visto (se retoma en el paso 2 de 4).
 let mockContainer: Container;
 jest.mock('@/composition/providers/AppProviders', () => ({
   useContainer: () => mockContainer,
@@ -31,9 +33,12 @@ const renderScreen = (topicId: number) =>
 const press = (name: string) => fireEvent.press(screen.getByRole('button', { name }));
 
 describe('TopicSessionScreen', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.clearAllMocks();
-    mockContainer = createContainer();
+    mockContainer = await createTestContainer({
+      completedTopics: [101, 102, 103],
+      viewedSubtopics: [10401],
+    });
   });
 
   it('retoma en el paso 2 con la Cuenta T y la Regla de Oro (captura)', async () => {

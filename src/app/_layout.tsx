@@ -27,8 +27,8 @@ export default function RootLayout() {
     PlusJakartaSans_700Bold,
     PlusJakartaSans_800ExtraBold,
   });
-  const databaseReady = useBootstrap();
-  const ready = (fontsLoaded || fontError !== null) && databaseReady;
+  const container = useBootstrap();
+  const ready = (fontsLoaded || fontError !== null) && container !== null;
 
   useEffect(() => {
     if (ready) SplashScreen.hideAsync();
@@ -37,7 +37,7 @@ export default function RootLayout() {
   if (!ready) return null;
 
   return (
-    <AppProviders>
+    <AppProviders container={container}>
       <StatusBar style="light" />
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.bg } }} />
     </AppProviders>

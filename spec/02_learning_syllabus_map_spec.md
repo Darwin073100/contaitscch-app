@@ -1,6 +1,6 @@
 # 02 — Pestaña Aprender: mapa del temario (`learning`)
 
-- **Estado:** maquetación implementada con datos de ejemplo (`PreviewSyllabusRepository`). Pendiente: datos reales de SQLite y navegación (sección 10).
+- **Estado:** implementado con datos de SQLite (`SqliteSyllabusRepository`). Pendiente: navegación (sección 10).
 - **Fecha:** 1 de noviembre de 2026
 - **Fuente:** `docs/design/examen-pregunta.png` (es el mapa del temario, no una pregunta de examen; ver spec 01, decisión 3), historia "Temario del nivel" de `docs/USER_STORIES.md`, `docs/ARCHITECTURE.md`.
 - **Depende de:** `spec/01_ui_components_spec.md` (kit `@/shared/ui`, sección 6: recetas de `ModuleHeaderCard`, `TopicNode`, `TopicPath`, `ExamNode`, `ContinueTopicBar`).
@@ -56,7 +56,7 @@ src/features/learning/
 │   ├── repositories/SyllabusRepository.ts   # interfaz: findByLevel(levelId)
 │   └── usecases/GetSyllabusUseCase.ts       # (+ .test.ts con repo en memoria)
 ├── data/
-│   └── repositories/PreviewSyllabusRepository.ts   # TEMPORAL: lee de PreviewLearningStore (spec 06)
+│   └── repositories/SqliteSyllabusRepository.ts    # level, topic, topic_progress, subtopic_progress, xp_event
 ├── presentation/
 │   ├── components/  ModuleHeaderCard, TopicPath, TopicNode (+ .test.tsx), ExamNode, ContinueTopicBar
 │   ├── viewmodels/  syllabusMapVm.ts (+ .test.ts), useSyllabusMapViewModel.ts
@@ -172,14 +172,14 @@ Mapa de estado del nodo (reemplaza condicionales de estilo):
 
 ## 10. Pendientes para datos reales
 
-| #   | Pendiente                           | Detalle                                                                                                                                                                                        |
-| --- | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | `SqliteSyllabusRepository`          | Implementa `SyllabusRepository` con `level`, `topic`, `subtopic`, `topic_progress` y `xp_event` (examen aprobado). Reemplaza a `PreviewSyllabusRepository` en `container.ts`; la UI no cambia. |
-| 2   | Usuario de la sesión                | `findByLevel(levelId)` aún no recibe `userId`. Agregarlo cuando exista `SessionStore` (`session.requireUserId()` en el use case).                                                              |
-| 3   | `title` y `description` del nivel   | Agregar a `level` en `contentSchema.ts` (y subir `manifest.version`), o tomarlos de otro lugar. Hoy solo vienen del repositorio de ejemplo.                                                    |
-| 4   | Subtemas vistos (`viewedSubtopics`) | Observación 5 de ARCHITECTURE.md: falta `subtopic_progress` (o `app_state`). Sin ella, el globo dirá siempre "¡Toca para empezar!".                                                            |
-| 5   | Nivel actual                        | `CURRENT_LEVEL_ID = 1` en la pantalla. Debe venir de `levels` (nivel más alto desbloqueado) o de un parámetro al llegar desde Niveles.                                                         |
-| 6   | Navegación                          | **`openTopic` resuelto en spec 06** (`/tema/[topicId]`). `openExam` sigue vacío hasta que exista `ExamIntro`.                                                                                  |
+| #   | Pendiente                           | Detalle                                                                                                                                                      |
+| --- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1   | `SqliteSyllabusRepository`          | **Hecho (paso 1d):** implementa `SyllabusRepository` con `level`, `topic`, `subtopic`, `topic_progress`, `subtopic_progress` y `xp_event` (examen aprobado). |
+| 2   | Usuario de la sesión                | `findByLevel(levelId)` aún no recibe `userId`. Agregarlo cuando exista `SessionStore` (`session.requireUserId()` en el use case).                            |
+| 3   | `title` y `description` del nivel   | Agregar a `level` en `contentSchema.ts` (y subir `manifest.version`), o tomarlos de otro lugar. Hoy solo vienen del repositorio de ejemplo.                  |
+| 4   | Subtemas vistos (`viewedSubtopics`) | Observación 5 de ARCHITECTURE.md: falta `subtopic_progress` (o `app_state`). Sin ella, el globo dirá siempre "¡Toca para empezar!".                          |
+| 5   | Nivel actual                        | `CURRENT_LEVEL_ID = 1` en la pantalla. Debe venir de `levels` (nivel más alto desbloqueado) o de un parámetro al llegar desde Niveles.                       |
+| 6   | Navegación                          | **`openTopic` resuelto en spec 06** (`/tema/[topicId]`). `openExam` sigue vacío hasta que exista `ExamIntro`.                                                |
 
 ## 11. Preguntas abiertas y pulido
 

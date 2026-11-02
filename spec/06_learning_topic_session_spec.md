@@ -1,6 +1,6 @@
 # 06 — Desarrollo de un tema: sesión por pasos (`learning`)
 
-- **Estado:** implementado con datos de ejemplo (`PreviewLearningStore`). El flujo completo funciona en memoria: abrir tema → avanzar por subtemas → completar → el mapa se actualiza. Pendiente: SQLite, XP real y pantalla de tema completado (sección 9).
+- **Estado:** implementado sobre SQLite: abrir tema → avanzar por subtemas → completar (`topic_progress`) → el mapa se actualiza. Pendiente: XP real, guardar el paso visto y pantalla de tema completado (sección 9).
 - **Fecha:** 1 de noviembre de 2026
 - **Fuente:** `docs/design/desarrollo-del-tema.png`; historia "Desarrollo de un tema" de `docs/USER_STORIES.md`; `docs/ARCHITECTURE.md` (CompleteTopicUseCase, contenido JSON por bloques, Registry).
 - **Depende de:** `spec/01_ui_components_spec.md` (kit `@/shared/ui`; recetas de `TAccountCard` y `SubtopicRenderer` en la sección 6) y `spec/02_learning_syllabus_map_spec.md` (mapa del temario, desde donde se abre la sesión).
@@ -52,9 +52,10 @@ src/features/learning/
 │   └── usecases/GetTopicSessionUseCase.ts     # (+ .test.ts)
 │       usecases/CompleteTopicUseCase.ts       # (+ .test.ts)
 ├── data/
-│   ├── preview/PreviewLearningStore.ts        # TEMPORAL: progreso en memoria compartido con el mapa
-│   ├── repositories/PreviewSyllabusRepository.ts  # ahora lee del store
-│   └── repositories/PreviewTopicRepository.ts     # implementa TopicSessionReader + TopicProgressRepository
+│   ├── mappers/blocksMapper.ts                # subtopic.content (JSON) → ContentBlock[]
+│   ├── queries/progressSql.ts                 # fragmentos SQL del progreso del usuario
+│   ├── repositories/SqliteSyllabusRepository.ts
+│   └── repositories/SqliteTopicRepository.ts      # implementa TopicSessionReader + TopicProgressRepository
 ├── presentation/
 │   ├── components/  SubtopicRenderer, TAccountCard, TAccountColumn, TopicStepProgress, TopicStepFooter,
 │   │                tAccountItem.ts (+ .test.ts), contentIcons.ts
@@ -73,7 +74,7 @@ Flujo: mapa (`TopicNode` / `ContinueTopicBar`) → `router.push({ pathname: '/te
 
 ### 5.1 Entidades
 
-`ContentBlock` es el espejo en el dominio de `BlockSchema` (Zod, `core/database/seed/contentSchema.ts`): el dominio no puede importar `core/database` (regla de ESLint). `PreviewLearningStore.session()` asigna `Block[]` a `ContentBlock[]`, así que si los dos tipos se separan **deja de compilar**. El repositorio SQLite debe conservar esa asignación directa.
+`ContentBlock` es el espejo en el dominio de `BlockSchema` (Zod, `core/database/seed/contentSchema.ts`): el dominio no puede importar `core/database` (regla de ESLint). `toContentBlocks()` (`data/mappers/blocksMapper.ts`) asigna `Block[]` a `ContentBlock[]`, así que si los dos tipos se separan **deja de compilar**.
 
 ```ts
 type TopicSession = {
@@ -146,7 +147,7 @@ Iconos del contenido (`contentIcons.ts`): los JSON usan nombres cortos (`scale`,
 
 ## 7. Datos de ejemplo
 
-- `PreviewLearningStore` (una instancia por contenedor) guarda el progreso de los 6 temas del nivel Básico y lo comparten `PreviewSyllabusRepository` y `PreviewTopicRepository`. Completar el tema 104 lo marca en el mapa y vuelve activo el 105. Se reinicia al recargar la app.
+- El progreso vive en SQLite (`topic_progress`, `subtopic_progress`) y sobrevive al recargar la app. Con la base nueva solo el tema 101 está activo.
 - El tema 104 quedó con `viewedSubtopics: 1` y 4 subtemas: la sesión abre en el **paso 2 de 4**, el de la captura (el globo del mapa ahora dice "1/4").
 - El contenido sale de `src/core/database/seed/content/basico.json` (vía `loadCourse()`). Tema 104, subtemas: 10401 "¿Qué es una cuenta contable?", 10402 la captura, 10403 "El saldo de una cuenta", 10404 "Registra tu primera operación" (compra de mobiliario en efectivo).
 - Los 6 temas del nivel Básico tienen contenido (borrador de 101–103, 105 y 106 pendiente de revisión docente).
@@ -160,19 +161,19 @@ Iconos del contenido (`contentIcons.ts`): los JSON usan nombres cortos (`scale`,
 | `gamification/domain/policies/XpRewardPolicy.ts` | **Nuevo:** `XP_REWARD = { topic: 5, exam: 100 }`, exportado por `gamification/index.ts`. |
 | `core/database/seed/contentSchema.ts`            | Exporta el tipo `TopicContent`.                                                          |
 | `learning/.../useSyllabusMapViewModel.ts`        | `openTopic` navega a `/tema/[topicId]` (pendiente 6 de spec 02).                         |
-| `composition/container.ts`                       | Un `PreviewLearningStore` compartido; registra `getTopicSession` y `completeTopic`.      |
+| `composition/container.ts`                       | `SqliteTopicRepository`; registra `getTopicSession` y `completeTopic`.                   |
 
 ## 9. Pendientes
 
 | #   | Pendiente                   | Detalle                                                                                                                                                                                                                     |
 | --- | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1   | `CompleteTopic` completo    | Con SQLite: `UnitOfWork.run(tx => …)` con `markCompleted` + `AwardXp` (+5, `synced_at NULL`) + `RecordDailyActivity`, y publicar `TopicCompleted` (ARCHITECTURE.md). Hoy solo marca el progreso en memoria; **no suma XP**. |
-| 2   | `SqliteTopicRepository`     | Implementa `TopicSessionReader` (`topic`, `subtopic.content` con `JSON.parse` → `ContentBlock[]`) y `TopicProgressRepository` (`topic_progress`). Reemplaza a `PreviewTopicRepository` y al store en `container.ts`.        |
+| 2   | `SqliteTopicRepository`     | **Hecho (paso 1d):** `TopicSessionReader` y `TopicProgressRepository` sobre `topic`, `subtopic`, `topic_progress` y `subtopic_progress`.                                                                                    |
 | 3   | Subtemas vistos             | Guardar el paso al avanzar (`subtopic_progress` o `app_state`, observación 5 de ARCHITECTURE.md). Hoy `viewedSubtopics` solo se lee; al salir a medio tema no se recuerda el avance.                                        |
 | 4   | Pantalla "Tema completado"  | `TopicCompleted` (+5 XP, racha) de ARCHITECTURE.md; no hay captura. Hoy se regresa directo al mapa.                                                                                                                         |
 | 5   | Temas bloqueados por enlace | Validar con `TopicLockPolicy` si se abre `/tema/<id>` directo.                                                                                                                                                              |
 | 6   | Contenido real              | **Hecho:** el tema 104 está en `basico.json` junto con un borrador de los demás temas y del examen 1. Falta la revisión docente.                                                                                            |
-| 7   | Usuario de la sesión        | Los repositorios no reciben `userId` todavía (igual que spec 02, pendiente 2).                                                                                                                                              |
+| 7   | Usuario de la sesión        | Los repositorios leen el `userId` de `SessionStore` (hoy el usuario local temporal).                                                                                                                                        |
 | 8   | Animaciones                 | Transición entre pasos y barra que se llena (Reanimated), sin cambiar props.                                                                                                                                                |
 
 ## 10. Accesibilidad

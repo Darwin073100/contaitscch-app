@@ -1,6 +1,6 @@
 # 03 — Pestaña Niveles: menú de inicio y niveles (`home`, `levels`, `gamification`)
 
-- **Estado:** maquetación implementada con datos de ejemplo (`Preview*Repository`). Pendiente: datos reales de SQLite, sesión y navegación (sección 9).
+- **Estado:** implementado con datos de SQLite (`SqliteLevelRepository`, `SqliteStatsRepository`). Pendiente: sesión real y navegación (sección 9).
 - **Fecha:** 1 de noviembre de 2026
 - **Fuente:** `docs/design/menu-inicio-niveles.png`; historias "Menú de inicio" y "Niveles de contabilidad" de `docs/USER_STORIES.md`; `docs/ARCHITECTURE.md` ("Niveles → Home/LevelsList", reglas de negocio).
 - **Depende de:** `spec/01_ui_components_spec.md` (kit `@/shared/ui`; receta de `LevelCard` en la sección 6). Sin cambios en `shared/ui`: todo se armó con componentes existentes.
@@ -54,7 +54,7 @@ src/features/levels/
 ├── domain/policies/LevelUnlockPolicy.ts         # resolveLevelStatuses, levelProgress, careerProgress (+ test)
 ├── domain/repositories/LevelRepository.ts       # getProgress()
 ├── domain/usecases/GetLevelsOverviewUseCase.ts  # (+ test)
-├── data/repositories/PreviewLevelRepository.ts  # TEMPORAL
+├── data/repositories/SqliteLevelRepository.ts   # level, topic, topic_progress, xp_event
 ├── presentation/viewmodels/levelCardVm.ts       # toLevelCardVm (+ test)
 ├── presentation/components/LevelCard.tsx        # (+ test)
 └── index.ts                                     # LevelCard, toLevelCardVm, GetLevelsOverviewUseCase, tipos
@@ -64,7 +64,7 @@ src/features/gamification/
 ├── domain/policies/StreakCalculator.ts          # calculateStreak, shiftDay (+ test)
 ├── domain/repositories/StatsReaders.ts          # XpReader, ActivityReader (solo lectura)
 ├── domain/usecases/GetUserStatsUseCase.ts       # usa Clock.todayLocal() (+ test)
-├── data/repositories/PreviewStatsRepository.ts  # TEMPORAL
+├── data/repositories/SqliteStatsRepository.ts   # xp_event, daily_activity
 └── index.ts
 
 src/features/home/                               # solo presentation (no tiene repositorio propio)
@@ -130,15 +130,15 @@ Aviso: `next` → `Callout plain accent information-outline`; `later` → `Callo
 
 ## 9. Pendientes
 
-| #   | Pendiente                        | Detalle                                                                                                                                                                                                  |
-| --- | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | `SqliteLevelRepository`          | `getProgress()` con la consulta "Nivel desbloqueado" de ARCHITECTURE.md (`level`, `topic`, `topic_progress`, `xp_event` del examen). Reemplaza a `PreviewLevelRepository` en el contenedor.              |
-| 2   | Repositorios SQLite de XP/racha  | `XpReader` sobre `xp_event` (`SUM(points)`; hoy = `earned_at` convertido a día local) y `ActivityReader` sobre `daily_activity`. Reemplazan a `PreviewStatsRepository`.                                  |
-| 3   | Textos del nivel en el contenido | `subtitle` y `description` (aquí) y `title` del módulo (spec 02) no existen en `contentSchema.ts`. Propuesta: `level: { id, name, sortOrder, title, subtitle, description }` y subir `manifest.version`. |
-| 4   | Usuario de la sesión             | Los repositorios no reciben `userId`; el saludo usa "Contador". Conectar con `SessionStore` (feature `auth`).                                                                                            |
-| 5   | Abrir un nivel concreto          | "Continuar/Repasar Nivel" lleva a Aprender, que siempre muestra el nivel 1 (`CURRENT_LEVEL_ID` en spec 02). Pasar `levelId` a la ruta `/` o usar `overview.currentLevel`.                                |
-| 6   | Acerca de                        | **Resuelto en spec 04:** "Acerca de" e "Introducción a la app" abren `/acerca-de` (feature `onboarding`).                                                                                                |
-| 7   | `levelTone`                      | Spec 01 sugiere un mapa de tono por nivel para badges del ranking; se creará en `levels` cuando `leaderboard` lo necesite.                                                                               |
+| #   | Pendiente                        | Detalle                                                                                                                                                                                 |
+| --- | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | `SqliteLevelRepository`          | **Hecho (paso 1d):** `getProgress()` con `level`, `topic`, `topic_progress` y el `xp_event` del examen.                                                                                 |
+| 2   | Repositorios SQLite de XP/racha  | **Hecho (paso 1d):** `SqliteStatsRepository`: `SUM(points)`, XP de hoy por rango del día local y `daily_activity`. Muestra 0 hasta que completar un tema otorgue XP.                    |
+| 3   | Textos del nivel en el contenido | **Hecho (paso 1d):** `level: { id, name, sortOrder, title, tagline, subtitle, description }` en los JSON, columnas en `level` (migración 0001) y `manifest.version` 2.                  |
+| 4   | Usuario de la sesión             | Los repositorios leen el `userId` de `SessionStore`; hoy es el usuario local temporal (`composition/devSession.ts`). El saludo usa "Contador". Pendiente: sesión real (feature `auth`). |
+| 5   | Abrir un nivel concreto          | "Continuar/Repasar Nivel" lleva a Aprender, que siempre muestra el nivel 1 (`CURRENT_LEVEL_ID` en spec 02). Pasar `levelId` a la ruta `/` o usar `overview.currentLevel`.               |
+| 6   | Acerca de                        | **Resuelto en spec 04:** "Acerca de" e "Introducción a la app" abren `/acerca-de` (feature `onboarding`).                                                                               |
+| 7   | `levelTone`                      | Spec 01 sugiere un mapa de tono por nivel para badges del ranking; se creará en `levels` cuando `leaderboard` lo necesite.                                                              |
 
 ## 10. Pruebas
 

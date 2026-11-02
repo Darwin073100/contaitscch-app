@@ -1,4 +1,6 @@
+import avanzado from './content/avanzado.json';
 import basico from './content/basico.json';
+import intermedio from './content/intermedio.json';
 import manifestJson from './content/manifest.json';
 import {
   LevelContentSchema,
@@ -11,6 +13,8 @@ import {
 // un nivel nuevo = su archivo en manifest.json y una entrada aquí.
 const levelFiles: Record<string, unknown> = {
   'basico.json': basico,
+  'intermedio.json': intermedio,
+  'avanzado.json': avanzado,
 };
 
 export type Course = { version: number; levels: LevelContent[] };

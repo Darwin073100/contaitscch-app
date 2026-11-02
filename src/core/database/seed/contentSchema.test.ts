@@ -1,7 +1,19 @@
 import { LevelContentSchema, validateCourse, type LevelContent } from './contentSchema';
 
-const validLevel = (): LevelContent => ({
-  level: { id: 1, name: 'Básico', sortOrder: 1 },
+type LevelWithExam = LevelContent & { exam: NonNullable<LevelContent['exam']> };
+
+const levelInfo = (id: number, name: string) => ({
+  id,
+  name,
+  sortOrder: id,
+  title: `Módulo ${name}`,
+  tagline: `Frase del nivel ${name}.`,
+  subtitle: `Subtítulo ${name}`,
+  description: `Descripción del nivel ${name}.`,
+});
+
+const validLevel = (): LevelWithExam => ({
+  level: levelInfo(1, 'Básico'),
   topics: [
     {
       id: 101,
@@ -70,6 +82,24 @@ describe('LevelContentSchema', () => {
     level.topics[0].subtopics[0].blocks.push({ type: 'video', url: 'x' });
 
     expect(LevelContentSchema.safeParse(level).success).toBe(false);
+  });
+});
+
+describe('nivel en preparación', () => {
+  it('acepta un nivel sin temas ni examen', () => {
+    expect(
+      LevelContentSchema.safeParse({ level: levelInfo(2, 'Intermedio'), topics: [] }).success,
+    ).toBe(true);
+  });
+
+  it('rechaza un nivel con temas pero sin examen', () => {
+    const { exam: _exam, ...withoutExam } = validLevel();
+
+    expect(LevelContentSchema.safeParse(withoutExam).success).toBe(false);
+  });
+
+  it('rechaza un nivel con examen pero sin temas', () => {
+    expect(LevelContentSchema.safeParse({ ...validLevel(), topics: [] }).success).toBe(false);
   });
 });
 

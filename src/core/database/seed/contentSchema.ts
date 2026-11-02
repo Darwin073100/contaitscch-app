@@ -70,13 +70,30 @@ export const ExamSchema = z.object({
 
 export const LevelContentSchema = z
   .object({
-    level: z.object({ id, name: text, sortOrder }),
-    topics: z.array(TopicSchema).min(1),
-    exam: ExamSchema,
+    level: z.object({
+      id,
+      name: text,
+      sortOrder,
+      /** Nombre del módulo en el temario: "Introducción a la Contabilidad". */
+      title: text,
+      /** Frase corta bajo el nombre del módulo: "Domina los cimientos financieros paso a paso." */
+      tagline: text,
+      /** Tarjeta de Niveles: "Fundamentos y Cuentas". */
+      subtitle: text,
+      /** Texto de la tarjeta de Niveles. */
+      description: text,
+    }),
+    // Un nivel "en preparación" no tiene temas ni examen: solo aparece bloqueado en Niveles
+    topics: z.array(TopicSchema),
+    exam: ExamSchema.optional(),
   })
   .superRefine((content, ctx) => {
     const issue = (message: string) => ctx.addIssue({ code: 'custom', message });
     const levelId = content.level.id;
+
+    if (content.topics.length > 0 !== (content.exam !== undefined)) {
+      issue(`Nivel ${levelId}: con temas debe tener examen, y sin temas no debe tenerlo`);
+    }
 
     const checkSequence = (label: string, orders: number[]) => {
       const sorted = [...orders].sort((a, b) => a - b);
@@ -104,6 +121,7 @@ export const LevelContentSchema = z
     }
 
     const exam = content.exam;
+    if (!exam) return;
     if (exam.id !== levelId)
       issue(`Examen ${exam.id}: el id debe ser igual al del nivel (${levelId})`);
     checkSequence(
@@ -142,6 +160,7 @@ export function validateCourse(levels: LevelContent[]): string[] {
   for (const l of levels) {
     unique('Nivel', l.level.id);
     unique('sortOrder de nivel', l.level.sortOrder);
+    if (!l.exam) continue;
     unique('Examen', l.exam.id);
     l.exam.questions.forEach((q) => q.options.forEach((o) => unique('Opción', o.id)));
   }

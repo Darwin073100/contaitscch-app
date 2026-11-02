@@ -1,0 +1,12 @@
+{
+  "level": {
+    "id": 2,
+    "name": "Intermedio",
+    "sortOrder": 2,
+    "title": "Estados Financieros",
+    "tagline": "Convierte tus registros en información para decidir.",
+    "subtitle": "Estados Financieros e IVA",
+    "description": "Elabora Balance General y Estado de Resultados, y calcula el IVA de cada operación."
+  },
+  "topics": []
+}
