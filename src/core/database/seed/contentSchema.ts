@@ -125,6 +125,7 @@ export const ManifestSchema = z.object({
 });
 
 export type Block = z.infer<typeof BlockSchema>;
+export type TopicContent = z.infer<typeof TopicSchema>;
 export type LevelContent = z.infer<typeof LevelContentSchema>;
 export type Manifest = z.infer<typeof ManifestSchema>;
 

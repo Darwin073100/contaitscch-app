@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useEffect, useRef, type ComponentRef, type ReactNode } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { tv, type VariantProps } from 'tailwind-variants';
@@ -32,6 +32,8 @@ type ScreenProps = VariantProps<typeof screen> & {
   safeBottom?: boolean;
   /** Formularios: el contenido se recorre para que el teclado no tape el campo activo. */
   keyboardAvoiding?: boolean;
+  /** Al cambiar este valor el contenido vuelve arriba (pasos de una sesión de tema). */
+  scrollResetKey?: string | number;
 };
 
 export function Screen({
@@ -42,15 +44,22 @@ export function Screen({
   scroll = false,
   safeBottom = false,
   keyboardAvoiding = false,
+  scrollResetKey,
 }: ScreenProps) {
   const insets = useSafeAreaInsets();
+  const scrollRef = useRef<ComponentRef<typeof ScrollView>>(null);
   const s = screen({ align });
   const bottomInset = safeBottom ? insets.bottom : 0;
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ y: 0, animated: false });
+  }, [scrollResetKey]);
 
   const content = (
     <>
       {scroll ? (
         <ScrollView
+          ref={scrollRef}
           contentContainerClassName={s.content()}
           contentContainerStyle={footer ? undefined : { paddingBottom: 32 + bottomInset }}
           showsVerticalScrollIndicator={false}

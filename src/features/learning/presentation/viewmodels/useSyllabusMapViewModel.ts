@@ -1,4 +1,4 @@
-import { useFocusEffect } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 
 import { useContainer } from '@/composition/providers/AppProviders';
@@ -32,8 +32,12 @@ export function useSyllabusMapViewModel(levelId: number) {
     }, [learning, levelId]),
   );
 
-  // TopicSession y ExamIntro aún no existen: se conectan en sus specs.
-  const openTopic = useCallback((_topicId: number) => {}, []);
+  const openTopic = useCallback(
+    (topicId: number) =>
+      router.push({ pathname: '/tema/[topicId]', params: { topicId: String(topicId) } }),
+    [],
+  );
+  // ExamIntro aún no existe: se conecta en su spec.
   const openExam = useCallback(() => {}, []);
 
   return { state, openTopic, openExam };

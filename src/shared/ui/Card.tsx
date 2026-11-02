@@ -14,6 +14,8 @@ const card = tv({
     },
     padding: { none: 'p-0', sm: 'p-3', md: 'p-4', lg: 'p-5' },
     locked: { true: 'opacity-60' },
+    // Reparte el ancho de una Row (columnas DEBE / HABER de la Cuenta T)
+    grow: { true: 'flex-1' },
     pressable: { true: 'active:opacity-80' },
   },
   defaultVariants: { tone: 'default', padding: 'md' },
@@ -25,11 +27,11 @@ type CardProps = Omit<VariantProps<typeof card>, 'pressable'> &
   };
 
 /** Contenedor base. Con `onPress` se vuelve un botón accesible; sin él es una View. */
-export function Card({ tone, padding, locked, onPress, children, ...a11y }: CardProps) {
+export function Card({ tone, padding, locked, grow, onPress, children, ...a11y }: CardProps) {
   if (onPress) {
     return (
       <Pressable
-        className={card({ tone, padding, locked, pressable: true })}
+        className={card({ tone, padding, locked, grow, pressable: true })}
         onPress={onPress}
         accessibilityRole="button"
         accessibilityState={{ disabled: Boolean(locked) }}
@@ -40,7 +42,7 @@ export function Card({ tone, padding, locked, onPress, children, ...a11y }: Card
     );
   }
   return (
-    <View className={card({ tone, padding, locked })} {...a11y}>
+    <View className={card({ tone, padding, locked, grow })} {...a11y}>
       {children}
     </View>
   );

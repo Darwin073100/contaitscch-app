@@ -56,7 +56,7 @@ src/features/learning/
 │   ├── repositories/SyllabusRepository.ts   # interfaz: findByLevel(levelId)
 │   └── usecases/GetSyllabusUseCase.ts       # (+ .test.ts con repo en memoria)
 ├── data/
-│   └── repositories/PreviewSyllabusRepository.ts   # TEMPORAL: datos de la captura
+│   └── repositories/PreviewSyllabusRepository.ts   # TEMPORAL: lee de PreviewLearningStore (spec 06)
 ├── presentation/
 │   ├── components/  ModuleHeaderCard, TopicPath, TopicNode (+ .test.tsx), ExamNode, ContinueTopicBar
 │   ├── viewmodels/  syllabusMapVm.ts (+ .test.ts), useSyllabusMapViewModel.ts
@@ -179,7 +179,7 @@ Mapa de estado del nodo (reemplaza condicionales de estilo):
 | 3   | `title` y `description` del nivel   | Agregar a `level` en `contentSchema.ts` (y subir `manifest.version`), o tomarlos de otro lugar. Hoy solo vienen del repositorio de ejemplo.                                                    |
 | 4   | Subtemas vistos (`viewedSubtopics`) | Observación 5 de ARCHITECTURE.md: falta `subtopic_progress` (o `app_state`). Sin ella, el globo dirá siempre "¡Toca para empezar!".                                                            |
 | 5   | Nivel actual                        | `CURRENT_LEVEL_ID = 1` en la pantalla. Debe venir de `levels` (nivel más alto desbloqueado) o de un parámetro al llegar desde Niveles.                                                         |
-| 6   | Navegación                          | `openTopic` / `openExam` están vacíos: conectar con `TopicSession` y `ExamIntro` cuando existan sus rutas.                                                                                     |
+| 6   | Navegación                          | **`openTopic` resuelto en spec 06** (`/tema/[topicId]`). `openExam` sigue vacío hasta que exista `ExamIntro`.                                                                                  |
 
 ## 11. Preguntas abiertas y pulido
 
@@ -198,4 +198,4 @@ Mapa de estado del nodo (reemplaza condicionales de estilo):
 | `presentation/viewmodels/syllabusMapVm.test.ts` | Textos de la tarjeta, globo, destino de la barra (tema / examen / sin barra)                    |
 | `presentation/components/TopicNode.test.tsx`    | Activo responde al toque y muestra el globo; bloqueado deshabilitado                            |
 
-Verificación manual en Expo (pestaña Aprender): tarjeta con 50%, temas 1–3 verdes, tema 4 cian con halo y globo "2/3", 5–6 con candado, examen con candado, barra inferior sobre las pestañas, etiquetas largas truncadas.
+Verificación manual en Expo (pestaña Aprender): tarjeta con 50%, temas 1–3 verdes, tema 4 cian con halo y globo "1/4" (spec 06 cambió el ejemplo para que la sesión abra en el paso 2), 5–6 con candado, examen con candado, barra inferior sobre las pestañas, etiquetas largas truncadas.
