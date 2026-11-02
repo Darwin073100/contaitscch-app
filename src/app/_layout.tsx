@@ -14,6 +14,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 
 import { AppProviders } from '@/composition/providers/AppProviders';
+import { useBootstrap } from '@/composition/providers/useBootstrap';
 import { colors } from '@/shared/theme';
 
 SplashScreen.preventAutoHideAsync();
@@ -26,7 +27,8 @@ export default function RootLayout() {
     PlusJakartaSans_700Bold,
     PlusJakartaSans_800ExtraBold,
   });
-  const ready = fontsLoaded || fontError !== null;
+  const databaseReady = useBootstrap();
+  const ready = (fontsLoaded || fontError !== null) && databaseReady;
 
   useEffect(() => {
     if (ready) SplashScreen.hideAsync();
