@@ -1,10 +1,11 @@
+import { loadCourse } from '@/core/database/seed/loadCourse';
+
 import type { SyllabusLevel, SyllabusSource, TopicProgress } from '../../domain/entities/Syllabus';
 import type { TopicSessionSource } from '../../domain/entities/TopicSession';
-import { previewTopicContents } from './previewTopicContent';
 
 // Temporal: progreso en memoria compartido por los repositorios de ejemplo, para que completar un
 // tema en la sesión se vea en el mapa al regresar. Se reinicia al recargar la app.
-// Se reemplaza por SQLite (topic, subtopic, topic_progress): spec 02 §10 y spec 06 §9.
+// El contenido ya sale de basico.json; el progreso se reemplaza por SQLite (topic_progress).
 
 const level: SyllabusLevel = {
   id: 1,
@@ -70,6 +71,7 @@ export class PreviewLearningStore {
   // Copia por instancia: cada contenedor (y cada prueba) empieza con el mismo progreso.
   private readonly topics = initialTopics.map((t) => ({ ...t }));
   private readonly examPassed = false;
+  private readonly contents = loadCourse().levels.flatMap((l) => l.topics);
 
   syllabus(levelId: number): SyllabusSource | null {
     if (levelId !== level.id) return null;
@@ -78,7 +80,7 @@ export class PreviewLearningStore {
 
   session(topicId: number): TopicSessionSource | null {
     const progress = this.topics.find((t) => t.id === topicId);
-    const content = previewTopicContents.find((t) => t.id === topicId);
+    const content = this.contents.find((t) => t.id === topicId);
     if (!progress || !content) return null;
     return {
       level: { id: level.id, name: level.name, sortOrder: level.sortOrder },

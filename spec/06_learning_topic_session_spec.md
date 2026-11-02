@@ -53,7 +53,6 @@ src/features/learning/
 │       usecases/CompleteTopicUseCase.ts       # (+ .test.ts)
 ├── data/
 │   ├── preview/PreviewLearningStore.ts        # TEMPORAL: progreso en memoria compartido con el mapa
-│   ├── preview/previewTopicContent.ts         # TEMPORAL: tema 104 en formato JSON del curso (+ .test.ts)
 │   ├── repositories/PreviewSyllabusRepository.ts  # ahora lee del store
 │   └── repositories/PreviewTopicRepository.ts     # implementa TopicSessionReader + TopicProgressRepository
 ├── presentation/
@@ -149,8 +148,8 @@ Iconos del contenido (`contentIcons.ts`): los JSON usan nombres cortos (`scale`,
 
 - `PreviewLearningStore` (una instancia por contenedor) guarda el progreso de los 6 temas del nivel Básico y lo comparten `PreviewSyllabusRepository` y `PreviewTopicRepository`. Completar el tema 104 lo marca en el mapa y vuelve activo el 105. Se reinicia al recargar la app.
 - El tema 104 quedó con `viewedSubtopics: 1` y 4 subtemas: la sesión abre en el **paso 2 de 4**, el de la captura (el globo del mapa ahora dice "1/4").
-- `previewTopicContent.ts`: el tema 104 completo en el formato de los JSON del curso (`TopicContent`), validado por su prueba con `TopicSchema` y la convención de ids. Subtemas: 10401 "¿Qué es una cuenta contable?", 10402 la captura, 10403 "El saldo de una cuenta", 10404 "Registra tu primera operación" (compra de mobiliario en efectivo).
-- Solo el tema 104 tiene contenido: los demás muestran "Este tema todavía no tiene contenido disponible." hasta que exista `basico.json`.
+- El contenido sale de `src/core/database/seed/content/basico.json` (vía `loadCourse()`). Tema 104, subtemas: 10401 "¿Qué es una cuenta contable?", 10402 la captura, 10403 "El saldo de una cuenta", 10404 "Registra tu primera operación" (compra de mobiliario en efectivo).
+- Los 6 temas del nivel Básico tienen contenido (borrador de 101–103, 105 y 106 pendiente de revisión docente).
 
 ## 8. Cambios en `shared` y otras features
 
@@ -172,7 +171,7 @@ Iconos del contenido (`contentIcons.ts`): los JSON usan nombres cortos (`scale`,
 | 3   | Subtemas vistos             | Guardar el paso al avanzar (`subtopic_progress` o `app_state`, observación 5 de ARCHITECTURE.md). Hoy `viewedSubtopics` solo se lee; al salir a medio tema no se recuerda el avance.                                        |
 | 4   | Pantalla "Tema completado"  | `TopicCompleted` (+5 XP, racha) de ARCHITECTURE.md; no hay captura. Hoy se regresa directo al mapa.                                                                                                                         |
 | 5   | Temas bloqueados por enlace | Validar con `TopicLockPolicy` si se abre `/tema/<id>` directo.                                                                                                                                                              |
-| 6   | Contenido real              | Mover el tema 104 a `basico.json` y escribir los demás temas (agente `content-author`); borrar `previewTopicContent.ts`.                                                                                                    |
+| 6   | Contenido real              | **Hecho:** el tema 104 está en `basico.json` junto con un borrador de los demás temas y del examen 1. Falta la revisión docente.                                                                                            |
 | 7   | Usuario de la sesión        | Los repositorios no reciben `userId` todavía (igual que spec 02, pendiente 2).                                                                                                                                              |
 | 8   | Animaciones                 | Transición entre pasos y barra que se llena (Reanimated), sin cambiar props.                                                                                                                                                |
 
@@ -189,7 +188,6 @@ Iconos del contenido (`contentIcons.ts`): los JSON usan nombres cortos (`scale`,
 | -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | `domain/usecases/GetTopicSessionUseCase.test.ts`   | Orden de subtemas, XP en juego, retomar (y tope), repaso sin XP, `TOPIC_NOT_FOUND`                               |
 | `domain/usecases/CompleteTopicUseCase.test.ts`     | Marca la primera vez, idempotente después, tema inexistente                                                      |
-| `data/preview/previewTopicContent.test.ts`         | El contenido de ejemplo cumple `TopicSchema` y la convención de ids                                              |
 | `presentation/components/tAccountItem.test.ts`     | Signos `+`, `−`, `-`, `–` y sin signo                                                                            |
 | `presentation/viewmodels/topicSessionVm.test.ts`   | Textos del paso 2 de 4, primer paso sin "<", último paso, repaso, recorte de rango                               |
 | `presentation/screens/TopicSessionScreen.test.tsx` | Abre en el paso 2 con Cuenta T y Regla de Oro; avanzar/regresar; completar actualiza el mapa; tema sin contenido |

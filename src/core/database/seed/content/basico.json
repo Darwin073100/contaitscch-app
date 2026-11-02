@@ -1,0 +1,599 @@
+{
+  "level": { "id": 1, "name": "Básico", "sortOrder": 1 },
+  "topics": [
+    {
+      "id": 101,
+      "title": "Conceptos Básicos",
+      "sortOrder": 1,
+      "subtopics": [
+        {
+          "id": 10101,
+          "title": "¿Qué es la contabilidad?",
+          "sortOrder": 1,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "La **contabilidad** es la técnica que registra, clasifica y resume las operaciones de una entidad para producir **información financiera** útil en la toma de decisiones."
+            },
+            {
+              "type": "paragraph",
+              "text": "Cada compra, venta, pago o cobro es una **operación**. La contabilidad la anota con orden para saber qué tiene la empresa, qué debe y cómo le va."
+            },
+            {
+              "type": "example",
+              "title": "Ejemplo",
+              "text": "La papelería **El Lápiz Feliz** vende cuadernos por $3,000 al contado. La contabilidad registra que entró dinero y que se obtuvo un **ingreso**."
+            }
+          ]
+        },
+        {
+          "id": 10102,
+          "title": "La entidad económica y sus usuarios",
+          "sortOrder": 2,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "La **entidad económica** es la organización que realiza las operaciones: una tienda, un despacho o una fábrica. Su contabilidad es **independiente** de la de sus dueños."
+            },
+            {
+              "type": "paragraph",
+              "text": "La información financiera la usan los **dueños**, los **bancos** que prestan dinero, los **proveedores**, el **SAT** y la propia **administración**."
+            },
+            {
+              "type": "callout",
+              "icon": "lightbulb",
+              "title": "Para recordar",
+              "text": "Los gastos personales del dueño **no** se registran en la contabilidad del negocio."
+            }
+          ]
+        },
+        {
+          "id": 10103,
+          "title": "Los estados financieros básicos",
+          "sortOrder": 3,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Los **estados financieros** son los reportes que resumen la contabilidad. Los dos principales para empezar son el **Estado de Situación Financiera** (Balance General) y el **Estado de Resultados**."
+            },
+            {
+              "type": "paragraph",
+              "text": "El **Balance General** muestra lo que la empresa tiene y debe en una fecha. El **Estado de Resultados** muestra si en un periodo hubo **utilidad** o **pérdida**."
+            },
+            {
+              "type": "example",
+              "title": "Ejemplo",
+              "text": "Si en el mes los ingresos fueron $40,000 y los gastos $28,000, el Estado de Resultados muestra una **utilidad de $12,000**."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 102,
+      "title": "Activo, Pasivo y Capital",
+      "sortOrder": 2,
+      "subtopics": [
+        {
+          "id": 10201,
+          "title": "El Activo",
+          "sortOrder": 1,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "El **Activo** son los recursos que controla la empresa y de los que espera obtener un beneficio: **Caja**, **Bancos**, **Clientes**, **Mercancías**, **Mobiliario y Equipo**."
+            },
+            {
+              "type": "example",
+              "title": "Ejemplo",
+              "text": "Una cafetería tiene $8,000 en caja, $25,000 en el banco y una cafetera de $18,000. Su activo total es **$51,000**."
+            }
+          ]
+        },
+        {
+          "id": 10202,
+          "title": "El Pasivo",
+          "sortOrder": 2,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "El **Pasivo** son las obligaciones que la empresa tiene con terceros y que pagará con sus recursos: **Proveedores**, **Acreedores diversos**, **Préstamos bancarios**, **Impuestos por pagar**."
+            },
+            {
+              "type": "example",
+              "title": "Ejemplo",
+              "text": "La cafetería compró café a crédito por $6,000 y debe $10,000 de un préstamo. Su pasivo total es **$16,000**."
+            }
+          ]
+        },
+        {
+          "id": 10203,
+          "title": "El Capital y la ecuación contable",
+          "sortOrder": 3,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "El **Capital Contable** es la parte del activo que pertenece a los dueños: lo que aportaron más las utilidades que ha generado el negocio."
+            },
+            {
+              "type": "callout",
+              "icon": "scale",
+              "title": "Ecuación contable",
+              "text": "**Activo = Pasivo + Capital.** Todo lo que tiene la empresa fue financiado por terceros (pasivo) o por los dueños (capital)."
+            },
+            {
+              "type": "example",
+              "title": "Ejemplo",
+              "text": "Activo $51,000 y pasivo $16,000: el capital de la cafetería es **$35,000**, porque $51,000 = $16,000 + $35,000."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 103,
+      "title": "La Partida Doble",
+      "sortOrder": 3,
+      "subtopics": [
+        {
+          "id": 10301,
+          "title": "El principio de la partida doble",
+          "sortOrder": 1,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "La **partida doble** dice que toda operación afecta por lo menos **dos cuentas**: una recibe un valor y otra lo entrega, siempre por la misma cantidad."
+            },
+            {
+              "type": "callout",
+              "icon": "scale",
+              "title": "Regla de Oro",
+              "text": "A todo cargo corresponde un abono por el mismo importe. Así la ecuación contable siempre se mantiene en equilibrio."
+            }
+          ]
+        },
+        {
+          "id": 10302,
+          "title": "Cargar y abonar",
+          "sortOrder": 2,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "**Cargar** es anotar una cantidad en el lado izquierdo de una cuenta, llamado **Debe**. **Abonar** es anotarla en el lado derecho, llamado **Haber**."
+            },
+            {
+              "type": "callout",
+              "icon": "info",
+              "title": "Ojo",
+              "text": "En contabilidad, **cargo** y **abono** solo indican el **lado** de la cuenta; no significan por sí solos aumentar ni disminuir."
+            }
+          ]
+        },
+        {
+          "id": 10303,
+          "title": "Reglas del cargo y del abono",
+          "sortOrder": 3,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Que un cargo aumente o disminuya una cuenta depende de su naturaleza. Las cuentas de **Activo** aumentan con cargos; las de **Pasivo** y **Capital** aumentan con abonos."
+            },
+            {
+              "type": "t_account",
+              "debit": {
+                "label": "Se carga cuando",
+                "items": ["+ Activo", "− Pasivo", "− Capital"]
+              },
+              "credit": {
+                "label": "Se abona cuando",
+                "items": ["− Activo", "+ Pasivo", "+ Capital"]
+              }
+            }
+          ]
+        },
+        {
+          "id": 10304,
+          "title": "Un ejemplo completo",
+          "sortOrder": 4,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "La empresa pide un préstamo bancario de **$20,000** y el dinero se deposita en su cuenta de banco."
+            },
+            {
+              "type": "t_account",
+              "debit": {
+                "label": "Bancos • Cargo",
+                "items": ["+ $20,000 aumenta el activo"]
+              },
+              "credit": {
+                "label": "Préstamos bancarios • Abono",
+                "items": ["+ $20,000 aumenta el pasivo"]
+              }
+            },
+            {
+              "type": "example",
+              "title": "Comprobación",
+              "text": "Activo +$20,000 y Pasivo +$20,000: la ecuación **Activo = Pasivo + Capital** sigue en equilibrio."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 104,
+      "title": "Cuentas T (Esquemas de Mayor)",
+      "sortOrder": 4,
+      "subtopics": [
+        {
+          "id": 10401,
+          "title": "¿Qué es una cuenta contable?",
+          "sortOrder": 1,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Una **cuenta** es el registro donde se anotan, en orden, los aumentos y disminuciones de un mismo concepto: **Caja**, **Bancos**, **Clientes**, **Proveedores** o **Capital Social**."
+            },
+            {
+              "type": "paragraph",
+              "text": "Cada operación de la empresa afecta por lo menos **dos cuentas**, y el conjunto de todas ellas forma el **Libro Mayor**."
+            },
+            {
+              "type": "example",
+              "title": "Ejemplo",
+              "text": "Si la empresa deposita $5,000 del efectivo en el banco, **Bancos** aumenta y **Caja** disminuye: dos cuentas afectadas por la misma cantidad."
+            }
+          ]
+        },
+        {
+          "id": 10402,
+          "title": "¿Qué es una Cuenta T y cómo funciona?",
+          "sortOrder": 2,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "El esquema de mayor o **\"Cuenta T\"** es la herramienta gráfica fundamental para clasificar y registrar aumentos y disminuciones en la contabilidad."
+            },
+            {
+              "type": "t_account",
+              "debit": {
+                "label": "Lado Izquierdo • Cargos",
+                "items": ["+ Activo", "+ Gasto", "− Pasivo"]
+              },
+              "credit": {
+                "label": "Lado Derecho • Abonos",
+                "items": ["+ Pasivo", "+ Capital / Ingreso", "− Activo"]
+              }
+            },
+            {
+              "type": "callout",
+              "icon": "scale",
+              "title": "Regla de Oro de la Partida Doble",
+              "text": "A todo cargo corresponde un abono equivalente. La suma del **DEBE** siempre debe coincidir con la del **HABER**."
+            }
+          ]
+        },
+        {
+          "id": 10403,
+          "title": "El saldo de una cuenta",
+          "sortOrder": 3,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "El **saldo** es la diferencia entre la suma de los cargos (**movimientos deudores**) y la suma de los abonos (**movimientos acreedores**)."
+            },
+            {
+              "type": "paragraph",
+              "text": "Si los cargos son mayores, el saldo es **deudor**; si los abonos son mayores, es **acreedor**; si son iguales, la cuenta está **saldada**."
+            },
+            {
+              "type": "example",
+              "title": "Ejemplo: cuenta de Caja",
+              "text": "Saldo inicial $50,000 (cargo), venta al contado $12,000 (cargo) y pago de renta $8,000 (abono). Cargos $62,000 − abonos $8,000 = **saldo deudor de $54,000**."
+            },
+            {
+              "type": "callout",
+              "icon": "lightbulb",
+              "title": "Para recordar",
+              "text": "Las cuentas de **Activo** suelen tener saldo deudor; las de **Pasivo** y **Capital**, saldo acreedor."
+            }
+          ]
+        },
+        {
+          "id": 10404,
+          "title": "Registra tu primera operación",
+          "sortOrder": 4,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "La empresa compra mobiliario de oficina por **$15,000** y lo paga en efectivo. ¿Qué cuentas cambian y de qué lado se registran?"
+            },
+            {
+              "type": "t_account",
+              "debit": {
+                "label": "Mobiliario y Equipo • Cargo",
+                "items": ["+ $15,000 por el mobiliario que entra"]
+              },
+              "credit": {
+                "label": "Caja • Abono",
+                "items": ["− $15,000 por el efectivo que sale"]
+              }
+            },
+            {
+              "type": "example",
+              "title": "Comprobación",
+              "text": "Cargos $15,000 = abonos $15,000. Un activo aumenta y otro disminuye por la misma cantidad: la **partida doble** se cumple."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 105,
+      "title": "Balanza de Comprobación",
+      "sortOrder": 5,
+      "subtopics": [
+        {
+          "id": 10501,
+          "title": "¿Qué es la balanza de comprobación?",
+          "sortOrder": 1,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "La **balanza de comprobación** es una lista de todas las cuentas del mayor con sus movimientos y saldos en una fecha. Sirve para comprobar que la partida doble se respetó."
+            },
+            {
+              "type": "callout",
+              "icon": "scale",
+              "title": "La comprobación",
+              "text": "La suma de los **saldos deudores** debe ser igual a la suma de los **saldos acreedores**."
+            }
+          ]
+        },
+        {
+          "id": 10502,
+          "title": "Cómo se elabora",
+          "sortOrder": 2,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Se anota cada cuenta con su total de **cargos**, su total de **abonos** y su **saldo** (deudor o acreedor). Al final se suman las columnas."
+            },
+            {
+              "type": "example",
+              "title": "Ejemplo",
+              "text": "Caja, saldo deudor $54,000; Mobiliario, saldo deudor $15,000; Proveedores, saldo acreedor $9,000; Capital, saldo acreedor $60,000. Deudores $69,000 = acreedores $69,000: **la balanza cuadra**."
+            }
+          ]
+        },
+        {
+          "id": 10503,
+          "title": "Lo que la balanza no detecta",
+          "sortOrder": 3,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Si las sumas no coinciden, hay un error de registro o de suma. Pero que **cuadre** no garantiza que todo esté bien."
+            },
+            {
+              "type": "callout",
+              "icon": "warning",
+              "title": "Errores que no se ven",
+              "text": "Una operación que se omitió por completo, o un cargo hecho a la cuenta equivocada por el importe correcto, **no** alteran la igualdad de la balanza."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 106,
+      "title": "Catálogo de Cuentas",
+      "sortOrder": 6,
+      "subtopics": [
+        {
+          "id": 10601,
+          "title": "¿Qué es el catálogo de cuentas?",
+          "sortOrder": 1,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "El **catálogo de cuentas** es la lista ordenada de todas las cuentas que usa una empresa, cada una con su nombre y su **código**."
+            },
+            {
+              "type": "paragraph",
+              "text": "Gracias al catálogo, todas las personas registran las operaciones en las mismas cuentas y con los mismos nombres."
+            }
+          ]
+        },
+        {
+          "id": 10602,
+          "title": "Estructura y codificación",
+          "sortOrder": 2,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Las cuentas se agrupan por **género** (Activo, Pasivo, Capital, Ingresos, Costos y Gastos), luego por **grupo** y por **cuenta**. El código refleja ese orden."
+            },
+            {
+              "type": "example",
+              "title": "Ejemplo de código",
+              "text": "**1** Activo → **1.1** Activo circulante → **1.1.01** Caja → **1.1.02** Bancos."
+            }
+          ]
+        },
+        {
+          "id": 10603,
+          "title": "Un catálogo sencillo",
+          "sortOrder": 3,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Un negocio pequeño puede empezar con pocas cuentas y agregar más conforme crece, sin cambiar los códigos que ya usa."
+            },
+            {
+              "type": "example",
+              "title": "Catálogo de una papelería",
+              "text": "**1.1.01** Caja · **1.1.02** Bancos · **1.1.03** Mercancías · **2.1.01** Proveedores · **3.1.01** Capital Social · **4.1.01** Ventas · **5.1.01** Gastos de operación."
+            },
+            {
+              "type": "callout",
+              "icon": "book",
+              "title": "En México",
+              "text": "El SAT publica un **código agrupador** de cuentas; las empresas relacionan su propio catálogo con él para la contabilidad electrónica."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "exam": {
+    "id": 1,
+    "xpReward": 100,
+    "passingScore": 70,
+    "questions": [
+      {
+        "id": 1001,
+        "type": "multiple_choice",
+        "sortOrder": 1,
+        "statement": "¿Cuál es el propósito principal de la contabilidad?",
+        "options": [
+          {
+            "id": 100101,
+            "text": "Producir información financiera útil para tomar decisiones",
+            "isCorrect": true
+          },
+          {
+            "id": 100102,
+            "text": "Calcular únicamente los impuestos de la empresa",
+            "isCorrect": false
+          },
+          {
+            "id": 100103,
+            "text": "Llevar el control de los gastos personales del dueño",
+            "isCorrect": false
+          }
+        ],
+        "feedback": "La contabilidad registra y resume las operaciones para generar información financiera; los impuestos son solo uno de sus usos."
+      },
+      {
+        "id": 1002,
+        "type": "multiple_choice",
+        "sortOrder": 2,
+        "statement": "¿Cuál de las siguientes cuentas es de Activo?",
+        "options": [
+          { "id": 100201, "text": "Proveedores", "isCorrect": false },
+          { "id": 100202, "text": "Bancos", "isCorrect": true },
+          { "id": 100203, "text": "Capital Social", "isCorrect": false },
+          { "id": 100204, "text": "Préstamos bancarios", "isCorrect": false }
+        ],
+        "feedback": "Bancos es un recurso de la empresa. Proveedores y Préstamos son pasivo; Capital Social es capital."
+      },
+      {
+        "id": 1003,
+        "type": "complementary",
+        "sortOrder": 3,
+        "statement": "La ecuación contable es: Activo = Pasivo + ____.",
+        "options": [
+          { "id": 100301, "text": "Capital", "isCorrect": true },
+          { "id": 100302, "text": "Capital contable", "isCorrect": true },
+          { "id": 100303, "text": "el capital", "isCorrect": true }
+        ],
+        "feedback": "Todo lo que tiene la empresa lo financian terceros (pasivo) o los dueños (capital)."
+      },
+      {
+        "id": 1004,
+        "type": "multiple_choice",
+        "sortOrder": 4,
+        "statement": "Una empresa tiene activo de $80,000 y pasivo de $30,000. ¿Cuánto es su capital?",
+        "options": [
+          { "id": 100401, "text": "$110,000", "isCorrect": false },
+          { "id": 100402, "text": "$50,000", "isCorrect": true },
+          { "id": 100403, "text": "$30,000", "isCorrect": false }
+        ],
+        "feedback": "Capital = Activo − Pasivo = $80,000 − $30,000 = $50,000."
+      },
+      {
+        "id": 1005,
+        "type": "complementary",
+        "sortOrder": 5,
+        "statement": "El lado izquierdo de una Cuenta T se llama ____.",
+        "options": [
+          { "id": 100501, "text": "Debe", "isCorrect": true },
+          { "id": 100502, "text": "el Debe", "isCorrect": true }
+        ],
+        "feedback": "El lado izquierdo es el Debe (cargos) y el derecho, el Haber (abonos)."
+      },
+      {
+        "id": 1006,
+        "type": "multiple_choice",
+        "sortOrder": 6,
+        "statement": "La empresa compra mobiliario por $15,000 en efectivo. ¿Cómo se registra?",
+        "options": [
+          { "id": 100601, "text": "Cargo a Mobiliario y Equipo, abono a Caja", "isCorrect": true },
+          { "id": 100602, "text": "Cargo a Caja, abono a Mobiliario y Equipo", "isCorrect": false },
+          {
+            "id": 100603,
+            "text": "Cargo a Mobiliario y Equipo, abono a Capital Social",
+            "isCorrect": false
+          }
+        ],
+        "feedback": "El mobiliario (activo) aumenta con un cargo y la caja (activo) disminuye con un abono."
+      },
+      {
+        "id": 1007,
+        "type": "multiple_choice",
+        "sortOrder": 7,
+        "statement": "¿Cómo aumenta una cuenta de Pasivo?",
+        "options": [
+          { "id": 100701, "text": "Con un cargo", "isCorrect": false },
+          { "id": 100702, "text": "Con un abono", "isCorrect": true },
+          { "id": 100703, "text": "No puede aumentar", "isCorrect": false }
+        ],
+        "feedback": "Las cuentas de Pasivo y Capital aumentan con abonos y disminuyen con cargos."
+      },
+      {
+        "id": 1008,
+        "type": "multiple_choice",
+        "sortOrder": 8,
+        "statement": "En la cuenta de Caja hay cargos por $62,000 y abonos por $8,000. ¿Cuál es su saldo?",
+        "options": [
+          { "id": 100801, "text": "Saldo deudor de $54,000", "isCorrect": true },
+          { "id": 100802, "text": "Saldo acreedor de $54,000", "isCorrect": false },
+          { "id": 100803, "text": "Saldo deudor de $70,000", "isCorrect": false }
+        ],
+        "feedback": "Cargos mayores que abonos dan saldo deudor: $62,000 − $8,000 = $54,000."
+      },
+      {
+        "id": 1009,
+        "type": "multiple_choice",
+        "sortOrder": 9,
+        "statement": "Si la balanza de comprobación cuadra, ¿qué se puede asegurar?",
+        "options": [
+          {
+            "id": 100901,
+            "text": "Que la suma de saldos deudores es igual a la de saldos acreedores",
+            "isCorrect": true
+          },
+          { "id": 100902, "text": "Que no se omitió ninguna operación", "isCorrect": false },
+          {
+            "id": 100903,
+            "text": "Que todas las operaciones están en la cuenta correcta",
+            "isCorrect": false
+          }
+        ],
+        "feedback": "La balanza solo comprueba la igualdad de sumas; una operación omitida o mal clasificada no la descuadra."
+      },
+      {
+        "id": 1010,
+        "type": "complementary",
+        "sortOrder": 10,
+        "statement": "La lista ordenada y codificada de todas las cuentas de una empresa se llama catálogo de ____.",
+        "options": [
+          { "id": 101001, "text": "cuentas", "isCorrect": true },
+          { "id": 101002, "text": "las cuentas", "isCorrect": true }
+        ],
+        "feedback": "El catálogo de cuentas asegura que todos registren en las mismas cuentas y con los mismos códigos."
+      }
+    ]
+  }
+}

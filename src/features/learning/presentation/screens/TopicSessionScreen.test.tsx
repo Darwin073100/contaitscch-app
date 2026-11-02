@@ -76,7 +76,8 @@ describe('TopicSessionScreen', () => {
   });
 
   it('un tema sin contenido muestra el aviso y permite volver', async () => {
-    await renderScreen(105);
+    // Todos los temas del curso tienen contenido: se usa un id que no existe
+    await renderScreen(199);
 
     expect(
       await screen.findByText('Este tema todavía no tiene contenido disponible.'),
