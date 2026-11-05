@@ -27,10 +27,10 @@ grant  execute on function <nombre>(uuid, uuid /*, ... */) to anon;   -- solo si
 ```
 
 ## Pasos
-1. `supabase migration new <nombre>` y escribe el SQL en el archivo creado.
+1. `npx supabase migration new <nombre>` y escribe el SQL en el archivo creado.
 2. Nunca expongas `password_hash`, `password_salt` completo de otros usuarios ni `api_token` ajenos.
 3. En la app: método en `src/features/<feature>/data/datasources/<X>RemoteDataSource.ts`
    usando `supabase.rpc('<nombre>', { p_user_id, p_token, ... })`, DTO tipado y mapper a entidad.
 4. Manejo de errores: convierte el error de Supabase a `Result` con un código de dominio.
-5. Indica al usuario que ejecute `supabase db reset` (local) para probar; no lo ejecutes tú sin permiso.
+5. Indica al usuario que ejecute `npx supabase db reset` (local) para probar; no lo ejecutes tú sin permiso.
 6. Delega la revisión de seguridad al subagente `supabase-expert` si la función escribe datos.

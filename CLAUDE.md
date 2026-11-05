@@ -27,7 +27,7 @@ Proyecto escolar: priorizar soluciones gratuitas y simples.
 - `npm run format` — Prettier en todo el proyecto
 - `npx expo install --check` — verifica versiones compatibles con el SDK
 - `npx expo export --platform android` — compila el bundle sin dev server (verifica Babel/Metro/NativeWind)
-- `supabase start` / `supabase db reset` — Supabase local (Docker)
+- `npx supabase start` / `npx supabase db reset` / `npx supabase stop` — Supabase local (Docker). La CLI es devDependency fijada en la 2.x estable (no instalarla global)
 
 Antes de decir que algo está terminado: `npm run typecheck && npm run lint && npm test`.
 
@@ -81,7 +81,7 @@ Observer (`DomainEventBus`), Outbox (`synced_at IS NULL`), Mapper, Facade (`Sync
 
 ## Seguridad
 
-- Nunca leer ni escribir `.env*`. Secretos de Gmail/Supabase solo con `supabase secrets set`.
+- Nunca leer ni escribir `.env*`. Secretos de Gmail/Supabase solo con `npx supabase secrets set`.
 - La contraseña en texto plano nunca se guarda ni se loguea. Postgres guarda `digest(hash_app,'sha256')`.
 - Funciones RPC: `security definer`, validan `id + api_token`; RLS activo sin políticas.
 - El MCP de Supabase apunta al proyecto de DESARROLLO y en solo lectura.

@@ -371,7 +371,7 @@ Se usa la API de Gmail (HTTPS) en lugar de SMTP porque las Edge Functions de Sup
 5. Guardar los secretos en Supabase (nunca en la app ni en el repositorio):
 
 ```bash
-supabase secrets set GMAIL_CLIENT_ID=... GMAIL_CLIENT_SECRET=... \
+npx supabase secrets set GMAIL_CLIENT_ID=... GMAIL_CLIENT_SECRET=... \
   GMAIL_REFRESH_TOKEN=... GMAIL_SENDER=contaitscch.app@gmail.com
 ```
 

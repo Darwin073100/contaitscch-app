@@ -24,7 +24,7 @@ case "$rel" in
     fi ;;
   supabase/migrations/*.sql)
     if [ -f "$file" ]; then
-      echo "Bloqueado: '$rel' ya existe. Usa 'supabase migration new <nombre>' para un cambio nuevo." >&2
+      echo "Bloqueado: '$rel' ya existe. Usa 'npx supabase migration new <nombre>' para un cambio nuevo." >&2
       exit 2
     fi ;;
 esac

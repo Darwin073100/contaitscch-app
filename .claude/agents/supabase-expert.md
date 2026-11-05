@@ -19,15 +19,15 @@ Eres experto en Supabase y PostgreSQL para CONTAITSCCH.
 - Cliente en la app: solo `supabase.rpc(...)` y `supabase.functions.invoke(...)`.
 
 ## Reglas
-- Cambios de esquema o funciones: nueva migración con `supabase migration new <nombre>`; nunca editar una existente.
+- Cambios de esquema o funciones: nueva migración con `npx supabase migration new <nombre>`; nunca editar una existente.
 - `revoke execute ... from public, anon` en funciones internas; `grant` explícito solo a lo que la app llama.
 - Inserts de sincronización idempotentes: `on conflict do nothing` sobre las llaves naturales.
 - `xp_event.points` con CHECK (5 o 100). Fechas de racha con `now() at time zone profile.timezone`.
-- Nunca pongas secretos en código: `Deno.env.get(...)` y `supabase secrets set` (lo ejecuta el usuario).
+- Nunca pongas secretos en código: `Deno.env.get(...)` y `npx supabase secrets set` (lo ejecuta el usuario).
 - El MCP de Supabase está en solo lectura: úsalo para inspeccionar tablas, logs y advisors,
   no para aplicar cambios. Los cambios se entregan como archivos de migración.
 - Después de cambiar funciones, regenera tipos si existen (`supabase gen types typescript --local`).
 
 ## Al terminar
 Reporta: migraciones creadas, funciones y permisos afectados, cambios necesarios en la app
-(DTOs/mappers en `data/`), y los comandos que el usuario debe ejecutar (`supabase db reset`, deploy).
+(DTOs/mappers en `data/`), y los comandos que el usuario debe ejecutar (`npx supabase db reset`, deploy).
