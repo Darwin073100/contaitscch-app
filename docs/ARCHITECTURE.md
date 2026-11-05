@@ -345,6 +345,8 @@ Nota de rendimiento: 60 000 iteraciones en JavaScript puro tardan alrededor de u
 
 Postgres genera el código, una Edge Function lo envía con la **API de Gmail** y Postgres lo valida. La app nunca recibe el código: solo lo conoce quien abre el correo.
 
+> **Versión real:** el SQL de esta sección es el diseño original. La implementación vigente está en `supabase/migrations/` y sus pruebas en `supabase/tests/`. Diferencias: todas las RPC responden con un `status` en vez de lanzar excepciones (`create_verification_code` devuelve `cooldown` con `retry_in_seconds`, `invalid_token` o `already_verified`), validan `id + api_token` con `private.is_owner`, y `verify_email` responde `ok` si el correo ya estaba verificado.
+
 ```mermaid
 sequenceDiagram
   participant A as App móvil
