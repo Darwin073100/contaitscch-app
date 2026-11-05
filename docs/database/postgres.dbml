@@ -1,39 +1,58 @@
 // CONTAITSCCH - PostgreSQL / Supabase (solo participantes y ranking) - SIN Supabase Auth
 // Esta BD NO guarda el contenido del curso (temas, exámenes, preguntas): eso vive solo en SQLite.
-// Aquí solo se guarda: el participante (con su email y contraseña hasheada) y su actividad.
-// El SQL completo (funciones, seguridad, vista leaderboard) está en contabilidad_postgres.sql.
+// Aquí solo se guarda: el participante, su verificación de correo y su actividad (XP y días activos).
+// El SQL real está en supabase/migrations/ (tablas, funciones RPC y permisos).
 //
 // Convenciones: fechas en timestamptz (UTC), racha en date (día local), nombres en singular.
 // Se llama "profile" porque "user" es palabra reservada en PostgreSQL.
-// Las tablas se acceden SOLO por funciones (RPC); RLS activado y sin políticas.
+// Las tablas se acceden SOLO por funciones RPC (security definer): RLS activado, sin políticas,
+// y sin permisos de tabla para anon/authenticated.
 // Datos solo-se-agregan: xp_event y daily_activity nunca se sobrescriben (varios dispositivos).
+//
+// Contraseña: la app calcula PBKDF2-SHA256(contraseña, sal, iteraciones) y manda ese hash en hex.
+// El servidor guarda digest(hash_de_la_app, 'sha256') (doble hash): quien lea la tabla no puede
+// usar el valor guardado para iniciar sesión. La contraseña en texto plano nunca sale del teléfono.
 
 Project contaitscch_postgres {
   database_type: 'PostgreSQL'
 }
 
 Table profile {
-  id             uuid [pk, default: `gen_random_uuid()`, note: 'UUID del participante. Lo genera el servidor al registrarse y la app lo guarda como user.id en SQLite.']
-  email          text [not null, unique, note: 'Correo electrónico en minúsculas. Único. Debe contener @ (mínimo 3 caracteres).']
-  password_hash  text [not null, note: 'Contraseña con hash bcrypt, generado EN EL SERVIDOR (crypt + gen_salt). Nunca se guarda ni se devuelve en texto plano.']
-  api_token      uuid [not null, default: `gen_random_uuid()`, note: 'Llave que la app recibe al registrarse o iniciar sesión y manda en cada llamada (junto con el id) para demostrar que es el dueño del perfil.']
-  first_name     text [not null, note: 'Nombre(s). Mínimo 3 caracteres. Se muestra en el ranking.']
-  last_name      text [not null, note: 'Apellidos. Mínimo 3 caracteres.']
-  country        text [not null, note: 'País (requerido).']
-  state          text [not null, note: 'Estado (requerido).']
-  city           text [null, note: 'Ciudad (opcional).']
-  created_at     timestamptz [not null, default: `now()`, note: 'Fecha de registro.']
-  updated_at     timestamptz [not null, default: `now()`, note: 'Última modificación (trigger automático).']
+  id                  uuid [pk, default: `gen_random_uuid()`, note: 'UUID del participante. Lo genera el servidor al registrarse y la app lo guarda como user.id en SQLite.']
+  email               text [not null, unique, note: 'Correo en minúsculas y sin espacios. Debe contener @ (mínimo 3 caracteres).']
+  password_hash       text [not null, note: 'sha256 en hex del hash PBKDF2 que manda la app (doble hash). Nunca se devuelve.']
+  password_salt       text [not null, note: 'Sal de 16 bytes en hex (32 caracteres) generada en la app. get_login_params la devuelve para recalcular el hash.']
+  password_iterations integer [not null, default: 60000, note: 'Iteraciones de PBKDF2 de este usuario. Si se sube el valor, los usuarios antiguos siguen entrando con las suyas.']
+  api_token           uuid [not null, default: `gen_random_uuid()`, note: 'Llave que la app recibe al registrarse o iniciar sesión y manda en cada llamada (junto con el id).']
+  first_name          text [not null, note: 'Nombre(s). Mínimo 3 caracteres. Se muestra en el ranking.']
+  last_name           text [not null, note: 'Apellidos. Mínimo 3 caracteres.']
+  country             text [not null, note: 'País (requerido).']
+  state               text [not null, note: 'Estado (requerido).']
+  city                text [null, note: 'Ciudad (opcional).']
+  email_verified      boolean [not null, default: false, note: 'true cuando verify_email acepta el código. Sin verificar no se puede iniciar sesión ni aparecer en el ranking.']
+  timezone            text [not null, default: 'America/Mexico_City', note: 'Zona horaria del usuario, para calcular "hoy" en la racha del leaderboard.']
+  created_at          timestamptz [not null, default: `now()`, note: 'Fecha de registro.']
+  updated_at          timestamptz [not null, default: `now()`, note: 'Última modificación (trigger automático).']
 
   Note: 'Un participante. XP, racha y nivel NO se guardan aquí: se calculan en la vista leaderboard.'
 }
 
+Table email_verification {
+  profile_id    uuid [pk, note: 'Participante al que se le envió el código (uno vigente a la vez).']
+  code_hash     text [not null, note: 'sha256 en hex del código de 6 dígitos. El código en claro solo viaja en el correo.']
+  expires_at    timestamptz [not null, note: 'Vence 10 minutos después de enviarse.']
+  attempts      integer [not null, default: 0, note: 'Intentos fallidos; con 5 se bloquea hasta pedir otro código.']
+  last_sent_at  timestamptz [not null, default: `now()`, note: 'Último envío; se exigen 45 s entre reenvíos.']
+
+  Note: 'Código de verificación pendiente. Se borra al verificar el correo.'
+}
+
 Table xp_event {
-  id          bigint [pk, increment, note: 'Identificador del movimiento de XP.']
+  id          bigint [pk, increment, note: 'Identificador del movimiento de XP (lo genera el servidor; el id local de SQLite no viaja).']
   user_id     uuid [not null, note: 'Participante que ganó los puntos.']
   topic_id    integer [null, note: 'Si el XP vino de un tema (+5): id del tema en el catálogo LOCAL de SQLite (sin llave foránea).']
-  exam_id     integer [null, note: 'Si el XP vino de un examen (+100): id del examen en SQLite (sin llave foránea). Si vino de un tema, queda NULL.']
-  points      integer [not null, note: 'Puntos: 5 por tema, 100 por examen (CHECK).']
+  exam_id     integer [null, note: 'Si el XP vino de un examen (+100): id del examen en SQLite (sin llave foránea).']
+  points      integer [not null, note: 'CHECK: 5 si es tema, 100 si es examen.']
   earned_at   timestamptz [not null, note: 'Cuándo los ganó en su dispositivo.']
   created_at  timestamptz [not null, default: `now()`, note: 'Cuándo llegó al servidor.']
   updated_at  timestamptz [not null, default: `now()`, note: 'Última modificación (trigger).']
@@ -41,10 +60,9 @@ Table xp_event {
   indexes {
     (user_id, topic_id) [unique, note: 'Un tema da XP una sola vez por usuario, desde cualquier dispositivo.']
     (user_id, exam_id) [unique, note: 'Un examen da XP una sola vez por usuario.']
-    user_id
   }
 
-  Note: 'Libro de movimientos. Da el XP total, los temas completados y los exámenes aprobados (nivel).'
+  Note: 'Libro de movimientos. CHECK: exactamente uno de topic_id / exam_id. Da el XP total, los temas completados y los exámenes aprobados (nivel).'
 }
 
 Table daily_activity {
@@ -60,5 +78,6 @@ Table daily_activity {
   Note: 'Base de la racha: días consecutivos que terminan hoy o ayer.'
 }
 
+Ref: email_verification.profile_id - profile.id [delete: cascade]
 Ref: xp_event.user_id > profile.id [delete: cascade]
 Ref: daily_activity.user_id > profile.id [delete: cascade]

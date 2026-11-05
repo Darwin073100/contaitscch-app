@@ -77,6 +77,7 @@ Las tablas y funciones de Postgres se definen con archivos SQL en `supabase/migr
 | Crear una migración nueva                    | `npx supabase migration new <nombre_en_snake_case>` → crea `supabase/migrations/<fecha>_<nombre>.sql` vacío para escribir el SQL |
 | Aplicar **todas** las migraciones desde cero | `npx supabase db reset`                                                                                                          |
 | Ver qué migraciones hay                      | `npx supabase migration list --local`                                                                                            |
+| Correr las pruebas de la base (pgTAP)        | `npx supabase test db` (archivos en `supabase/tests/`)                                                                           |
 
 Reglas:
 
@@ -188,6 +189,7 @@ supabase/
 ├── README.md        # Esta guía
 ├── config.toml      # Configuración de Supabase local (puertos, servicios)
 ├── .gitignore       # Ignora .temp/, .branches/ y archivos .env locales
-├── migrations/      # SQL de tablas y funciones RPC (se crea con la primera migración)
+├── migrations/      # SQL de tablas y funciones RPC, en orden por fecha
+├── tests/           # Pruebas pgTAP de las RPC y permisos (npx supabase test db)
 └── functions/       # Edge Functions en Deno (send-verification)
 ```

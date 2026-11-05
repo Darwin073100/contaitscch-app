@@ -27,7 +27,8 @@ Proyecto escolar: priorizar soluciones gratuitas y simples.
 - `npm run format` — Prettier en todo el proyecto
 - `npx expo install --check` — verifica versiones compatibles con el SDK
 - `npx expo export --platform android` — compila el bundle sin dev server (verifica Babel/Metro/NativeWind)
-- `npx supabase start` / `npx supabase db reset` / `npx supabase stop` — Supabase local (Docker). La CLI es devDependency fijada en la 2.x estable (no instalarla global)
+- `npx supabase start` / `npx supabase db reset` / `npx supabase stop` — Supabase local (Docker). La CLI es devDependency fijada en la 2.x estable (no instalarla global). Guía: `supabase/README.md`
+- `npx supabase test db` — pruebas pgTAP de RPC y permisos (`supabase/tests/*.test.sql`)
 
 Antes de decir que algo está terminado: `npm run typecheck && npm run lint && npm test`.
 
