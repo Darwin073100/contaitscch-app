@@ -40,7 +40,7 @@ function setup(
   const useCase = new LoginUseCase(
     remote,
     hasher,
-    { save: async (u) => void savedUsers.push(u) },
+    { save: async (u) => void savedUsers.push(u), markEmailVerified: async () => undefined },
     { save: async (s) => void sessions.push(s) },
   );
   return { useCase, calls, savedUsers, sessions };
@@ -55,7 +55,9 @@ describe('LoginUseCase', () => {
 
     const result = await useCase.execute({ email: ' ANA@correo.com', password: 'secreta123' });
 
-    expect(result).toEqual(ok({ userId: 'id-1', apiToken: 'token-1', emailVerified: true }));
+    expect(result).toEqual(
+      ok({ userId: 'id-1', apiToken: 'token-1', email: 'ana@correo.com', emailVerified: true }),
+    );
     expect(calls).toEqual([
       'params:ana@correo.com',
       'login:ana@correo.com:hash(secreta123|sal-de-ana|75000)',
@@ -72,7 +74,9 @@ describe('LoginUseCase', () => {
 
     await useCase.execute({ email: 'ana@correo.com', password: 'x' });
 
-    expect(sessions).toEqual([{ userId: 'id-1', apiToken: 't', emailVerified: false }]);
+    expect(sessions).toEqual([
+      { userId: 'id-1', apiToken: 't', email: 'ana@correo.com', emailVerified: false },
+    ]);
   });
 
   it('credenciales incorrectas: no guarda nada', async () => {

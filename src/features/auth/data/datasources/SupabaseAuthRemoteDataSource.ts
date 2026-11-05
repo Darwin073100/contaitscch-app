@@ -1,15 +1,18 @@
 import { z } from 'zod';
 
-import type { RpcClient } from '@/core/network/RpcClient';
+import type { RemoteClient } from '@/core/network/RpcClient';
 import { err, ok, type Result } from '@/core/result/Result';
 
 import type {
   AuthRemote,
+  CodeRequest,
   LoginParams,
   LoginResponse,
   NetworkError,
   RegisterRequest,
   RemoteCredentials,
+  RequestCodeError,
+  VerifyEmailError,
 } from '../../domain/ports/AuthRemote';
 
 // DTOs de las RPC (snake_case, ver supabase/migrations). Una respuesta con otra forma se trata como
@@ -43,8 +46,76 @@ const LoginDto = z.discriminatedUnion('status', [
   z.object({ status: z.literal('invalid_credentials') }),
 ]);
 
+const VerifyEmailDto = z.enum([
+  'ok',
+  'invalid_code',
+  'expired',
+  'too_many_attempts',
+  'no_code',
+  'invalid_token',
+]);
+
+const verifyErrors: Record<Exclude<z.infer<typeof VerifyEmailDto>, 'ok'>, VerifyEmailError> = {
+  invalid_code: 'INVALID_CODE',
+  expired: 'EXPIRED',
+  too_many_attempts: 'TOO_MANY_ATTEMPTS',
+  no_code: 'NO_CODE',
+  invalid_token: 'INVALID_TOKEN',
+};
+
+// Contrato de la Edge Function send-verification (supabase/functions): siempre HTTP 200 con status.
+const SendVerificationDto = z.discriminatedUnion('status', [
+  z.object({ status: z.literal('ok'), resend_in_seconds: z.number().int().nonnegative() }),
+  z.object({ status: z.literal('cooldown'), retry_in_seconds: z.number().int().nonnegative() }),
+  z.object({ status: z.literal('already_verified') }),
+  z.object({ status: z.literal('invalid_token') }),
+  z.object({ status: z.literal('send_failed') }),
+]);
+
 export class SupabaseAuthRemoteDataSource implements AuthRemote {
-  constructor(private readonly client: RpcClient) {}
+  constructor(private readonly client: RemoteClient) {}
+
+  async verifyEmail(
+    credentials: RemoteCredentials,
+    code: string,
+  ): Promise<Result<void, VerifyEmailError>> {
+    const response = await this.call(
+      'verify_email',
+      { p_user_id: credentials.userId, p_token: credentials.apiToken, p_code: code },
+      VerifyEmailDto,
+    );
+    if (!response.ok) return response;
+    return response.value === 'ok' ? ok(undefined) : err(verifyErrors[response.value]);
+  }
+
+  /** Sin red, función no desplegada o respuesta inesperada: SEND_FAILED. */
+  async requestVerificationCode(
+    credentials: RemoteCredentials,
+  ): Promise<Result<CodeRequest, RequestCodeError>> {
+    try {
+      const { data, error } = await this.client.functions.invoke('send-verification', {
+        body: { userId: credentials.userId, apiToken: credentials.apiToken },
+      });
+      const parsed = SendVerificationDto.safeParse(data);
+      if (error || !parsed.success) return err('SEND_FAILED');
+
+      const dto = parsed.data;
+      switch (dto.status) {
+        case 'ok':
+          return ok({ sent: true, resendInSeconds: dto.resend_in_seconds });
+        case 'cooldown':
+          return ok({ sent: false, resendInSeconds: dto.retry_in_seconds });
+        case 'already_verified':
+          return err('ALREADY_VERIFIED');
+        case 'invalid_token':
+          return err('INVALID_TOKEN');
+        default:
+          return err('SEND_FAILED');
+      }
+    } catch {
+      return err('SEND_FAILED');
+    }
+  }
 
   async register(
     request: RegisterRequest,

@@ -2,6 +2,7 @@ import {
   AppText,
   Badge,
   Button,
+  Callout,
   Card,
   Column,
   IconBox,
@@ -38,6 +39,15 @@ export function VerifyEmailScreen() {
 
           <OtpInput value={vm.code} onChange={vm.setCode} length={CODE_LENGTH} autoFocus />
 
+          {vm.notice && (
+            <Callout
+              variant="plain"
+              tone={vm.notice.tone}
+              icon={vm.notice.tone === 'danger' ? 'alert-circle-outline' : 'information-outline'}
+              text={vm.notice.text}
+            />
+          )}
+
           <Row justify="center">
             {vm.canResend ? (
               <Button
@@ -57,6 +67,7 @@ export function VerifyEmailScreen() {
               label="Validar y Entrar al Curso"
               leftIcon="check-decagram-outline"
               disabled={!vm.canVerify}
+              loading={vm.verifying}
               onPress={vm.verify}
             />
             <Button

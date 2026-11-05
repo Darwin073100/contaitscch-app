@@ -37,7 +37,7 @@ export class RegisterUserUseCase {
     });
     if (!created.ok) return err(created.error);
 
-    const session: Session = { ...created.value, emailVerified: false };
+    const session: Session = { ...created.value, email: profile.email, emailVerified: false };
     await this.users.save({ ...profile, id: session.userId, emailVerified: false });
     await this.session.save(session);
     return ok(session);

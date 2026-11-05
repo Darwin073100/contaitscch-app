@@ -13,7 +13,8 @@ export function useCountdown(seconds: number) {
     return () => clearTimeout(id);
   }, [remaining]);
 
-  const restart = useCallback(() => setRemaining(seconds), [seconds]);
+  /** Vuelve a empezar desde `seconds`, o desde `from` (por ejemplo, la espera que indicó el servidor). */
+  const restart = useCallback((from: number = seconds) => setRemaining(from), [seconds]);
 
   return { remaining, done: remaining <= 0, restart };
 }

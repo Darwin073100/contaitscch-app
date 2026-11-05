@@ -37,7 +37,7 @@ function setup(response: Awaited<ReturnType<AuthRemote['register']>>) {
   const useCase = new RegisterUserUseCase(
     remote,
     hasher,
-    { save: async (u) => void savedUsers.push(u) },
+    { save: async (u) => void savedUsers.push(u), markEmailVerified: async () => undefined },
     { save: async (s) => void sessions.push(s) },
   );
   return { useCase, requests, savedUsers, sessions };
@@ -51,7 +51,9 @@ describe('RegisterUserUseCase', () => {
 
     const result = await useCase.execute(input);
 
-    expect(result).toEqual(ok({ userId: 'id-1', apiToken: 'token-1', emailVerified: false }));
+    expect(result).toEqual(
+      ok({ userId: 'id-1', apiToken: 'token-1', email: 'ana@correo.com', emailVerified: false }),
+    );
     expect(requests).toEqual([
       expect.objectContaining({
         email: 'ana@correo.com',
@@ -65,7 +67,9 @@ describe('RegisterUserUseCase', () => {
       expect.objectContaining({ id: 'id-1', email: 'ana@correo.com', emailVerified: false }),
     ]);
     expect(JSON.stringify(savedUsers)).not.toContain('secreta123');
-    expect(sessions).toEqual([{ userId: 'id-1', apiToken: 'token-1', emailVerified: false }]);
+    expect(sessions).toEqual([
+      { userId: 'id-1', apiToken: 'token-1', email: 'ana@correo.com', emailVerified: false },
+    ]);
   });
 
   it.each(['EMAIL_TAKEN', 'INVALID_INPUT', 'NETWORK'] as const)(

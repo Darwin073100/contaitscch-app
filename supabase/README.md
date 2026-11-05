@@ -134,6 +134,27 @@ En local, la API acepta peticiones aunque la llave falte o sea incorrecta. En la
 
 ---
 
+### Probar el registro sin la Edge Function de correo
+
+Mientras no exista `send-verification`, el correo con el código no sale. En la app verás "No pudimos enviar el código", pero la cuenta sí se crea. Para obtener el código a mano:
+
+1. Abre Studio (http://127.0.0.1:54323) → **SQL Editor**.
+2. Ejecuta, con el correo que registraste:
+
+   ```sql
+   select public.create_verification_code(id, api_token)
+   from public.profile
+   where email = 'tu@correo.com';
+   ```
+
+3. La respuesta trae `"code": "123456"`: escríbelo en la app y toca **Validar y Entrar al Curso**.
+
+Si ejecutas el SQL dos veces seguidas, la segunda responde `cooldown`: espera 45 segundos. Este truco solo funciona en local: en la nube, la función solo la puede ejecutar la Edge Function.
+
+Para volver a probar el registro desde cero, usa **Ajustes → Cerrar sesión (temporal)** en la app.
+
+---
+
 ## 6. Edge Functions y secretos (cuando exista `send-verification`)
 
 - El código va en `supabase/functions/<nombre>/index.ts` (Deno).

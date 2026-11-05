@@ -37,7 +37,7 @@ export class LoginUseCase {
     if (!logged.ok) return err(logged.error);
 
     const { userId, apiToken, emailVerified, profile } = logged.value;
-    const session: Session = { userId, apiToken, emailVerified };
+    const session: Session = { userId, apiToken, email: profile.email, emailVerified };
     await this.users.save({ ...profile, id: userId, emailVerified });
     await this.session.save(session);
     return ok(session);

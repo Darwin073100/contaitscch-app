@@ -1,4 +1,4 @@
-import { AppText, Button, Card, Column, Divider, Row } from '@/shared/ui';
+import { AppText, Button, Callout, Card, Column, Divider, Row } from '@/shared/ui';
 
 import { AuthLayout } from '../components/AuthLayout';
 import { FormTextField } from '../components/FormTextField';
@@ -7,7 +7,7 @@ import { useRegisterViewModel } from '../viewmodels/useRegisterViewModel';
 
 /** Registro, paso 1 "Tus Datos". */
 export function RegisterScreen() {
-  const { control, focus, submit, submitting, passwordStrength, openLogin } =
+  const { control, focus, submit, submitting, formError, passwordStrength, openLogin } =
     useRegisterViewModel();
 
   return (
@@ -118,6 +118,7 @@ export function RegisterScreen() {
         </Column>
       </Card>
 
+      {formError && <Callout variant="plain" tone="danger" icon="wifi-off" text={formError} />}
       <Button
         label="Crear Cuenta y Recibir Código"
         leftIcon="send-outline"

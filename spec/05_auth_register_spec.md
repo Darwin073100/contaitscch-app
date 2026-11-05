@@ -82,14 +82,14 @@ Rutas tipadas: `.expo/types/router.d.ts` se actualizó a mano con `/registro` y 
 
 ## 7. Pendientes
 
-| #   | Pendiente                  | Detalle                                                                                                      |
-| --- | -------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| 1   | Use cases y datos          | Conectar `submit`, `verify` y `resend` de los ViewModels (marcados con "Pendiente (spec 05)").               |
-| 2   | Mensajes de `verify_email` | `OtpInput error` + `Callout tone=danger` según la tabla de ARCHITECTURE.md (`invalid_code` limpia casillas). |
-| 3   | Login                      | `openLogin` no hace nada hasta que exista la pantalla.                                                       |
-| 4   | Guard de sesión            | Quitar el botón temporal de Ajustes; el guard decidirá entre `(auth)` y `(tabs)`.                            |
-| 5   | Sin red                    | Aviso "Necesitas conexión para registrarte" (observación 4 de ARCHITECTURE.md).                              |
-| 6   | País/Estado como lista     | Hoy son texto libre; valorar un selector si se necesitan datos normalizados.                                 |
+| #   | Pendiente                  | Detalle                                                                                                                             |
+| --- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Use cases y datos          | **Hecho (paso 3b):** `RegisterUser`, `RequestVerificationCode` y `VerifyEmailCode` conectados a los ViewModels.                     |
+| 2   | Mensajes de `verify_email` | **Hecho (paso 3b):** `Callout` con los mensajes de la tabla de ARCHITECTURE.md (`invalid_code` limpia casillas; `expired` reenvía). |
+| 3   | Login                      | `openLogin` no hace nada hasta que exista la pantalla.                                                                              |
+| 4   | Guard de sesión            | **Hecho (paso 3b):** `composition/RootNavigator.tsx` con `Stack.Protected`. Ajustes tiene un "Cerrar sesión (temporal)".            |
+| 5   | Sin red                    | **Hecho (paso 3b):** aviso "Necesitas conexión a internet para crear tu cuenta" en el registro.                                     |
+| 6   | País/Estado como lista     | Hoy son texto libre; valorar un selector si se necesitan datos normalizados.                                                        |
 
 ## 8. Pruebas
 

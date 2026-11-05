@@ -8,14 +8,13 @@ import {
   PlusJakartaSans_800ExtraBold,
   useFonts,
 } from '@expo-google-fonts/plus-jakarta-sans';
-import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 
 import { AppProviders } from '@/composition/providers/AppProviders';
 import { useBootstrap } from '@/composition/providers/useBootstrap';
-import { colors } from '@/shared/theme';
+import { RootNavigator } from '@/composition/RootNavigator';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -39,7 +38,7 @@ export default function RootLayout() {
   return (
     <AppProviders container={container}>
       <StatusBar style="light" />
-      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.bg } }} />
+      <RootNavigator />
     </AppProviders>
   );
 }

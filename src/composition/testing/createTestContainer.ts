@@ -3,24 +3,43 @@ import {
   createSeededTestDatabase,
   TEST_USER_ID,
   testClock,
-  testSession,
 } from '@/core/database/testing/createSeededTestDatabase';
+import type { RemoteClient } from '@/core/network/RpcClient';
+import { SecureSessionStore } from '@/core/session/SecureSessionStore';
+import type { Session } from '@/core/session/SessionStore';
+import { memoryStorage } from '@/core/session/testing/memoryStorage';
 
 import { createContainer, type Container } from '../container';
 
-export type TestProgress = {
+export type TestContainerOptions = {
   completedTopics?: number[];
   viewedSubtopics?: number[];
+  /** Sesión inicial; por defecto el usuario de prueba ya verificado. `null` = sin sesión. */
+  session?: Session | null;
+  /** Cliente remoto; por defecto todas las llamadas fallan como sin red. */
+  remote?: RemoteClient;
+};
+
+export const testUserSession: Session = {
+  userId: TEST_USER_ID,
+  apiToken: 'token-de-prueba',
+  email: 'ana@correo.com',
+  emailVerified: true,
+};
+
+const offlineRemote: RemoteClient = {
+  rpc: async () => ({ data: null, error: { message: 'Sin red en pruebas' } }),
+  functions: { invoke: async () => ({ data: null, error: { message: 'Sin red en pruebas' } }) },
 };
 
 /**
  * Contenedor real sobre SQLite en memoria con el contenido del curso, para pruebas de pantallas.
  * Vive en composition porque presentation no puede tocar la base de datos.
  */
-export async function createTestContainer(progress: TestProgress = {}): Promise<Container> {
+export async function createTestContainer(options: TestContainerOptions = {}): Promise<Container> {
   const db = await createSeededTestDatabase();
   const at = testClock.nowIso();
-  const { completedTopics = [], viewedSubtopics = [] } = progress;
+  const { completedTopics = [], viewedSubtopics = [] } = options;
   if (completedTopics.length > 0) {
     db.insert(topicProgress)
       .values(
@@ -35,5 +54,15 @@ export async function createTestContainer(progress: TestProgress = {}): Promise<
       )
       .run();
   }
-  return createContainer({ db, session: testSession, clock: testClock });
+
+  const session = new SecureSessionStore(memoryStorage().storage);
+  const initial = options.session === undefined ? testUserSession : options.session;
+  if (initial) await session.save(initial);
+
+  return createContainer({
+    db,
+    session,
+    clock: testClock,
+    remote: options.remote ?? offlineRemote,
+  });
 }
