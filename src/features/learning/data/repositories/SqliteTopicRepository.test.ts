@@ -1,5 +1,5 @@
 import type { AppDatabase } from '@/core/database/database';
-import { subtopicProgress, topicProgress } from '@/core/database/schema';
+import { quizProgress } from '@/core/database/schema';
 import {
   createSeededTestDatabase,
   TEST_USER_ID,
@@ -19,29 +19,32 @@ describe('SqliteTopicRepository', () => {
   });
 
   describe('findSession', () => {
-    it('devuelve el tema con sus subtemas en orden y los bloques ya convertidos', async () => {
-      const session = await repo.findSession(104);
+    it('arma los 4 pasos fijos del tema con sus bloques', async () => {
+      const session = await repo.findSession(101);
 
-      expect(session?.level).toEqual({ id: 1, name: 'Básico', sortOrder: 1 });
-      expect(session?.topic).toEqual({
-        id: 104,
-        title: 'Cuentas T (Esquemas de Mayor)',
-        sortOrder: 4,
+      expect(session?.level).toEqual({ id: 1, name: 'Nivel 1', sortOrder: 1 });
+      expect(session?.topic).toEqual({ id: 101, title: '¿Qué es la contabilidad?', sortOrder: 1 });
+      expect(session?.subtopics.map((s) => s.title)).toEqual([
+        'Objetivo',
+        'Explicación',
+        'Ejemplo resuelto',
+        'Repaso del tema',
+      ]);
+      expect(session?.subtopics[0].blocks[0]).toMatchObject({
+        type: 'paragraph',
+        text: expect.stringContaining('Definir la contabilidad'),
       });
-      expect(session?.subtopics.map((s) => s.id)).toEqual([10401, 10402, 10403, 10404]);
-      expect(session?.subtopics[1].blocks[1]).toMatchObject({
-        type: 't_account',
-        debit: { label: 'Lado Izquierdo • Cargos' },
+      expect(session?.subtopics[2].blocks[0]).toMatchObject({
+        type: 'example',
+        title: 'La papelería de Ana',
+        text: expect.stringMatching(/^1\. Lunes/),
       });
+      expect(session?.subtopics[3].blocks.map((b) => b.type === 'callout' && b.title)).toEqual([
+        'Idea clave',
+        'Error común',
+        'Actividad para practicar',
+      ]);
       expect(session).toMatchObject({ completed: false, viewedSubtopics: 0 });
-    });
-
-    it('cuenta los subtemas vistos para retomar', async () => {
-      db.insert(subtopicProgress)
-        .values({ userId: TEST_USER_ID, subtopicId: 10401, viewedAt: testClock.nowIso() })
-        .run();
-
-      expect((await repo.findSession(104))?.viewedSubtopics).toBe(1);
     });
 
     it('devuelve null si el tema no existe', async () => {
@@ -59,15 +62,17 @@ describe('SqliteTopicRepository', () => {
       expect(await repo.isCompleted(199)).toBeNull();
     });
 
-    it('markCompleted es idempotente y guarda la fecha del Clock', async () => {
+    it('markCompleted es idempotente y aprueba el ejercicio del tema con la fecha del Clock', async () => {
       await repo.markCompleted(101);
       await repo.markCompleted(101);
 
-      expect(db.select().from(topicProgress).all()).toEqual([
+      expect(db.select().from(quizProgress).all()).toEqual([
         expect.objectContaining({
           userId: TEST_USER_ID,
-          topicId: 101,
-          completedAt: testClock.nowIso(),
+          quizId: 101,
+          passed: true,
+          passedAt: testClock.nowIso(),
+          syncedAt: null,
         }),
       ]);
     });

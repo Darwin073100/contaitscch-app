@@ -1,11 +1,16 @@
-import { and, asc, eq, sql } from 'drizzle-orm';
+import { asc } from 'drizzle-orm';
 
 import type { AppDatabase } from '@/core/database/database';
-import { exams, levels, topicProgress, topics, xpEvents } from '@/core/database/schema';
+import { levels } from '@/core/database/schema';
 import type { SessionStore } from '@/core/session/SessionStore';
 
 import type { LevelProgress } from '../../domain/entities/Level';
 import type { LevelRepository } from '../../domain/repositories/LevelRepository';
+import {
+  levelCompletedSql,
+  passedTopicsInLevelSql,
+  topicsInLevelSql,
+} from '@/core/database/queries/progressSql';
 
 export class SqliteLevelRepository implements LevelRepository {
   constructor(
@@ -15,33 +20,20 @@ export class SqliteLevelRepository implements LevelRepository {
 
   async getProgress(): Promise<LevelProgress[]> {
     const userId = this.session.requireUserId();
-    return this.db
+    const rows = this.db
       .select({
         id: levels.id,
-        name: levels.name,
         sortOrder: levels.sortOrder,
-        subtitle: levels.subtitle,
-        description: levels.description,
-        completedTopics: sql`(SELECT COUNT(*) FROM ${topicProgress} INNER JOIN ${topics} ON ${eq(
-          topics.id,
-          topicProgress.topicId,
-        )} WHERE ${and(eq(topicProgress.userId, userId), eq(topics.levelId, levels.id))})`.mapWith(
-          Number,
-        ),
-        totalTopics: sql`(SELECT COUNT(*) FROM ${topics} WHERE ${eq(
-          topics.levelId,
-          levels.id,
-        )})`.mapWith(Number),
-        // Aprobado = existe el xp_event del examen (también cuenta al restaurar desde Supabase)
-        examPassed: sql`EXISTS (SELECT 1 FROM ${xpEvents} INNER JOIN ${exams} ON ${eq(
-          exams.id,
-          xpEvents.examId,
-        )} WHERE ${and(eq(xpEvents.userId, userId), eq(exams.levelId, levels.id))})`.mapWith(
-          Boolean,
-        ),
+        subtitle: levels.title,
+        description: levels.goal,
+        completedTopics: passedTopicsInLevelSql(userId, levels.id),
+        totalTopics: topicsInLevelSql(levels.id),
+        // Temporal (F3): sin examen por nivel, "aprobado" = sus 4 temas aprobados
+        examPassed: levelCompletedSql(userId, levels.id),
       })
       .from(levels)
       .orderBy(asc(levels.sortOrder))
       .all();
+    return rows.map((l) => ({ ...l, name: `Nivel ${l.sortOrder}` }));
   }
 }

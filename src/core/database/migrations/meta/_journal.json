@@ -15,6 +15,13 @@
       "when": 1793642907814,
       "tag": "0001_level_texts",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1794369069628,
+      "tag": "0002_cliente_v2",
+      "breakpoints": true
     }
   ]
 }

@@ -6,12 +6,8 @@ import type { SessionStore } from '@/core/session/SessionStore';
 
 import type { SyllabusSource } from '../../domain/entities/Syllabus';
 import type { SyllabusRepository } from '../../domain/repositories/SyllabusRepository';
-import {
-  examPassedSql,
-  topicCompletedSql,
-  totalSubtopicsSql,
-  viewedSubtopicsSql,
-} from '../queries/progressSql';
+import { LESSON_STEP_TITLES } from '../mappers/lessonStepsMapper';
+import { levelCompletedSql, topicPassedSql } from '@/core/database/queries/progressSql';
 
 export class SqliteSyllabusRepository implements SyllabusRepository {
   constructor(
@@ -24,11 +20,11 @@ export class SqliteSyllabusRepository implements SyllabusRepository {
     const level = this.db
       .select({
         id: levels.id,
-        name: levels.name,
         sortOrder: levels.sortOrder,
         title: levels.title,
-        description: levels.tagline,
-        examPassed: examPassedSql(userId, levelId),
+        description: levels.goal,
+        // Temporal (F3): sin examen por nivel, "aprobado" = sus 4 temas aprobados
+        examPassed: levelCompletedSql(userId, levelId),
       })
       .from(levels)
       .where(eq(levels.id, levelId))
@@ -40,9 +36,7 @@ export class SqliteSyllabusRepository implements SyllabusRepository {
         id: topics.id,
         title: topics.title,
         sortOrder: topics.sortOrder,
-        completed: topicCompletedSql(userId),
-        viewedSubtopics: viewedSubtopicsSql(userId),
-        totalSubtopics: totalSubtopicsSql(),
+        completed: topicPassedSql(userId),
       })
       .from(topics)
       .where(eq(topics.levelId, levelId))
@@ -50,6 +44,15 @@ export class SqliteSyllabusRepository implements SyllabusRepository {
       .all();
 
     const { examPassed, ...info } = level;
-    return { level: info, topics: rows, examPassed };
+    return {
+      level: { ...info, name: `Nivel ${info.sortOrder}` },
+      // El tema siempre abre en el paso 1: no se guarda el paso visto
+      topics: rows.map((t) => ({
+        ...t,
+        viewedSubtopics: 0,
+        totalSubtopics: LESSON_STEP_TITLES.length,
+      })),
+      examPassed,
+    };
   }
 }

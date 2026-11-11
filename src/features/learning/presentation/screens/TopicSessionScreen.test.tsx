@@ -11,8 +11,7 @@ jest.mock('expo-router', () => ({
   router: { back: jest.fn(), replace: jest.fn(), canGoBack: jest.fn(() => true) },
 }));
 
-// Contenedor real sobre SQLite en memoria; uno nuevo por prueba con el progreso de la captura:
-// temas 101–103 completados y el primer subtema del 104 visto (se retoma en el paso 2 de 4).
+// Contenedor real sobre SQLite en memoria; uno nuevo por prueba con los temas 101 y 102 aprobados.
 let mockContainer: Container;
 jest.mock('@/composition/providers/AppProviders', () => ({
   useContainer: () => mockContainer,
@@ -35,48 +34,47 @@ const press = (name: string) => fireEvent.press(screen.getByRole('button', { nam
 describe('TopicSessionScreen', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
-    mockContainer = await createTestContainer({
-      completedTopics: [101, 102, 103],
-      viewedSubtopics: [10401],
-    });
+    mockContainer = await createTestContainer({ completedTopics: [101, 102] });
   });
 
-  it('retoma en el paso 2 con la Cuenta T y la Regla de Oro (captura)', async () => {
-    await renderScreen(104);
+  it('abre el tema en el paso 1 con su objetivo', async () => {
+    await renderScreen(103);
 
-    expect(await screen.findByText('Paso 2 de 4')).toBeTruthy();
-    expect(screen.getByText('¿Qué es una Cuenta T y cómo funciona?')).toBeTruthy();
-    // DEBE y HABER también aparecen en negrita dentro de la Regla de Oro
-    expect(screen.getByText('Lado Izquierdo • Cargos')).toBeTruthy();
-    expect(screen.getByText('Lado Derecho • Abonos')).toBeTruthy();
-    expect(screen.getByText('+ Capital / Ingreso')).toBeTruthy();
-    expect(screen.getByText('Regla de Oro de la Partida Doble')).toBeTruthy();
+    expect(await screen.findByText('Paso 1 de 4')).toBeTruthy();
+    expect(screen.getByText('Objetivo')).toBeTruthy();
+    expect(screen.getByText(/^Distinguir usuarios internos y externos/)).toBeTruthy();
   });
 
-  it('avanza y regresa entre pasos', async () => {
-    await renderScreen(104);
-    await screen.findByText('Paso 2 de 4');
-
-    await press('Paso anterior');
-    expect(screen.getByText('Paso 1 de 4')).toBeTruthy();
+  it('avanza y regresa entre los 4 pasos fijos', async () => {
+    await renderScreen(103);
+    await screen.findByText('Paso 1 de 4');
     expect(screen.queryByRole('button', { name: 'Paso anterior' })).toBeNull();
 
     await press('Continuar');
-    expect(screen.getByText('Paso 2 de 4')).toBeTruthy();
+    expect(screen.getByText('Explicación')).toBeTruthy();
+    await press('Continuar');
+    expect(screen.getByText('La misma tienda, tres miradas')).toBeTruthy();
+    await press('Continuar');
+    expect(screen.getByText('Paso 4 de 4')).toBeTruthy();
+    expect(screen.getByText('Idea clave')).toBeTruthy();
+    expect(screen.getByText('Error común')).toBeTruthy();
+
+    await press('Paso anterior');
+    expect(screen.getByText('Paso 3 de 4')).toBeTruthy();
   });
 
   it('al terminar marca el tema como completado y regresa al temario', async () => {
-    await renderScreen(104);
-    await screen.findByText('Paso 2 de 4');
+    await renderScreen(103);
+    await screen.findByText('Paso 1 de 4');
 
     await press('Continuar');
     await press('Continuar');
-    expect(screen.getByText('Paso 4 de 4')).toBeTruthy();
+    await press('Continuar');
     await press('Completar tema');
 
     expect(router.back).toHaveBeenCalled();
     const syllabus = await mockContainer.learning.getSyllabus.execute({ levelId: 1 });
-    expect(syllabus.ok && syllabus.value.activeTopic?.id).toBe(105);
+    expect(syllabus.ok && syllabus.value.activeTopic?.id).toBe(104);
   });
 
   it('un tema sin contenido muestra el aviso y permite volver', async () => {

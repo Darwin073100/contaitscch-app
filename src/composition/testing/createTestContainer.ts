@@ -1,4 +1,4 @@
-import { subtopicProgress, topicProgress } from '@/core/database/schema';
+import { quizProgress } from '@/core/database/schema';
 import {
   createSeededTestDatabase,
   TEST_USER_ID,
@@ -12,8 +12,8 @@ import { memoryStorage } from '@/core/session/testing/memoryStorage';
 import { createContainer, type Container } from '../container';
 
 export type TestContainerOptions = {
+  /** Temas con el ejercicio aprobado. */
   completedTopics?: number[];
-  viewedSubtopics?: number[];
   /** Sesión inicial; por defecto el usuario de prueba ya verificado. `null` = sin sesión. */
   session?: Session | null;
   /** Cliente remoto; por defecto todas las llamadas fallan como sin red. */
@@ -39,18 +39,20 @@ const offlineRemote: RemoteClient = {
 export async function createTestContainer(options: TestContainerOptions = {}): Promise<Container> {
   const db = await createSeededTestDatabase();
   const at = testClock.nowIso();
-  const { completedTopics = [], viewedSubtopics = [] } = options;
+  const { completedTopics = [] } = options;
   if (completedTopics.length > 0) {
-    db.insert(topicProgress)
+    // El ejercicio de un tema tiene el mismo id que el tema
+    db.insert(quizProgress)
       .values(
-        completedTopics.map((topicId) => ({ userId: TEST_USER_ID, topicId, completedAt: at })),
-      )
-      .run();
-  }
-  if (viewedSubtopics.length > 0) {
-    db.insert(subtopicProgress)
-      .values(
-        viewedSubtopics.map((subtopicId) => ({ userId: TEST_USER_ID, subtopicId, viewedAt: at })),
+        completedTopics.map((topicId) => ({
+          userId: TEST_USER_ID,
+          quizId: topicId,
+          passed: true,
+          bestScore: 2,
+          attempts: 1,
+          passedAt: at,
+          updatedAt: at,
+        })),
       )
       .run();
   }

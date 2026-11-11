@@ -1,22 +1,22 @@
 import { integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 
 import { auditColumns } from './columns';
-import { exams } from './exam';
+import { quizzes } from './quiz';
 
+// Solo opción múltiple.
 export const questions = sqliteTable(
   'question',
   {
-    /** Inmutable: examen×1000 + orden. */
+    /** Inmutable: quiz×100 + orden. */
     id: integer('id').primaryKey(),
-    examId: integer('exam_id')
+    quizId: integer('quiz_id')
       .notNull()
-      .references(() => exams.id),
-    type: text('type', { enum: ['multiple_choice', 'complementary'] }).notNull(),
-    statement: text('statement').notNull(),
+      .references(() => quizzes.id),
     sortOrder: integer('sort_order').notNull(),
-    /** Mensaje opcional al responder (ej. "¡Excelente!"). */
+    statement: text('statement').notNull(),
+    /** Se muestra solo cuando el alumno acierta. */
     feedback: text('feedback'),
     ...auditColumns,
   },
-  (t) => [uniqueIndex('question_exam_sort_order_unique').on(t.examId, t.sortOrder)],
+  (t) => [uniqueIndex('question_quiz_sort_order_unique').on(t.quizId, t.sortOrder)],
 );

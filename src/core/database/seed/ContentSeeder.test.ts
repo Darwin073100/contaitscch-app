@@ -5,17 +5,19 @@ import type { Clock } from '@/core/clock/Clock';
 import type { AppDatabase } from '../database';
 import {
   contentMeta,
+  glossaryTerms,
   levels,
   questionOptions,
   questions,
-  subtopics,
-  topicProgress,
+  quizProgress,
+  quizzes,
   topics,
   users,
 } from '../schema';
 import { SqliteUnitOfWork } from '../SqliteUnitOfWork';
 import { createTestDatabase } from '../testing/createTestDatabase';
 import { ContentSeeder } from './ContentSeeder';
+import { FINAL_EXAM_ID, LessonBodySchema } from './courseSchema';
 import { loadCourse, type Course } from './loadCourse';
 
 const clock: Clock = {
@@ -37,19 +39,45 @@ describe('ContentSeeder', () => {
   it('siembra el contenido del bundle y guarda la versión', async () => {
     expect(await seeder.seedIfNeeded(course)).toBe(true);
 
-    expect(db.select().from(levels).all()).toHaveLength(3);
-    expect(db.select().from(topics).all()).toHaveLength(6);
-    expect(db.select().from(subtopics).all()).toHaveLength(20);
-    expect(db.select().from(questions).all()).toHaveLength(10);
+    expect(db.select().from(levels).all()).toHaveLength(6);
+    expect(db.select().from(topics).all()).toHaveLength(24);
+    // 24 ejercicios de tema + examen integrador
+    expect(db.select().from(quizzes).all()).toHaveLength(25);
+    expect(db.select().from(questions).all()).toHaveLength(24 * 2 + 10);
+    expect(db.select().from(glossaryTerms).all()).toHaveLength(course.glossary.length);
     expect(db.select().from(contentMeta).get()?.version).toBe(course.version);
   });
 
-  it('guarda los bloques del subtema como JSON', async () => {
+  it('el ejercicio de tema exige todas sus preguntas y el examen final su passMark', async () => {
     await seeder.seedIfNeeded(course);
 
-    const row = db.select().from(subtopics).where(eq(subtopics.id, 10402)).get();
+    expect(db.select().from(quizzes).where(eq(quizzes.id, 101)).get()).toMatchObject({
+      kind: 'topic',
+      topicId: 101,
+      passMark: 2,
+    });
+    expect(db.select().from(quizzes).where(eq(quizzes.id, FINAL_EXAM_ID)).get()).toMatchObject({
+      kind: 'final',
+      topicId: null,
+      passMark: 8,
+    });
+  });
 
-    expect(JSON.parse(row!.content)[1]).toMatchObject({ type: 't_account' });
+  it('guarda el cuerpo de la lección como JSON y las opciones en orden A–D', async () => {
+    await seeder.seedIfNeeded(course);
+
+    const row = db.select().from(topics).where(eq(topics.id, 101)).get();
+    expect(LessonBodySchema.parse(JSON.parse(row!.content)).example.title).toBe(
+      'La papelería de Ana',
+    );
+    const options = db
+      .select()
+      .from(questionOptions)
+      .where(eq(questionOptions.questionId, 10101))
+      .orderBy(questionOptions.sortOrder)
+      .all();
+    expect(options.map((o) => o.sortOrder)).toEqual([1, 2, 3, 4]);
+    expect(options.filter((o) => o.isCorrect)).toHaveLength(1);
   });
 
   it('no vuelve a sembrar si la versión no cambió', async () => {
@@ -58,7 +86,7 @@ describe('ContentSeeder', () => {
     expect(await seeder.seedIfNeeded(course)).toBe(false);
   });
 
-  it('con una versión mayor actualiza el contenido, reemplaza opciones y conserva el progreso', async () => {
+  it('con una versión mayor actualiza el contenido, reemplaza opciones y conserva el avance', async () => {
     await seeder.seedIfNeeded(course);
     db.insert(users)
       .values({
@@ -70,36 +98,49 @@ describe('ContentSeeder', () => {
         state: 'Chiapas',
       })
       .run();
-    db.insert(topicProgress)
-      .values({ userId: 'u1', topicId: 101, completedAt: clock.nowIso() })
+    db.insert(quizProgress)
+      .values({
+        userId: 'u1',
+        quizId: 101,
+        passed: true,
+        attempts: 1,
+        bestScore: 2,
+        passedAt: clock.nowIso(),
+      })
       .run();
 
-    const [basico] = course.levels;
-    const basicoExam = basico.exam!;
-    const firstQuestion = basicoExam.questions[0];
+    const [nivel1, ...rest] = course.levels;
+    const [first, ...others] = nivel1.topics;
+    const firstQuestion = first.quiz.questions[0];
     const updated: Course = {
+      ...course,
       version: course.version + 1,
       levels: [
         {
-          ...basico,
-          topics: basico.topics.map((t) =>
-            t.id === 101 ? { ...t, title: 'Conceptos Básicos (revisado)' } : t,
-          ),
-          exam: {
-            ...basicoExam,
-            questions: [
-              { ...firstQuestion, options: firstQuestion.options.slice(0, 2) },
-              ...basicoExam.questions.slice(1),
-            ],
-          },
+          ...nivel1,
+          topics: [
+            {
+              ...first,
+              title: '¿Qué es la contabilidad? (revisado)',
+              quiz: {
+                questions: [
+                  { ...firstQuestion, options: firstQuestion.options.slice(0, 2) },
+                  ...first.quiz.questions.slice(1),
+                ],
+              },
+            },
+            ...others,
+          ],
         },
+        ...rest,
       ],
+      glossary: course.glossary.slice(0, 5),
     };
 
     expect(await seeder.seedIfNeeded(updated)).toBe(true);
 
     expect(db.select().from(topics).where(eq(topics.id, 101)).get()?.title).toBe(
-      'Conceptos Básicos (revisado)',
+      '¿Qué es la contabilidad? (revisado)',
     );
     expect(
       db
@@ -108,7 +149,8 @@ describe('ContentSeeder', () => {
         .where(eq(questionOptions.questionId, firstQuestion.id))
         .all(),
     ).toHaveLength(2);
-    expect(db.select().from(topicProgress).all()).toHaveLength(1);
+    expect(db.select().from(glossaryTerms).all()).toHaveLength(5);
+    expect(db.select().from(quizProgress).all()).toHaveLength(1);
     expect(db.select().from(contentMeta).get()?.version).toBe(course.version + 1);
   });
 });

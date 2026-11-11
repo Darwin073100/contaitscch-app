@@ -3,10 +3,7 @@
 /** Un lado de la Cuenta T: etiqueta y movimientos ("+ Activo", "− Pasivo"). */
 export type TAccountSide = { label: string; items: string[] };
 
-/**
- * Bloques del contenido de un subtema. Espejo de `BlockSchema` (core/database/seed/contentSchema.ts):
- * el dominio no importa core/database; el repositorio de datos garantiza que coincidan al compilar.
- */
+/** Bloques de un paso del tema; el repositorio de datos los arma desde el cuerpo de la lección. */
 export type ContentBlock =
   | { type: 'paragraph'; text: string }
   | { type: 't_account'; debit: TAccountSide; credit: TAccountSide }

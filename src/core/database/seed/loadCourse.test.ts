@@ -1,17 +1,20 @@
+import { FINAL_EXAM_ID } from './courseSchema';
 import { loadCourse } from './loadCourse';
 
 describe('loadCourse', () => {
   it('carga y valida el contenido del bundle', () => {
     const course = loadCourse();
 
-    expect(course.version).toBeGreaterThanOrEqual(1);
-    expect(course.levels.map((l) => l.level.name)).toEqual(['Básico', 'Intermedio', 'Avanzado']);
+    expect(course.version).toBeGreaterThanOrEqual(3);
+    expect(course.levels.map((l) => l.level.id)).toEqual([1, 2, 3, 4, 5, 6]);
+    expect(course.finalExam.id).toBe(FINAL_EXAM_ID);
+    expect(course.glossary.length).toBeGreaterThan(0);
   });
 
-  it('el nivel Básico tiene sus 6 temas y un examen de al menos 10 preguntas', () => {
-    const [basico] = loadCourse().levels;
+  it('el Nivel 1 tiene sus 4 temas con ejercicio', () => {
+    const [nivel1] = loadCourse().levels;
 
-    expect(basico.topics.map((t) => t.id)).toEqual([101, 102, 103, 104, 105, 106]);
-    expect(basico.exam?.questions.length).toBeGreaterThanOrEqual(10);
+    expect(nivel1.topics.map((t) => t.id)).toEqual([101, 102, 103, 104]);
+    expect(nivel1.topics.every((t) => t.quiz.questions.length > 0)).toBe(true);
   });
 });

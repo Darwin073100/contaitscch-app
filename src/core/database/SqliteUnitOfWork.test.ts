@@ -16,9 +16,15 @@ describe('SqliteUnitOfWork', () => {
 
   it('confirma todas las escrituras y devuelve el resultado', async () => {
     const result = await uow.run(async (tx) => {
-      databaseOf(tx).insert(levels).values({ id: 1, name: 'Básico', sortOrder: 1 }).run();
+      databaseOf(tx)
+        .insert(levels)
+        .values({ id: 1, sortOrder: 1, title: 'Fundamentos', goal: 'Meta' })
+        .run();
       await tick();
-      databaseOf(tx).insert(topics).values({ id: 101, levelId: 1, title: 'T', sortOrder: 1 }).run();
+      databaseOf(tx)
+        .insert(topics)
+        .values({ id: 101, levelId: 1, title: 'T', sortOrder: 1, objective: 'O', content: '{}' })
+        .run();
       return 'listo';
     });
 
@@ -28,10 +34,16 @@ describe('SqliteUnitOfWork', () => {
 
   it('deshace todo si el trabajo falla, aunque falle después de un await', async () => {
     const work = uow.run(async (tx) => {
-      databaseOf(tx).insert(levels).values({ id: 1, name: 'Básico', sortOrder: 1 }).run();
+      databaseOf(tx)
+        .insert(levels)
+        .values({ id: 1, sortOrder: 1, title: 'Fundamentos', goal: 'Meta' })
+        .run();
       await tick();
       // Nivel inexistente: falla la llave foránea
-      databaseOf(tx).insert(topics).values({ id: 201, levelId: 2, title: 'T', sortOrder: 1 }).run();
+      databaseOf(tx)
+        .insert(topics)
+        .values({ id: 201, levelId: 2, title: 'T', sortOrder: 1, objective: 'O', content: '{}' })
+        .run();
     });
 
     await expect(work).rejects.toThrow(/FOREIGN KEY/);
@@ -62,7 +74,10 @@ describe('SqliteUnitOfWork', () => {
     ).rejects.toThrow('falla');
 
     await uow.run(async (tx) => {
-      databaseOf(tx).insert(levels).values({ id: 1, name: 'Básico', sortOrder: 1 }).run();
+      databaseOf(tx)
+        .insert(levels)
+        .values({ id: 1, sortOrder: 1, title: 'Fundamentos', goal: 'Meta' })
+        .run();
     });
 
     expect(db.select().from(levels).all()).toHaveLength(1);

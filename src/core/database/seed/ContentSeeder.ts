@@ -7,24 +7,27 @@ import type { UnitOfWork } from '@/core/transaction/UnitOfWork';
 import type { AppDatabase } from '../database';
 import {
   contentMeta,
-  exams,
+  glossaryTerms,
   levels,
   questionOptions,
   questions,
-  subtopics,
+  quizzes,
   topics,
 } from '../schema';
 import { databaseOf } from '../SqliteUnitOfWork';
-import type { LevelContent } from './contentSchema';
+import type { LessonBody, QuestionContent } from './courseSchema';
 import type { Course } from './loadCourse';
 
 /** Valor que se intentó insertar, para el SET de un upsert. */
 const excluded = (column: AnySQLiteColumn) => sql.raw(`excluded.${column.name}`);
 
+/** Los ids del contenido son inmutables y vienen del JSON. */
+type QuizRow = typeof quizzes.$inferInsert & { id: number };
+
 /**
  * Copia el contenido del JSON a SQLite cuando `manifest.version` es mayor que la versión sembrada.
- * Temas, subtemas, examen y preguntas se actualizan por id (inmutables) y nunca se borran, porque
- * el progreso del usuario apunta a ellos. Las opciones de cada pregunta se reemplazan completas.
+ * Niveles, temas, ejercicios y preguntas se actualizan por id (inmutables) y nunca se borran, porque
+ * el avance del usuario apunta a ellos. Las opciones de cada pregunta y el glosario se reemplazan.
  */
 export class ContentSeeder {
   constructor(
@@ -41,7 +44,9 @@ export class ContentSeeder {
     const now = this.clock.nowIso();
     await this.uow.run(async (tx) => {
       const db = databaseOf(tx);
-      for (const level of course.levels) upsertLevel(db, level, now);
+      upsertLevels(db, course, now);
+      upsertQuizzes(db, course, now);
+      replaceGlossary(db, course);
       db.insert(contentMeta)
         .values({ id: 1, version: course.version })
         .onConflictDoUpdate({
@@ -54,108 +59,120 @@ export class ContentSeeder {
   }
 }
 
-function upsertLevel(db: AppDatabase, content: LevelContent, now: string): void {
-  const { level, exam } = content;
-
+function upsertLevels(db: AppDatabase, course: Course, now: string): void {
   db.insert(levels)
-    .values(level)
+    .values(
+      course.levels.map(({ level }) => ({
+        id: level.id,
+        sortOrder: level.id,
+        title: level.title,
+        goal: level.goal,
+      })),
+    )
     .onConflictDoUpdate({
       target: levels.id,
       set: {
-        name: excluded(levels.name),
         sortOrder: excluded(levels.sortOrder),
         title: excluded(levels.title),
-        tagline: excluded(levels.tagline),
-        subtitle: excluded(levels.subtitle),
-        description: excluded(levels.description),
+        goal: excluded(levels.goal),
         updatedAt: now,
       },
     })
     .run();
 
-  // Nivel en preparación: sin temas ni examen (el esquema garantiza que van juntos)
-  if (!exam) return;
-
   db.insert(topics)
     .values(
-      content.topics.map((t) => ({
-        id: t.id,
-        levelId: level.id,
-        title: t.title,
-        sortOrder: t.sortOrder,
-      })),
+      course.levels.flatMap(({ level, topics: levelTopics }) =>
+        levelTopics.map((t) => {
+          const body: LessonBody = {
+            explanation: t.explanation,
+            example: t.example,
+            keyIdea: t.keyIdea,
+            commonError: t.commonError,
+            activity: t.activity,
+          };
+          return {
+            id: t.id,
+            levelId: level.id,
+            sortOrder: t.sortOrder,
+            title: t.title,
+            objective: t.objective,
+            content: JSON.stringify(body),
+          };
+        }),
+      ),
     )
     .onConflictDoUpdate({
       target: topics.id,
       set: {
         levelId: excluded(topics.levelId),
-        title: excluded(topics.title),
         sortOrder: excluded(topics.sortOrder),
+        title: excluded(topics.title),
+        objective: excluded(topics.objective),
+        content: excluded(topics.content),
         updatedAt: now,
       },
     })
     .run();
+}
 
-  db.insert(subtopics)
-    .values(
-      content.topics.flatMap((t) =>
-        t.subtopics.map((s) => ({
-          id: s.id,
+function upsertQuizzes(db: AppDatabase, course: Course, now: string): void {
+  // Ejercicio de cada tema (id = id del tema) y examen integrador
+  const sources: { row: QuizRow; questions: QuestionContent[] }[] = [
+    ...course.levels.flatMap(({ topics: levelTopics }) =>
+      levelTopics.map((t) => ({
+        row: {
+          id: t.id,
+          kind: 'topic' as const,
           topicId: t.id,
-          title: s.title,
-          content: JSON.stringify(s.blocks),
-          sortOrder: s.sortOrder,
-        })),
-      ),
-    )
+          passMark: t.quiz.passMark ?? t.quiz.questions.length,
+        },
+        questions: t.quiz.questions,
+      })),
+    ),
+    {
+      row: {
+        id: course.finalExam.id,
+        kind: 'final',
+        topicId: null,
+        passMark: course.finalExam.passMark ?? course.finalExam.questions.length,
+      },
+      questions: course.finalExam.questions,
+    },
+  ];
+
+  db.insert(quizzes)
+    .values(sources.map((s) => s.row))
     .onConflictDoUpdate({
-      target: subtopics.id,
+      target: quizzes.id,
       set: {
-        topicId: excluded(subtopics.topicId),
-        title: excluded(subtopics.title),
-        content: excluded(subtopics.content),
-        sortOrder: excluded(subtopics.sortOrder),
+        kind: excluded(quizzes.kind),
+        topicId: excluded(quizzes.topicId),
+        passMark: excluded(quizzes.passMark),
         updatedAt: now,
       },
     })
     .run();
 
-  db.insert(exams)
-    .values({
-      id: exam.id,
-      levelId: level.id,
-      xpReward: exam.xpReward,
-      passingScore: exam.passingScore,
-    })
-    .onConflictDoUpdate({
-      target: exams.id,
-      set: {
-        levelId: excluded(exams.levelId),
-        xpReward: excluded(exams.xpReward),
-        passingScore: excluded(exams.passingScore),
-        updatedAt: now,
-      },
-    })
-    .run();
-
+  const allQuestions = sources.flatMap((s) =>
+    s.questions.map((q) => ({ quizId: s.row.id, question: q })),
+  );
   db.insert(questions)
     .values(
-      exam.questions.map((q) => ({
+      allQuestions.map(({ quizId, question: q }) => ({
         id: q.id,
-        examId: exam.id,
-        type: q.type,
-        statement: q.statement,
+        quizId,
         sortOrder: q.sortOrder,
+        statement: q.statement,
         feedback: q.feedback ?? null,
       })),
     )
     .onConflictDoUpdate({
       target: questions.id,
       set: {
-        examId: excluded(questions.examId),
-        type: excluded(questions.type),
-        statement: excluded(questions.statement),
+        quizId: excluded(questions.quizId),
         sortOrder: excluded(questions.sortOrder),
+        statement: excluded(questions.statement),
         feedback: excluded(questions.feedback),
         updatedAt: now,
       },
@@ -163,18 +180,25 @@ function upsertLevel(db: AppDatabase, content: LevelContent, now: string): void 
     .run();
 
   // Reemplazo completo: una opción quitada del JSON no debe seguir contando como correcta
-  const questionIds = exam.questions.map((q) => q.id);
+  const questionIds = allQuestions.map(({ question }) => question.id);
   db.delete(questionOptions).where(inArray(questionOptions.questionId, questionIds)).run();
   db.insert(questionOptions)
     .values(
-      exam.questions.flatMap((q) =>
-        q.options.map((o) => ({
+      allQuestions.flatMap(({ question: q }) =>
+        q.options.map((o, i) => ({
           id: o.id,
           questionId: q.id,
+          sortOrder: i + 1,
           text: o.text,
           isCorrect: o.isCorrect,
         })),
       ),
     )
     .run();
+}
+
+/** Nadie apunta a los términos: se reemplazan completos. */
+function replaceGlossary(db: AppDatabase, course: Course): void {
+  db.delete(glossaryTerms).run();
+  db.insert(glossaryTerms).values(course.glossary).run();
 }

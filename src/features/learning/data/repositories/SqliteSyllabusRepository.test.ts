@@ -1,5 +1,5 @@
 import type { AppDatabase } from '@/core/database/database';
-import { subtopicProgress, topicProgress, xpEvents } from '@/core/database/schema';
+import { quizProgress } from '@/core/database/schema';
 import {
   createSeededTestDatabase,
   TEST_USER_ID,
@@ -8,6 +8,17 @@ import {
 } from '@/core/database/testing/createSeededTestDatabase';
 
 import { SqliteSyllabusRepository } from './SqliteSyllabusRepository';
+
+const at = testClock.nowIso();
+const passed = (quizId: number) => ({
+  userId: TEST_USER_ID,
+  quizId,
+  passed: true,
+  bestScore: 2,
+  attempts: 1,
+  passedAt: at,
+  updatedAt: at,
+});
 
 describe('SqliteSyllabusRepository', () => {
   let db: AppDatabase;
@@ -18,21 +29,21 @@ describe('SqliteSyllabusRepository', () => {
     repo = new SqliteSyllabusRepository(db, testSession);
   });
 
-  it('devuelve el nivel y sus temas en orden, sin progreso', async () => {
+  it('devuelve el nivel y sus 4 temas en orden, sin avance', async () => {
     const syllabus = await repo.findByLevel(1);
 
     expect(syllabus?.level).toEqual({
       id: 1,
-      name: 'Básico',
+      name: 'Nivel 1',
       sortOrder: 1,
-      title: 'Introducción a la Contabilidad',
-      description: 'Domina los cimientos financieros paso a paso.',
+      title: 'Fundamentos: qué es la contabilidad y para qué sirve',
+      description: expect.stringContaining('Al terminar este nivel'),
     });
-    expect(syllabus?.topics.map((t) => t.id)).toEqual([101, 102, 103, 104, 105, 106]);
-    expect(syllabus?.topics[3]).toEqual({
-      id: 104,
-      title: 'Cuentas T (Esquemas de Mayor)',
-      sortOrder: 4,
+    expect(syllabus?.topics.map((t) => t.id)).toEqual([101, 102, 103, 104]);
+    expect(syllabus?.topics[0]).toEqual({
+      id: 101,
+      title: '¿Qué es la contabilidad?',
+      sortOrder: 1,
       completed: false,
       viewedSubtopics: 0,
       totalSubtopics: 4,
@@ -40,28 +51,33 @@ describe('SqliteSyllabusRepository', () => {
     expect(syllabus?.examPassed).toBe(false);
   });
 
-  it('refleja los temas completados, los subtemas vistos y el examen aprobado del usuario', async () => {
-    const at = testClock.nowIso();
-    db.insert(topicProgress).values({ userId: TEST_USER_ID, topicId: 101, completedAt: at }).run();
-    db.insert(subtopicProgress)
-      .values([
-        { userId: TEST_USER_ID, subtopicId: 10201, viewedAt: at },
-        { userId: TEST_USER_ID, subtopicId: 10202, viewedAt: at },
-      ])
+  it('refleja los temas aprobados; el nivel cuenta como aprobado con sus 4 temas', async () => {
+    db.insert(quizProgress)
+      .values([passed(101), passed(102)])
       .run();
-    db.insert(xpEvents)
-      .values({ userId: TEST_USER_ID, examId: 1, points: 100, earnedAt: at })
+    // Un intento sin aprobar no cuenta
+    db.insert(quizProgress)
+      .values({ userId: TEST_USER_ID, quizId: 103, attempts: 2, bestScore: 1, updatedAt: at })
       .run();
 
-    const syllabus = await repo.findByLevel(1);
+    const partial = await repo.findByLevel(1);
+    expect(partial?.topics.map((t) => t.completed)).toEqual([true, true, false, false]);
+    expect(partial?.examPassed).toBe(false);
 
-    expect(syllabus?.topics[0].completed).toBe(true);
-    expect(syllabus?.topics[1]).toMatchObject({ completed: false, viewedSubtopics: 2 });
-    expect(syllabus?.examPassed).toBe(true);
+    db.insert(quizProgress)
+      .values([passed(103), passed(104)])
+      .onConflictDoNothing()
+      .run();
+    db.update(quizProgress).set({ passed: true, passedAt: at }).run();
+
+    expect((await repo.findByLevel(1))?.examPassed).toBe(true);
   });
 
-  it('un nivel en preparación no tiene temas', async () => {
-    expect((await repo.findByLevel(2))?.topics).toEqual([]);
+  it('el avance de otro nivel no se mezcla', async () => {
+    db.insert(quizProgress).values(passed(201)).run();
+
+    expect((await repo.findByLevel(1))?.topics.some((t) => t.completed)).toBe(false);
+    expect((await repo.findByLevel(2))?.topics[0].completed).toBe(true);
   });
 
   it('devuelve null si el nivel no existe', async () => {

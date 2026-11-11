@@ -1,15 +1,15 @@
-import { asc, eq } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 
 import type { Clock } from '@/core/clock/Clock';
 import type { AppDatabase } from '@/core/database/database';
-import { levels, subtopics, topicProgress, topics } from '@/core/database/schema';
+import { levels, quizProgress, topics } from '@/core/database/schema';
 import type { SessionStore } from '@/core/session/SessionStore';
 
 import type { TopicSessionSource } from '../../domain/entities/TopicSession';
 import type { TopicProgressRepository } from '../../domain/repositories/TopicProgressRepository';
 import type { TopicSessionReader } from '../../domain/repositories/TopicSessionReader';
-import { toContentBlocks } from '../mappers/blocksMapper';
-import { subtopicViewedSql, topicCompletedSql } from '../queries/progressSql';
+import { toLessonSteps } from '../mappers/lessonStepsMapper';
+import { topicPassedSql } from '@/core/database/queries/progressSql';
 
 export class SqliteTopicRepository implements TopicSessionReader, TopicProgressRepository {
   constructor(
@@ -22,9 +22,11 @@ export class SqliteTopicRepository implements TopicSessionReader, TopicProgressR
     const userId = this.session.requireUserId();
     const row = this.db
       .select({
-        level: { id: levels.id, name: levels.name, sortOrder: levels.sortOrder },
+        level: { id: levels.id, sortOrder: levels.sortOrder },
         topic: { id: topics.id, title: topics.title, sortOrder: topics.sortOrder },
-        completed: topicCompletedSql(userId),
+        objective: topics.objective,
+        content: topics.content,
+        completed: topicPassedSql(userId),
       })
       .from(topics)
       .innerJoin(levels, eq(levels.id, topics.levelId))
@@ -32,45 +34,41 @@ export class SqliteTopicRepository implements TopicSessionReader, TopicProgressR
       .get();
     if (!row) return null;
 
-    const rows = this.db
-      .select({
-        id: subtopics.id,
-        title: subtopics.title,
-        sortOrder: subtopics.sortOrder,
-        content: subtopics.content,
-        viewed: subtopicViewedSql(userId),
-      })
-      .from(subtopics)
-      .where(eq(subtopics.topicId, topicId))
-      .orderBy(asc(subtopics.sortOrder))
-      .all();
-
     return {
-      ...row,
-      subtopics: rows.map(({ content, viewed: _viewed, ...subtopic }) => ({
-        ...subtopic,
-        blocks: toContentBlocks(content),
-      })),
-      viewedSubtopics: rows.filter((s) => s.viewed).length,
+      level: { ...row.level, name: `Nivel ${row.level.sortOrder}` },
+      topic: row.topic,
+      subtopics: toLessonSteps(row.topic.id, row.objective, row.content),
+      completed: row.completed,
+      // El tema siempre abre en el paso 1
+      viewedSubtopics: 0,
     };
   }
 
   async isCompleted(topicId: number): Promise<boolean | null> {
     const row = this.db
-      .select({ completed: topicCompletedSql(this.session.requireUserId()) })
+      .select({ completed: topicPassedSql(this.session.requireUserId()) })
       .from(topics)
       .where(eq(topics.id, topicId))
       .get();
     return row ? row.completed : null;
   }
 
+  /**
+   * Temporal (refactorización v2): marca aprobado el ejercicio del tema (quiz id = id del tema) al
+   * terminar de leerlo. En F4 lo reemplaza SubmitQuiz con la calificación real del ejercicio.
+   */
   async markCompleted(topicId: number): Promise<void> {
+    const userId = this.session.requireUserId();
+    const now = this.clock.nowIso();
     this.db
-      .insert(topicProgress)
+      .insert(quizProgress)
       .values({
-        userId: this.session.requireUserId(),
-        topicId,
-        completedAt: this.clock.nowIso(),
+        userId,
+        quizId: topicId,
+        passed: true,
+        attempts: 1,
+        passedAt: now,
+        updatedAt: now,
       })
       .onConflictDoNothing()
       .run();
