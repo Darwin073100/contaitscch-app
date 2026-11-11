@@ -1,12 +1,11 @@
 import { err, ok, type Result } from '@/core/result/Result';
-import { XP_REWARD } from '@/features/gamification';
 
 import type { TopicSession } from '../entities/TopicSession';
 import type { TopicSessionReader } from '../repositories/TopicSessionReader';
 
 export type GetTopicSessionError = 'TOPIC_NOT_FOUND';
 
-/** Pasos (subtemas) de un tema, el paso donde retomar y el XP en juego. */
+/** Pasos (subtemas) de un tema y el paso donde retomar. */
 export class GetTopicSessionUseCase {
   constructor(private readonly topics: TopicSessionReader) {}
 
@@ -30,7 +29,6 @@ export class GetTopicSessionUseCase {
       subtopics,
       completed: source.completed,
       startStep,
-      xpReward: source.completed ? 0 : XP_REWARD.topic,
     });
   }
 }

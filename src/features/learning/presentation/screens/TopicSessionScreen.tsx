@@ -18,14 +18,7 @@ export function TopicSessionScreen({ topicId }: TopicSessionScreenProps) {
       header={
         <Column gap="sm">
           <AppHeader title={step?.headerTitle ?? 'Tema'} onBack={exit} />
-          {step && (
-            <TopicStepProgress
-              stepLabel={step.stepLabel}
-              progress={step.progress}
-              rewardLabel={step.rewardLabel}
-              rewardAccessibilityLabel={step.rewardAccessibilityLabel}
-            />
-          )}
+          {step && <TopicStepProgress stepLabel={step.stepLabel} progress={step.progress} />}
         </Column>
       }
       footer={

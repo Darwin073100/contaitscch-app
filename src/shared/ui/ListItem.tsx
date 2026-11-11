@@ -29,9 +29,9 @@ type ListItemProps = Omit<VariantProps<typeof listItem>, 'pressable'> & {
   overline?: string;
   /** Normalmente un IconBox, Avatar o la posición del ranking. */
   leading?: ReactNode;
-  /** Chevron, XP, Badge… */
+  /** Chevron, contador, Badge… */
   trailing?: ReactNode;
-  /** Contenido extra bajo el título (por ejemplo Badge de nivel + racha). */
+  /** Contenido extra bajo el título (por ejemplo Badge de nivel + temas). */
   meta?: ReactNode;
   subtitleLines?: number;
   onPress?: () => void;

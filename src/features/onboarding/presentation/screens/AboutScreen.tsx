@@ -22,11 +22,7 @@ export function AboutScreen() {
   const { content, goBack, startLearning } = useAboutViewModel();
 
   return (
-    <Screen
-      header={<AppHeader title="Acerca de" onBack={goBack} showLives={false} />}
-      scroll
-      safeBottom
-    >
+    <Screen header={<AppHeader title="Acerca de" onBack={goBack} />} scroll safeBottom>
       <AboutHero hero={content.hero} highlights={content.highlights} />
       <AboutIntroCard intro={content.intro} />
 

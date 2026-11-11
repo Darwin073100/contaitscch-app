@@ -13,7 +13,7 @@ export type LoginError = 'INVALID_CREDENTIALS' | 'NETWORK';
  * Pide la sal del usuario, recalcula el hash con la contraseña escrita y abre sesión.
  * Si el correo no está verificado, la sesión se guarda igual con `emailVerified: false`
  * y la UI lleva a la pantalla de verificación.
- * Pendiente (ranking): RestoreProgress para bajar xp_event y daily_activity en un dispositivo nuevo.
+ * Pendiente (sincronización): restaurar el avance de la nube (sync_progress) en un dispositivo nuevo.
  */
 export class LoginUseCase {
   constructor(

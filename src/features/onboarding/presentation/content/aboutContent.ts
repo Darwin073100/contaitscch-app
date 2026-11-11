@@ -55,12 +55,12 @@ export const aboutContent = {
   hero: {
     version: versionLabel(Constants.expoConfig?.version),
     title: 'CONTAITSCCH',
-    tagline: 'Plataforma Académica Gamificada',
+    tagline: 'Aprendizaje claro, práctico y gradual',
   },
   highlights: [
-    { icon: 'fire', color: 'streak', label: 'Rachas Diarias' },
-    { icon: 'lightning-bolt', color: 'primary', label: 'XP Puntos Progreso' },
-    { icon: 'infinity', color: 'danger', label: 'Vidas Ilimitadas' },
+    { icon: 'layers-outline', color: 'primary', label: '6 niveles' },
+    { icon: 'book-open-page-variant-outline', color: 'accent', label: '24 temas' },
+    { icon: 'check-circle-outline', color: 'streak', label: 'Ejercicio por tema' },
   ] satisfies Highlight[],
   intro: {
     title: '¿Qué es CONTAITSCCH?',
@@ -86,16 +86,16 @@ export const aboutContent = {
     {
       icon: 'lock-open-variant-outline',
       tone: 'accentSoft',
-      title: 'Cero Bloqueos por Errores',
+      title: 'Aprueba para avanzar',
       description:
-        'Vidas ilimitadas pensadas para aprender guiadamente del error sin temor a penalizaciones ni tiempos de espera.',
+        'El siguiente tema se desbloquea al aprobar el ejercicio. Si no apruebas, vuelves a tomar la lección sin penalizaciones.',
     },
     {
       icon: 'trending-up',
       tone: 'infoSoft',
-      title: 'Constancia Medible',
+      title: 'Avance Medible',
       description:
-        'Impulsar la disciplina formativa a través de rachas consecutivas, métricas de retención y acumulación de experiencia (XP).',
+        'Sigue tu progreso por nivel, compara tus temas aprobados en el ranking y termina con el examen integrador.',
     },
   ] satisfies Objective[],
   institution: {

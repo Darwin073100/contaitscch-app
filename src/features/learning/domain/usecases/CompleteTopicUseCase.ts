@@ -18,8 +18,7 @@ export class CompleteTopicUseCase {
     if (completed === null) return err('TOPIC_NOT_FOUND');
     if (completed) return ok({ topicId, firstTime: false });
 
-    // Pendiente (spec 06): con SQLite, dentro de UnitOfWork.run(tx => …) junto con AwardXp
-    // (+5 XP, synced_at NULL) y RecordDailyActivity; después publicar el evento TopicCompleted.
+    // Temporal: en la refactorización v2 un tema se aprueba con su ejercicio (SubmitQuiz), no al leerlo.
     await this.progress.markCompleted(topicId);
     return ok({ topicId, firstTime: true });
   }

@@ -6,17 +6,17 @@ type CareerProgressCardProps = {
   progress: number;
   percentLabel: string;
   completedLabel: string;
-  xpTodayLabel: string;
+  remainingLabel: string;
 };
 
-/** "Progreso de la Carrera": avance de todos los niveles y XP ganado hoy. */
+/** "Progreso de la Carrera": avance de todos los niveles y temas que faltan. */
 export function CareerProgressCard({
   title,
   subtitle,
   progress,
   percentLabel,
   completedLabel,
-  xpTodayLabel,
+  remainingLabel,
 }: CareerProgressCardProps) {
   return (
     <Card padding="lg">
@@ -39,7 +39,7 @@ export function CareerProgressCard({
             {completedLabel}
           </AppText>
           <AppText variant="caption" tone="accent" weight="bold">
-            {xpTodayLabel}
+            {remainingLabel}
           </AppText>
         </Row>
       </Column>

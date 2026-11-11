@@ -1,10 +1,9 @@
-import type { UserStats } from '@/features/gamification';
 import { toLevelCardVm, type LevelCardVm, type LevelsOverview } from '@/features/levels';
 
 // Textos ya armados para la pantalla Niveles (Home): la vista solo pinta.
 
 export type HomeVm = {
-  stats: { streak: number; xp: number; levelName: string };
+  stats: { topicsLabel: string; levelName: string };
   greeting: { overline: string; title: string; subtitle: string };
   career: {
     title: string;
@@ -12,16 +11,20 @@ export type HomeVm = {
     progress: number;
     percentLabel: string;
     completedLabel: string;
-    xpTodayLabel: string;
+    remainingLabel: string;
   };
   levelsCountLabel: string;
   levels: LevelCardVm[];
 };
 
-export function toHomeVm(overview: LevelsOverview, stats: UserStats): HomeVm {
+export function toHomeVm(overview: LevelsOverview): HomeVm {
   const { career, levels, currentLevel } = overview;
+  const remaining = career.totalTopics - career.completedTopics;
   return {
-    stats: { streak: stats.streak, xp: stats.xpTotal, levelName: currentLevel.name },
+    stats: {
+      topicsLabel: `${career.completedTopics}/${career.totalTopics}`,
+      levelName: currentLevel.name,
+    },
     greeting: {
       overline: 'Portal Académico ITSSCH',
       // Temporal: el nombre del usuario llegará con la sesión (feature auth).
@@ -34,7 +37,7 @@ export function toHomeVm(overview: LevelsOverview, stats: UserStats): HomeVm {
       progress: career.progress,
       percentLabel: `${Math.round(career.progress * 100)}%`,
       completedLabel: `Temas completados: ${career.completedTopics}/${career.totalTopics}`,
-      xpTodayLabel: stats.xpToday > 0 ? `+${stats.xpToday} XP hoy` : 'Aún sin XP hoy',
+      remainingLabel: remaining > 0 ? `${remaining} por completar` : '¡Todo completado!',
     },
     levelsCountLabel: `${levels.length} Bloques`,
     levels: levels.map((level, i) => toLevelCardVm(level, levels[i - 1])),

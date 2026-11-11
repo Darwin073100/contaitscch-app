@@ -28,21 +28,23 @@ const overview: LevelsOverview = {
 
 describe('toHomeVm', () => {
   it('arma estadísticas, progreso de la carrera y tarjetas de nivel', () => {
-    const vm = toHomeVm(overview, { xpTotal: 1250, xpToday: 150, streak: 5 });
+    const vm = toHomeVm(overview);
 
-    expect(vm.stats).toEqual({ streak: 5, xp: 1250, levelName: 'Básico' });
+    expect(vm.stats).toEqual({ topicsLabel: '3/18', levelName: 'Básico' });
     expect(vm.career).toMatchObject({
       percentLabel: '17%',
       completedLabel: 'Temas completados: 3/18',
-      xpTodayLabel: '+150 XP hoy',
+      remainingLabel: '15 por completar',
     });
     expect(vm.levelsCountLabel).toBe('3 Bloques');
     expect(vm.levels.map((l) => l.unlockHint?.emphasis)).toEqual([undefined, 'next', 'later']);
   });
 
-  it('sin XP hoy no muestra "+0"', () => {
-    expect(toHomeVm(overview, { xpTotal: 0, xpToday: 0, streak: 0 }).career.xpTodayLabel).toBe(
-      'Aún sin XP hoy',
-    );
+  it('con todos los temas completados no muestra "0 por completar"', () => {
+    const done: LevelsOverview = {
+      ...overview,
+      career: { completedTopics: 18, totalTopics: 18, progress: 1 },
+    };
+    expect(toHomeVm(done).career.remainingLabel).toBe('¡Todo completado!');
   });
 });

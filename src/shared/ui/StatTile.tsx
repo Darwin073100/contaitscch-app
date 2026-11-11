@@ -12,8 +12,8 @@ type StatTileProps = {
 };
 
 /**
- * Celda de estadística que ocupa el ancho disponible. Se usa en filas de 3:
- * Home (5 Racha · 1,250 XP · Básico Nivel) y Acerca de (Rachas · XP · Vidas).
+ * Celda de estadística que ocupa el ancho disponible. Se usa en filas:
+ * Home (3/24 Temas · Básico Nivel) y Acerca de (Niveles · Temas · Ejercicios).
  */
 export function StatTile({ label, value, icon, iconColor = 'primary' }: StatTileProps) {
   const text = typeof value === 'number' ? formatNumber(value) : value;

@@ -30,7 +30,6 @@ export { SectionHeader } from './SectionHeader';
 // Indicadores
 export { Badge } from './Badge';
 export { ProgressBar } from './ProgressBar';
-export { StatPill } from './StatPill';
 export { StatTile } from './StatTile';
 export { Stepper } from './Stepper';
 

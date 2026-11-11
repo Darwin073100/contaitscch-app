@@ -12,7 +12,6 @@ const session = (overrides: Partial<TopicSession> = {}): TopicSession => ({
   })),
   completed: false,
   startStep: 0,
-  xpReward: 5,
   ...overrides,
 });
 
@@ -25,7 +24,6 @@ describe('toTopicStepVm', () => {
       badge: 'Módulo 1 • Tema 4',
       stepLabel: 'Paso 2 de 4',
       progress: 0.5,
-      rewardLabel: '+5 XP',
       title: 'Subtema 2',
       canGoBack: true,
       isLast: false,
@@ -38,7 +36,7 @@ describe('toTopicStepVm', () => {
     expect(toTopicStepVm(session(), 0).canGoBack).toBe(false);
   });
 
-  it('el último paso completa el tema; en repaso no muestra XP', () => {
+  it('el último paso completa el tema; en repaso lo termina', () => {
     expect(toTopicStepVm(session(), 3)).toMatchObject({
       isLast: true,
       primaryLabel: 'Completar tema',
@@ -46,9 +44,8 @@ describe('toTopicStepVm', () => {
       progress: 1,
     });
 
-    const review = toTopicStepVm(session({ completed: true, xpReward: 0 }), 3);
+    const review = toTopicStepVm(session({ completed: true }), 3);
     expect(review.primaryLabel).toBe('Terminar repaso');
-    expect(review.rewardLabel).toBeNull();
   });
 
   it('recorta el paso fuera de rango', () => {

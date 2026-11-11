@@ -13,8 +13,6 @@ import { LogoutUseCase } from '@/features/auth/domain/usecases/LogoutUseCase';
 import { RegisterUserUseCase } from '@/features/auth/domain/usecases/RegisterUserUseCase';
 import { RequestVerificationCodeUseCase } from '@/features/auth/domain/usecases/RequestVerificationCodeUseCase';
 import { VerifyEmailCodeUseCase } from '@/features/auth/domain/usecases/VerifyEmailCodeUseCase';
-import { SqliteStatsRepository } from '@/features/gamification/data/repositories/SqliteStatsRepository';
-import { GetUserStatsUseCase } from '@/features/gamification/domain/usecases/GetUserStatsUseCase';
 import { SqliteSyllabusRepository } from '@/features/learning/data/repositories/SqliteSyllabusRepository';
 import { SqliteTopicRepository } from '@/features/learning/data/repositories/SqliteTopicRepository';
 import { CompleteTopicUseCase } from '@/features/learning/domain/usecases/CompleteTopicUseCase';
@@ -42,9 +40,6 @@ export type Container = {
   levels: {
     getLevelsOverview: GetLevelsOverviewUseCase;
   };
-  gamification: {
-    getUserStats: GetUserStatsUseCase;
-  };
 };
 
 /** Infraestructura ya lista (base migrada y sembrada, sesión cargada); la arma bootstrap.ts. */
@@ -62,7 +57,6 @@ export function createContainer({ db, session, clock, remote }: ContainerDeps): 
   const syllabi = new SqliteSyllabusRepository(db, session);
   const topics = new SqliteTopicRepository(db, session, clock);
   const levels = new SqliteLevelRepository(db, session);
-  const stats = new SqliteStatsRepository(db, session);
 
   return {
     clock,
@@ -81,9 +75,6 @@ export function createContainer({ db, session, clock, remote }: ContainerDeps): 
     },
     levels: {
       getLevelsOverview: new GetLevelsOverviewUseCase(levels),
-    },
-    gamification: {
-      getUserStats: new GetUserStatsUseCase(stats, stats, clock),
     },
   };
 }

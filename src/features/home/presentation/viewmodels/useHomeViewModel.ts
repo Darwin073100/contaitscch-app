@@ -9,27 +9,25 @@ export type HomeState =
   { status: 'loading' } | { status: 'error'; message: string } | { status: 'ready'; home: HomeVm };
 
 export function useHomeViewModel() {
-  const { levels, gamification } = useContainer();
+  const { levels } = useContainer();
   const [state, setState] = useState<HomeState>({ status: 'loading' });
 
-  // Se recarga al volver a la pestaña: completar un tema cambia XP, racha y progreso.
+  // Se recarga al volver a la pestaña: completar un tema cambia el progreso.
   useFocusEffect(
     useCallback(() => {
       let active = true;
-      Promise.all([levels.getLevelsOverview.execute(), gamification.getUserStats.execute()]).then(
-        ([overview, stats]) => {
-          if (!active) return;
-          setState(
-            overview.ok
-              ? { status: 'ready', home: toHomeVm(overview.value, stats) }
-              : { status: 'error', message: 'Aún no hay niveles disponibles.' },
-          );
-        },
-      );
+      levels.getLevelsOverview.execute().then((overview) => {
+        if (!active) return;
+        setState(
+          overview.ok
+            ? { status: 'ready', home: toHomeVm(overview.value) }
+            : { status: 'error', message: 'Aún no hay niveles disponibles.' },
+        );
+      });
       return () => {
         active = false;
       };
-    }, [levels, gamification]),
+    }, [levels]),
   );
 
   // Temporal: Aprender siempre muestra el nivel actual; abrir un nivel concreto queda pendiente.

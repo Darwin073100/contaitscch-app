@@ -15,7 +15,7 @@ export function SyllabusMapScreen() {
 
   return (
     <Screen
-      header={<AppHeader showLives={false} />}
+      header={<AppHeader />}
       scroll
       footer={
         action && (

@@ -51,7 +51,6 @@ describe('TopicSessionScreen', () => {
     expect(screen.getByText('Lado Derecho • Abonos')).toBeTruthy();
     expect(screen.getByText('+ Capital / Ingreso')).toBeTruthy();
     expect(screen.getByText('Regla de Oro de la Partida Doble')).toBeTruthy();
-    expect(screen.getByLabelText('Completa el tema para ganar 5 XP')).toBeTruthy();
   });
 
   it('avanza y regresa entre pasos', async () => {

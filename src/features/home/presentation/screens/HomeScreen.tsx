@@ -20,13 +20,8 @@ import { useHomeViewModel } from '../viewmodels/useHomeViewModel';
 /** Pestaña Niveles: menú de inicio con estadísticas, progreso de la carrera y niveles. */
 export function HomeScreen() {
   const { state, openLevel, openProfile, openAbout } = useHomeViewModel();
-  const stats = state.status === 'ready' ? state.home.stats : undefined;
-
   return (
-    <Screen
-      header={<AppHeader streak={stats?.streak} xp={stats?.xp} onProfilePress={openProfile} />}
-      scroll
-    >
+    <Screen header={<AppHeader onProfilePress={openProfile} />} scroll>
       {state.status === 'loading' && <AppText variant="caption">Cargando…</AppText>}
       {state.status === 'error' && <Callout tone="danger" text={state.message} />}
       {state.status === 'ready' && (

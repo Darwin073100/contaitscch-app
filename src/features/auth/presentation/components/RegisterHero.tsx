@@ -11,7 +11,7 @@ export function RegisterHero() {
           ¡Únete a CONTAITSCCH!
         </AppText>
         <AppText variant="caption" align="center">
-          Aprende contabilidad jugando, gana rachas y domina el balance general.
+          Aprende contabilidad desde cero, nivel por nivel, con un ejercicio al final de cada tema.
         </AppText>
       </Column>
     </Column>

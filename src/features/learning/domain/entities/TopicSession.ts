@@ -38,12 +38,10 @@ export type TopicSession = {
   completed: boolean;
   /** Índice (desde 0) del paso donde se retoma. */
   startStep: number;
-  /** XP que se gana al terminarlo; 0 si ya estaba completado (repaso). */
-  xpReward: number;
 };
 
 export type TopicCompletion = {
   topicId: number;
-  /** false si ya estaba completado: no vuelve a dar XP. */
+  /** false si ya estaba completado (repaso). */
   firstTime: boolean;
 };
