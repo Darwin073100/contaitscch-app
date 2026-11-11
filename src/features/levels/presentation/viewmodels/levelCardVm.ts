@@ -24,23 +24,26 @@ export type LevelCardVm = {
   accessibilityLabel: string;
 };
 
-// Iconos de la captura por orden del nivel; un nivel nuevo usa el birrete.
+// Iconos por orden del nivel (equivalentes a los del prototipo); un nivel nuevo usa el birrete.
 const levelIcons: Record<number, IconName> = {
-  1: 'bank-outline',
-  2: 'calculator-variant-outline',
-  3: 'receipt-text-outline',
+  1: 'feather',
+  2: 'scale-balance',
+  3: 'book-open-variant',
+  4: 'chart-line',
+  5: 'storefront-outline',
+  6: 'lightbulb-on-outline',
 };
 
 const statusLabel: Record<LevelStatus, string> = {
-  completed: 'Completado',
+  completed: 'Aprobado',
   inProgress: 'En curso',
   locked: 'Bloqueado',
 };
 
 function actionLabel(level: LevelOverviewItem): string {
   if (level.status === 'locked') return 'Bloqueado';
-  if (level.status === 'completed') return 'Repasar Nivel';
-  return level.completedTopics > 0 ? 'Continuar Nivel' : 'Empezar Nivel';
+  if (level.status === 'completed') return 'Repasar nivel';
+  return level.completedTopics > 0 ? 'Continuar nivel' : 'Empezar nivel';
 }
 
 function unlockHint(
@@ -48,34 +51,29 @@ function unlockHint(
   previous: LevelOverviewItem | undefined,
 ): UnlockHintVm | undefined {
   if (level.status !== 'locked' || !previous) return undefined;
-  return previous.status === 'locked'
-    ? {
-        text: `Desbloquea completando satisfactoriamente el Nivel ${previous.name}.`,
-        emphasis: 'later',
-      }
-    : {
-        text: `Requiere aprobar el Test de Nivel ${previous.name} para desbloquear.`,
-        emphasis: 'next',
-      };
+  return {
+    text: `Se desbloquea al aprobar los ${previous.totalTopics} temas del Nivel ${previous.sortOrder}.`,
+    emphasis: previous.status === 'locked' ? 'later' : 'next',
+  };
 }
 
 /** `previous` es el nivel anterior en orden (para el aviso de desbloqueo). */
 export function toLevelCardVm(level: LevelOverviewItem, previous?: LevelOverviewItem): LevelCardVm {
   const percent = Math.round(level.progress * 100);
-  const name = `Nivel ${level.name}`;
+  const name = `Nivel ${level.sortOrder}`;
   return {
     id: level.id,
     name,
-    subtitle: level.subtitle,
+    subtitle: level.title,
     description: level.description,
     icon: levelIcons[level.sortOrder] ?? 'school-outline',
     status: level.status,
     statusLabel: statusLabel[level.status],
-    topicsLabel: `${level.completedTopics}/${level.totalTopics} Temas`,
+    topicsLabel: `${level.completedTopics}/${level.totalTopics} temas`,
     progress: level.progress,
-    progressLabel: `${percent}% Completado`,
+    progressLabel: `${percent}% aprobado`,
     actionLabel: actionLabel(level),
     unlockHint: unlockHint(level, previous),
-    accessibilityLabel: `${name}, ${level.subtitle}. ${statusLabel[level.status]}, ${percent}% completado`,
+    accessibilityLabel: `${name}, ${level.title}. ${statusLabel[level.status]}, ${percent}% aprobado`,
   };
 }

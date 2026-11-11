@@ -1,6 +1,6 @@
-import type { LevelProgress } from '../entities/Level';
+import type { LevelInfo } from '../entities/Level';
 
 export interface LevelRepository {
-  /** Todos los niveles con el progreso del usuario. */
-  getProgress(): Promise<LevelProgress[]>;
+  /** Textos de todos los niveles. */
+  getLevels(): Promise<LevelInfo[]>;
 }

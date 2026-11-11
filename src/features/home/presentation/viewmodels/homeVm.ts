@@ -23,7 +23,7 @@ export function toHomeVm(overview: LevelsOverview): HomeVm {
   return {
     stats: {
       topicsLabel: `${career.completedTopics}/${career.totalTopics}`,
-      levelName: currentLevel.name,
+      levelName: `Nivel ${currentLevel.sortOrder}`,
     },
     greeting: {
       overline: 'Portal Académico ITSSCH',

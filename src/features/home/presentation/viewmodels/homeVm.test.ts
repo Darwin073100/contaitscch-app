@@ -8,13 +8,11 @@ const level = (
   completedTopics: number,
 ): LevelOverviewItem => ({
   id: sortOrder,
-  name: ['Básico', 'Intermedio', 'Avanzado'][sortOrder - 1],
   sortOrder,
-  subtitle: '',
+  title: '',
   description: '',
   completedTopics,
   totalTopics: 6,
-  examPassed: false,
   status,
   progress: completedTopics / 6,
 });
@@ -30,7 +28,7 @@ describe('toHomeVm', () => {
   it('arma estadísticas, progreso de la carrera y tarjetas de nivel', () => {
     const vm = toHomeVm(overview);
 
-    expect(vm.stats).toEqual({ topicsLabel: '3/18', levelName: 'Básico' });
+    expect(vm.stats).toEqual({ topicsLabel: '3/18', levelName: 'Nivel 1' });
     expect(vm.career).toMatchObject({
       percentLabel: '17%',
       completedLabel: 'Temas completados: 3/18',

@@ -4,19 +4,17 @@ import { toSyllabusMapVm } from './syllabusMapVm';
 const topic = (
   sortOrder: number,
   status: SyllabusTopic['status'],
-  viewedSubtopics = 0,
+  retry = false,
 ): SyllabusTopic => ({
   id: 100 + sortOrder,
   title: `Tema ${sortOrder}`,
   sortOrder,
-  completed: status === 'completed',
-  viewedSubtopics,
-  totalSubtopics: 3,
   status,
+  retry,
 });
 
 const syllabus = (topics: SyllabusTopic[], examStatus: Syllabus['examStatus']): Syllabus => ({
-  level: { id: 1, name: 'Básico', sortOrder: 1, title: 'Introducción', description: 'Desc' },
+  level: { id: 1, sortOrder: 1, title: 'Fundamentos', description: 'Meta del nivel' },
   topics,
   completedTopics: topics.filter((t) => t.status === 'completed').length,
   totalTopics: topics.length,
@@ -25,7 +23,7 @@ const syllabus = (topics: SyllabusTopic[], examStatus: Syllabus['examStatus']): 
 });
 
 describe('toSyllabusMapVm', () => {
-  it('arma la tarjeta del módulo con el progreso', () => {
+  it('arma la tarjeta del nivel con el avance', () => {
     const vm = toSyllabusMapVm(
       syllabus(
         [topic(1, 'completed'), topic(2, 'completed'), topic(3, 'active'), topic(4, 'locked')],
@@ -34,41 +32,37 @@ describe('toSyllabusMapVm', () => {
     );
 
     expect(vm.header).toMatchObject({
-      overline: 'Módulo 1',
+      overline: 'Nivel 1',
+      levelName: 'Nivel 1',
       progress: 0.5,
-      progressLabel: '2 de 4 temas completados',
+      progressLabel: '2 de 4 temas aprobados',
       percentLabel: '50%',
     });
   });
 
-  it('el tema activo lleva globo con su avance y es el destino de la barra inferior', () => {
-    const vm = toSyllabusMapVm(syllabus([topic(1, 'completed'), topic(2, 'active', 2)], 'locked'));
+  it('el tema activo lleva globo y es el destino de la barra inferior', () => {
+    const vm = toSyllabusMapVm(syllabus([topic(1, 'completed'), topic(2, 'active')], 'locked'));
 
-    expect(vm.nodes[1]).toMatchObject({ label: '2. Tema 2', hint: '¡Toca para continuar! 2/3' });
+    expect(vm.nodes[1]).toMatchObject({ label: '2. Tema 2', hint: '¡Toca para empezar!' });
     expect(vm.nodes[0].hint).toBeUndefined();
     expect(vm.continueAction).toMatchObject({
-      caption: 'Continuar tema activo',
+      caption: 'Tema actual',
       target: { kind: 'topic', topicId: 102 },
     });
   });
 
-  it('un tema activo sin abrir invita a empezar', () => {
-    const vm = toSyllabusMapVm(syllabus([topic(1, 'active')], 'locked'));
+  it('un tema reprobado invita a volver a tomarlo', () => {
+    const vm = toSyllabusMapVm(syllabus([topic(1, 'active', true)], 'locked'));
 
-    expect(vm.nodes[0].hint).toBe('¡Toca para empezar!');
-    expect(vm.continueAction?.caption).toBe('Siguiente tema');
+    expect(vm.nodes[0].hint).toBe('¡Vuelve a tomarla!');
+    expect(vm.nodes[0].accessibilityLabel).toContain('por aprobar');
+    expect(vm.continueAction?.caption).toBe('Por aprobar');
   });
 
-  it('con todos los temas completados la barra lleva al examen', () => {
-    const vm = toSyllabusMapVm(syllabus([topic(1, 'completed')], 'available'));
+  it('sin barra inferior cuando el nivel ya está aprobado', () => {
+    const vm = toSyllabusMapVm(syllabus([topic(1, 'completed')], 'passed'));
 
-    expect(vm.continueAction).toMatchObject({
-      title: 'Examen Final Básico',
-      target: { kind: 'exam' },
-    });
-  });
-
-  it('sin barra inferior cuando el examen ya está aprobado', () => {
-    expect(toSyllabusMapVm(syllabus([topic(1, 'completed')], 'passed')).continueAction).toBeNull();
+    expect(vm.exam.title).toBe('Fin del Nivel 1');
+    expect(vm.continueAction).toBeNull();
   });
 });

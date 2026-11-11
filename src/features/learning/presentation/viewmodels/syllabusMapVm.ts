@@ -11,7 +11,7 @@ export type TopicNodeVm = {
   id: number;
   label: string;
   status: TopicStatus;
-  /** Globo sobre el tema activo: "¡Toca para continuar! 2/3". */
+  /** Globo sobre el tema activo: "¡Toca para empezar!" o "¡Vuelve a tomarla!". */
   hint?: string;
   accessibilityLabel: string;
 };
@@ -47,30 +47,25 @@ export type SyllabusMapVm = {
 };
 
 const statusText: Record<TopicStatus, string> = {
-  completed: 'Completado',
+  completed: 'Aprobado',
   active: 'En curso',
   locked: 'Bloqueado',
 };
 
 const examStatusText: Record<ExamStatus, string> = {
-  locked: 'Bloqueado: completa todos los temas',
+  locked: 'Bloqueado: aprueba todos los temas',
   available: 'Disponible',
   passed: 'Aprobado',
 };
 
 function toTopicNode(topic: SyllabusTopic): TopicNodeVm {
-  const started = topic.viewedSubtopics > 0;
-  const steps = `${topic.viewedSubtopics}/${topic.totalSubtopics}`;
   const hint =
     topic.status === 'active'
-      ? started
-        ? `¡Toca para continuar! ${steps}`
+      ? topic.retry
+        ? '¡Vuelve a tomarla!'
         : '¡Toca para empezar!'
       : undefined;
-  const progress =
-    topic.status === 'active' && started
-      ? `, ${topic.viewedSubtopics} de ${topic.totalSubtopics} pasos vistos`
-      : '';
+  const progress = topic.retry ? ', por aprobar' : '';
 
   return {
     id: topic.id,
@@ -85,7 +80,7 @@ function toContinueAction(syllabus: Syllabus, examTitle: string): ContinueAction
   const { activeTopic, examStatus } = syllabus;
   if (activeTopic) {
     return {
-      caption: activeTopic.viewedSubtopics > 0 ? 'Continuar tema activo' : 'Siguiente tema',
+      caption: activeTopic.retry ? 'Por aprobar' : 'Tema actual',
       title: activeTopic.title,
       actionLabel: 'Aprender',
       target: { kind: 'topic', topicId: activeTopic.id },
@@ -105,22 +100,23 @@ function toContinueAction(syllabus: Syllabus, examTitle: string): ContinueAction
 export function toSyllabusMapVm(syllabus: Syllabus): SyllabusMapVm {
   const { level, completedTopics, totalTopics, examStatus } = syllabus;
   const progress = totalTopics > 0 ? completedTopics / totalTopics : 0;
-  const examTitle = `Examen Final ${level.name}`;
+  const levelName = `Nivel ${level.sortOrder}`;
+  const examTitle = `Fin del ${levelName}`;
 
   return {
     header: {
-      overline: `Módulo ${level.sortOrder}`,
-      levelName: level.name,
+      overline: levelName,
+      levelName,
       title: level.title,
       description: level.description,
       progress,
-      progressLabel: `${completedTopics} de ${totalTopics} temas completados`,
+      progressLabel: `${completedTopics} de ${totalTopics} temas aprobados`,
       percentLabel: `${Math.round(progress * 100)}%`,
     },
     nodes: syllabus.topics.map(toTopicNode),
     exam: {
       title: examTitle,
-      caption: 'Certificado de Nivel',
+      caption: 'Aprueba los 4 temas',
       status: examStatus,
       accessibilityLabel: `${examTitle}. ${examStatusText[examStatus]}`,
     },
