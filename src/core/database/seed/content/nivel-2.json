@@ -1,0 +1,337 @@
+{
+  "level": {
+    "id": 2,
+    "title": "El lenguaje contable: cuentas, partida doble, cargo y abono",
+    "goal": "Al terminar este nivel el alumno clasifica cuentas de activo, pasivo y capital, aplica la regla del cargo y el abono según la naturaleza de cada cuenta y comprueba la dualidad económica en operaciones sencillas."
+  },
+  "topics": [
+    {
+      "id": 201,
+      "sortOrder": 1,
+      "title": "La cuenta y el catálogo de cuentas",
+      "objective": "Definir qué es una cuenta, conocer sus partes y explicar la función del catálogo de cuentas.",
+      "explanation": [
+        "Una cuenta es el cajón donde se acumula todo lo que pasa con un mismo concepto. La cuenta Caja guarda solo movimientos de dinero en efectivo; la cuenta Clientes, solo lo que los clientes deben; la cuenta Ventas, solo lo vendido. Cada cuenta tiene un nombre, un lado izquierdo llamado Debe y un lado derecho llamado Haber. Anotar en el Debe se llama cargar; anotar en el Haber se llama abonar.",
+        "La representación clásica de una cuenta es la cuenta T: una T mayúscula con el nombre arriba, el Debe a la izquierda y el Haber a la derecha. La diferencia entre ambos lados es el saldo. Si el Debe es mayor, el saldo es deudor; si el Haber es mayor, el saldo es acreedor.",
+        "El catálogo de cuentas es la lista ordenada y codificada de todas las cuentas que usa un negocio, por ejemplo 101 Caja, 102 Bancos, 201 Proveedores. Es el índice de todo el sistema: sin catálogo, cada quien nombraría las cuentas a su manera y la información no se podría sumar ni comparar."
+      ],
+      "example": {
+        "title": "La cuenta T de Caja",
+        "steps": [
+          "Debe (cargos): entró dinero por ventas $650 y por un préstamo $1,000. Total cargos: $1,650.",
+          "Haber (abonos): salió dinero por el pago de luz $300 y por compra de mercancía $500. Total abonos: $800.",
+          "Saldo = $1,650 − $800 = $850, saldo deudor. Interpretación: hay $850 en efectivo, y eso debe coincidir con el dinero físico de la caja."
+        ]
+      },
+      "keyIdea": "Debe = izquierda = cargar. Haber = derecha = abonar. Saldo deudor: manda el Debe. Saldo acreedor: manda el Haber.",
+      "commonError": "Creer que cargar significa siempre aumentar. Cargar aumenta unas cuentas y disminuye otras: depende de la naturaleza de la cuenta, como se verá en la lección N2-L3.",
+      "activity": "Dibuja la cuenta T de Bancos con estos movimientos: depósito inicial $5,000, pago con transferencia $1,200, depósito por ventas $2,300 y retiro $600. Calcula el saldo y di si es deudor o acreedor.",
+      "quiz": {
+        "questions": [
+          {
+            "id": 20101,
+            "sortOrder": 1,
+            "statement": "Anotar una cantidad en el lado izquierdo de una cuenta se llama:",
+            "options": [
+              {
+                "id": 201011,
+                "text": "Abonar",
+                "isCorrect": false
+              },
+              {
+                "id": 201012,
+                "text": "Cargar",
+                "isCorrect": true
+              },
+              {
+                "id": 201013,
+                "text": "Saldar",
+                "isCorrect": false
+              },
+              {
+                "id": 201014,
+                "text": "Cancelar",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "El lado izquierdo es el Debe; anotar ahí es cargar."
+          },
+          {
+            "id": 20102,
+            "sortOrder": 2,
+            "statement": "¿Para qué sirve el catálogo de cuentas?",
+            "options": [
+              {
+                "id": 201021,
+                "text": "Para guardar las facturas en orden",
+                "isCorrect": false
+              },
+              {
+                "id": 201022,
+                "text": "Es la lista ordenada y codificada de las cuentas que usa el negocio",
+                "isCorrect": true
+              },
+              {
+                "id": 201023,
+                "text": "Para calcular impuestos",
+                "isCorrect": false
+              },
+              {
+                "id": 201024,
+                "text": "Para diseñar el logotipo del negocio",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "El catálogo ordena y da un código único a cada cuenta del sistema."
+          }
+        ]
+      }
+    },
+    {
+      "id": 202,
+      "sortOrder": 2,
+      "title": "Activo, pasivo y capital: la ecuación contable",
+      "objective": "Clasificar bienes, derechos, obligaciones y aportaciones, y aplicar la ecuación Activo = Pasivo + Capital.",
+      "explanation": [
+        "Todo lo que un negocio tiene se llama activo: dinero, mercancía, muebles, equipo y también los derechos de cobro, como lo que los clientes deben. El activo responde a la pregunta ¿qué tiene el negocio y qué le deben?",
+        "La pregunta siguiente es ¿de dónde salió eso? Solo hay dos fuentes posibles: se debe a terceros —eso es el pasivo: préstamos, deudas con proveedores, impuestos por pagar— o lo aportaron los dueños y lo ha ganado el propio negocio —eso es el capital contable—.",
+        "De ahí nace la ecuación contable, la regla de oro de todo el sistema: Activo = Pasivo + Capital. Siempre debe cumplirse. Si un negocio tiene $100,000 en bienes y derechos y debe $40,000, la parte de los dueños es necesariamente $60,000. Toda operación mueve la ecuación, pero nunca la rompe: si un lado crece, algo del otro lado crece o el mismo lado se compensa."
+      ],
+      "example": {
+        "title": "Nace una tienda",
+        "steps": [
+          "María aporta $50,000 de sus ahorros para abrir su tienda. Activo: Caja $50,000. Capital: $50,000. Ecuación: 50,000 = 0 + 50,000.",
+          "El banco le presta $30,000. Activo: Bancos sube a $30,000. Pasivo: Préstamos $30,000. Ecuación: 80,000 = 30,000 + 50,000.",
+          "Compra mercancía a crédito por $20,000. Activo: Inventarios $20,000. Pasivo: Proveedores $20,000. Ecuación: 100,000 = 50,000 + 50,000. Siempre cuadra."
+        ]
+      },
+      "keyIdea": "Activo = Pasivo + Capital. El activo es lo que se tiene; pasivo y capital explican de dónde salió.",
+      "commonError": "Llamar capital a todo el dinero que hay en caja. En caja puede haber dinero prestado (pasivo) o de ventas que aún deben cubrir costos; capital es solo la parte que corresponde a los dueños.",
+      "activity": "Clasifica en activo, pasivo o capital: efectivo, deuda con el proveedor, aportación del dueño, mercancía, préstamo bancario, lo que un cliente debe, utilidades acumuladas y una computadora del negocio. Después verifica con la ecuación inventando un monto para cada uno.",
+      "quiz": {
+        "questions": [
+          {
+            "id": 20201,
+            "sortOrder": 1,
+            "statement": "Una empresa tiene activos por $180,000 y pasivos por $70,000. Su capital es:",
+            "options": [
+              {
+                "id": 202011,
+                "text": "$250,000",
+                "isCorrect": false
+              },
+              {
+                "id": 202012,
+                "text": "$110,000",
+                "isCorrect": true
+              },
+              {
+                "id": 202013,
+                "text": "$70,000",
+                "isCorrect": false
+              },
+              {
+                "id": 202014,
+                "text": "No se puede saber",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Capital = Activo − Pasivo = 180,000 − 70,000 = $110,000."
+          },
+          {
+            "id": 20202,
+            "sortOrder": 2,
+            "statement": "Lo que los clientes deben al negocio por ventas a crédito se clasifica como:",
+            "options": [
+              {
+                "id": 202021,
+                "text": "Pasivo",
+                "isCorrect": false
+              },
+              {
+                "id": 202022,
+                "text": "Capital",
+                "isCorrect": false
+              },
+              {
+                "id": 202023,
+                "text": "Activo, porque es un derecho de cobro",
+                "isCorrect": true
+              },
+              {
+                "id": 202024,
+                "text": "Gasto",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Los derechos de cobro forman parte del activo."
+          }
+        ]
+      }
+    },
+    {
+      "id": 203,
+      "sortOrder": 3,
+      "title": "Naturaleza de las cuentas y reglas del cargo y el abono",
+      "objective": "Aplicar, según la naturaleza deudora o acreedora de cada cuenta, cuándo se carga y cuándo se abona.",
+      "explanation": [
+        "Cada grupo de cuentas tiene una naturaleza, es decir, un lado por el que crece. Las cuentas de activo y las de gastos y costos son de naturaleza deudora: aumentan con un cargo y disminuyen con un abono. Las cuentas de pasivo, capital e ingresos son de naturaleza acreedora: aumentan con un abono y disminuyen con un cargo.",
+        "No hay que memorizarlo como una lista suelta: se deduce de la ecuación. Si compro mercancía al contado, el activo Inventarios aumenta (cargo) y el activo Caja disminuye (abono). Si vendo, Caja aumenta (cargo) y el ingreso Ventas aumenta (abono). El movimiento siempre toca al menos dos cuentas.",
+        "Regla práctica para no perderse: primero pregunta qué cuentas intervienen, segundo si cada una aumenta o disminuye, y tercero aplica su naturaleza. Con esas tres preguntas se resuelve cualquier operación básica."
+      ],
+      "example": {
+        "title": "Pago de renta por $4,000 con transferencia",
+        "steps": [
+          "Cuentas que intervienen: Gasto por renta (gasto) y Bancos (activo).",
+          "¿Aumenta o disminuye? El gasto nace, aumenta. Bancos baja porque salió dinero.",
+          "Aplicación: un gasto aumenta con cargo → cargo a Renta $4,000. Un activo disminuye con abono → abono a Bancos $4,000. Cargos = abonos."
+        ]
+      },
+      "keyIdea": "Deudoras: activo, costos y gastos — crecen cargando. Acreedoras: pasivo, capital e ingresos — crecen abonando.",
+      "commonError": "Cargar Bancos cuando sale dinero. Si el activo disminuye, se abona, aunque la palabra «abono» suene a «agregar».",
+      "activity": "Para cada operación di qué cuentas se cargan y cuáles se abonan: a) venta en efectivo $1,000; b) pago a un proveedor $700; c) compra de equipo a crédito $9,000; d) aportación adicional del dueño $10,000 en efectivo.",
+      "quiz": {
+        "questions": [
+          {
+            "id": 20301,
+            "sortOrder": 1,
+            "statement": "La cuenta de Proveedores (pasivo) aumenta cuando se anota en:",
+            "options": [
+              {
+                "id": 203011,
+                "text": "El Debe (cargo)",
+                "isCorrect": false
+              },
+              {
+                "id": 203012,
+                "text": "El Haber (abono)",
+                "isCorrect": true
+              },
+              {
+                "id": 203013,
+                "text": "Ambos lados por igual",
+                "isCorrect": false
+              },
+              {
+                "id": 203014,
+                "text": "La balanza",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "El pasivo es de naturaleza acreedora: crece con abonos."
+          },
+          {
+            "id": 20302,
+            "sortOrder": 2,
+            "statement": "Si se paga en efectivo una deuda con un proveedor, Bancos o Caja se:",
+            "options": [
+              {
+                "id": 203021,
+                "text": "Carga, porque es un pago importante",
+                "isCorrect": false
+              },
+              {
+                "id": 203022,
+                "text": "Abona, porque el activo disminuye",
+                "isCorrect": true
+              },
+              {
+                "id": 203023,
+                "text": "No se mueve",
+                "isCorrect": false
+              },
+              {
+                "id": 203024,
+                "text": "Carga y se abona a la vez",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Al salir dinero, el activo disminuye, y un activo disminuye con un abono."
+          }
+        ]
+      }
+    },
+    {
+      "id": 204,
+      "sortOrder": 4,
+      "title": "La partida doble y la dualidad económica",
+      "objective": "Registrar operaciones sencillas por partida doble comprobando que la suma de cargos iguala la suma de abonos.",
+      "explanation": [
+        "La partida doble es el método que Luca Pacioli difundió y que se sigue usando: toda operación afecta al menos a dos cuentas, y la suma de los cargos siempre es igual a la suma de los abonos. No es un capricho: es la consecuencia de la dualidad económica, el postulado de que todo recurso tiene una fuente.",
+        "Piensa en cualquier hecho de un negocio y pregúntate dos cosas: ¿qué entró o aumentó? y ¿de dónde salió o qué disminuyó? Una venta en efectivo: entra dinero (cargo a Caja) y nace un ingreso (abono a Ventas). Una compra a crédito: entra mercancía (cargo a Inventarios) y nace una deuda (abono a Proveedores). Siempre hay dos caras.",
+        "Si al terminar un registro los cargos no igualan a los abonos, hay un error, con seguridad. La partida doble funciona así también como un mecanismo de autocontrol: el sistema avisa cuando algo se registró mal."
+      ],
+      "example": {
+        "title": "Compra de mercancía por $8,000: mitad en efectivo, mitad a crédito",
+        "steps": [
+          "Cargo: Inventarios $8,000 (aumenta el activo).",
+          "Abono: Caja $4,000 (disminuye el activo) y Proveedores $4,000 (aumenta el pasivo).",
+          "Comprobación: cargos $8,000 = abonos $4,000 + $4,000 = $8,000. La operación cuadra y la ecuación se mantiene: el activo neto sube $4,000 y el pasivo sube $4,000."
+        ]
+      },
+      "keyIdea": "En cada operación: suma de cargos = suma de abonos. Si no cuadran, hay un error.",
+      "commonError": "Registrar solo una cara de la operación, por ejemplo anotar la venta y olvidar el ingreso o el derecho de cobro. Una sola cara rompe la ecuación y la partida doble.",
+      "activity": "Registra por partida doble, con cuentas T o en formato de asiento: a) el dueño aporta $20,000 en efectivo; b) se compra una vitrina por $6,000 a crédito; c) se venden $3,500 en efectivo; d) se paga la mitad de la vitrina. Comprueba cada asiento.",
+      "quiz": {
+        "questions": [
+          {
+            "id": 20401,
+            "sortOrder": 1,
+            "statement": "En la partida doble, en toda operación se cumple que:",
+            "options": [
+              {
+                "id": 204011,
+                "text": "Solo se mueve una cuenta",
+                "isCorrect": false
+              },
+              {
+                "id": 204012,
+                "text": "La suma de cargos es igual a la suma de abonos",
+                "isCorrect": true
+              },
+              {
+                "id": 204013,
+                "text": "Todo se carga",
+                "isCorrect": false
+              },
+              {
+                "id": 204014,
+                "text": "Todo se registra en efectivo",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Esa igualdad es la base del método y su mecanismo de comprobación."
+          },
+          {
+            "id": 20402,
+            "sortOrder": 2,
+            "statement": "Compras equipo a crédito por $15,000. El registro correcto es:",
+            "options": [
+              {
+                "id": 204021,
+                "text": "Cargo a Proveedores y abono a Equipo",
+                "isCorrect": false
+              },
+              {
+                "id": 204022,
+                "text": "Cargo a Equipo y abono a Proveedores",
+                "isCorrect": true
+              },
+              {
+                "id": 204023,
+                "text": "Cargo a Caja y abono a Equipo",
+                "isCorrect": false
+              },
+              {
+                "id": 204024,
+                "text": "Solo se anota en el diario sin cuentas",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Aumenta el activo Equipo (cargo) y aumenta el pasivo Proveedores (abono)."
+          }
+        ]
+      }
+    }
+  ]
+}

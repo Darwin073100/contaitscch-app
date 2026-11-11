@@ -1,0 +1,276 @@
+{
+  "id": 900,
+  "passMark": 8,
+  "questions": [
+    {
+      "id": 90001,
+      "sortOrder": 1,
+      "statement": "¿Cuál es la ecuación contable correcta?",
+      "options": [
+        {
+          "id": 900011,
+          "text": "Activo = Pasivo − Capital",
+          "isCorrect": false
+        },
+        {
+          "id": 900012,
+          "text": "Activo = Pasivo + Capital",
+          "isCorrect": true
+        },
+        {
+          "id": 900013,
+          "text": "Capital = Activo + Pasivo",
+          "isCorrect": false
+        },
+        {
+          "id": 900014,
+          "text": "Pasivo = Activo + Ingresos",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": 90002,
+      "sortOrder": 2,
+      "statement": "Una cuenta de activo aumenta con:",
+      "options": [
+        {
+          "id": 900021,
+          "text": "Un abono",
+          "isCorrect": false
+        },
+        {
+          "id": 900022,
+          "text": "Un cargo",
+          "isCorrect": true
+        },
+        {
+          "id": 900023,
+          "text": "Un cierre",
+          "isCorrect": false
+        },
+        {
+          "id": 900024,
+          "text": "Una factura",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": 90003,
+      "sortOrder": 3,
+      "statement": "El registro cronológico de las operaciones se hace en:",
+      "options": [
+        {
+          "id": 900031,
+          "text": "El mayor",
+          "isCorrect": false
+        },
+        {
+          "id": 900032,
+          "text": "La balanza",
+          "isCorrect": false
+        },
+        {
+          "id": 900033,
+          "text": "El diario",
+          "isCorrect": true
+        },
+        {
+          "id": 900034,
+          "text": "El balance",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": 90004,
+      "sortOrder": 4,
+      "statement": "Ventas $90,000, costo de ventas $54,000 y gastos $20,000. La utilidad es:",
+      "options": [
+        {
+          "id": 900041,
+          "text": "$36,000",
+          "isCorrect": false
+        },
+        {
+          "id": 900042,
+          "text": "$16,000",
+          "isCorrect": true
+        },
+        {
+          "id": 900043,
+          "text": "$34,000",
+          "isCorrect": false
+        },
+        {
+          "id": 900044,
+          "text": "$56,000",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": 90005,
+      "sortOrder": 5,
+      "statement": "El balance general presenta información:",
+      "options": [
+        {
+          "id": 900051,
+          "text": "De todo un año, día por día",
+          "isCorrect": false
+        },
+        {
+          "id": 900052,
+          "text": "A una fecha determinada",
+          "isCorrect": true
+        },
+        {
+          "id": 900053,
+          "text": "Solo de ventas",
+          "isCorrect": false
+        },
+        {
+          "id": 900054,
+          "text": "Solo de efectivo futuro",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": 90006,
+      "sortOrder": 6,
+      "statement": "Costo de ventas con inventario inicial $5,000, compras $20,000 e inventario final $6,000:",
+      "options": [
+        {
+          "id": 900061,
+          "text": "$31,000",
+          "isCorrect": false
+        },
+        {
+          "id": 900062,
+          "text": "$19,000",
+          "isCorrect": true
+        },
+        {
+          "id": 900063,
+          "text": "$21,000",
+          "isCorrect": false
+        },
+        {
+          "id": 900064,
+          "text": "$25,000",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": 90007,
+      "sortOrder": 7,
+      "statement": "Un activo de $24,000 con vida útil de 4 años se deprecia por año (línea recta, sin desecho):",
+      "options": [
+        {
+          "id": 900071,
+          "text": "$4,000",
+          "isCorrect": false
+        },
+        {
+          "id": 900072,
+          "text": "$6,000",
+          "isCorrect": true
+        },
+        {
+          "id": 900073,
+          "text": "$8,000",
+          "isCorrect": false
+        },
+        {
+          "id": 900074,
+          "text": "$24,000",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": 90008,
+      "sortOrder": 8,
+      "statement": "El IVA por pagar resulta de:",
+      "options": [
+        {
+          "id": 900081,
+          "text": "IVA acreditable − IVA trasladado",
+          "isCorrect": false
+        },
+        {
+          "id": 900082,
+          "text": "IVA trasladado − IVA acreditable",
+          "isCorrect": true
+        },
+        {
+          "id": 900083,
+          "text": "Ventas + compras",
+          "isCorrect": false
+        },
+        {
+          "id": 900084,
+          "text": "ISR − IVA",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": 90009,
+      "sortOrder": 9,
+      "statement": "Punto de equilibrio con fijos de $18,000 y margen de contribución de $60:",
+      "options": [
+        {
+          "id": 900091,
+          "text": "300 unidades",
+          "isCorrect": true
+        },
+        {
+          "id": 900092,
+          "text": "180 unidades",
+          "isCorrect": false
+        },
+        {
+          "id": 900093,
+          "text": "600 unidades",
+          "isCorrect": false
+        },
+        {
+          "id": 900094,
+          "text": "60 unidades",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": 90010,
+      "sortOrder": 10,
+      "statement": "Vender a crédito y aún no cobrar puede provocar:",
+      "options": [
+        {
+          "id": 900101,
+          "text": "Utilidad sin efectivo disponible",
+          "isCorrect": true
+        },
+        {
+          "id": 900102,
+          "text": "Pérdida automática",
+          "isCorrect": false
+        },
+        {
+          "id": 900103,
+          "text": "Que el balance no exista",
+          "isCorrect": false
+        },
+        {
+          "id": 900104,
+          "text": "Que no haya que registrar la venta",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

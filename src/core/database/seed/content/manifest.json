@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "levels": [
+    "nivel-1.json",
+    "nivel-2.json",
+    "nivel-3.json",
+    "nivel-4.json",
+    "nivel-5.json",
+    "nivel-6.json"
+  ],
+  "finalExam": "examen-final.json",
+  "glossary": "glosario.json"
+}

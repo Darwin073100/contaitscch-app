@@ -1,0 +1,337 @@
+{
+  "level": {
+    "id": 4,
+    "title": "Estados financieros",
+    "goal": "Al terminar este nivel el alumno elabora e interpreta el balance general y el estado de resultados, distingue ingresos, costos y gastos, y conoce el estado de flujo de efectivo y el estado de cambios en el capital contable."
+  },
+  "topics": [
+    {
+      "id": 401,
+      "sortOrder": 1,
+      "title": "Ingresos, costos y gastos: no es lo mismo",
+      "objective": "Diferenciar ingreso, costo y gasto, y calcular la utilidad bruta de una operación de venta.",
+      "explanation": [
+        "Un ingreso es el valor que el negocio gana por su actividad principal: vender mercancía o prestar un servicio. El monto de la venta es ingreso, pero no todo es ganancia, porque vender costó algo.",
+        "El costo de ventas es lo que costó la mercancía que se vendió o el servicio que se prestó. Si un pantalón se vende en $600 y al negocio le costó $350, la utilidad bruta de esa venta es $250. El costo está atado directamente a lo vendido: si no hay venta, no hay costo de ventas.",
+        "Los gastos son erogaciones necesarias para operar, pero no atadas a una venta en particular: renta, luz, sueldos administrativos, publicidad y papelería. Se pagan se venda o no se venda. Orden correcto para pensar: Ingresos − Costo de ventas = Utilidad bruta; Utilidad bruta − Gastos = Utilidad de operación."
+      ],
+      "example": {
+        "title": "Un día en la tienda de ropa",
+        "steps": [
+          "Ventas del día (ingresos): $6,000.",
+          "Lo que costó la ropa vendida (costo de ventas): $3,600. Utilidad bruta: $6,000 − $3,600 = $2,400.",
+          "Gastos del día (renta prorrateada, luz, sueldo): $1,500. Utilidad de operación del día: $2,400 − $1,500 = $900."
+        ]
+      },
+      "keyIdea": "El costo nace con la venta; el gasto nace con la operación diaria, se venda o no.",
+      "commonError": "Registrar como gasto toda la compra de mercancía. La compra no vendida es inventario (activo); solo se vuelve costo la parte que efectivamente se vendió.",
+      "activity": "Clasifica como ingreso, costo o gasto: venta de un servicio, la tela usada en un vestido vendido, la renta del local, la publicidad del mes, el sueldo de la vendedora, la venta de mercancía y el material consumido en un servicio cobrado.",
+      "quiz": {
+        "questions": [
+          {
+            "id": 40101,
+            "sortOrder": 1,
+            "statement": "La utilidad bruta se obtiene de:",
+            "options": [
+              {
+                "id": 401011,
+                "text": "Ingresos − gastos",
+                "isCorrect": false
+              },
+              {
+                "id": 401012,
+                "text": "Ingresos − costo de ventas",
+                "isCorrect": true
+              },
+              {
+                "id": 401013,
+                "text": "Activo − pasivo",
+                "isCorrect": false
+              },
+              {
+                "id": 401014,
+                "text": "Ventas + inventario",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Primero se restan los costos directos de lo vendido: Ingresos − Costo de ventas = Utilidad bruta."
+          },
+          {
+            "id": 40102,
+            "sortOrder": 2,
+            "statement": "La renta del local, que se paga se venda o no, es un:",
+            "options": [
+              {
+                "id": 401021,
+                "text": "Costo de ventas",
+                "isCorrect": false
+              },
+              {
+                "id": 401022,
+                "text": "Ingreso",
+                "isCorrect": false
+              },
+              {
+                "id": 401023,
+                "text": "Gasto de operación",
+                "isCorrect": true
+              },
+              {
+                "id": 401024,
+                "text": "Activo",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "La renta sostiene la operación, pero no depende de una venta específica: es un gasto."
+          }
+        ]
+      }
+    },
+    {
+      "id": 402,
+      "sortOrder": 2,
+      "title": "El estado de resultados",
+      "objective": "Elaborar un estado de resultados básico e interpretar si el negocio ganó o perdió en un periodo.",
+      "explanation": [
+        "El estado de resultados es la película de un periodo —un mes, un trimestre, un año—: muestra los ingresos, resta el costo y los gastos, y llega al resultado final: utilidad neta si los ingresos alcanzaron y sobró, o pérdida neta si no alcanzaron. Su pregunta central es: ¿el negocio ganó o perdió, y por qué?",
+        "Su estructura desciende por escalones: ventas netas, menos costo de ventas, igual utilidad bruta; menos gastos de operación, igual utilidad de operación; se consideran después otros ingresos y gastos y los impuestos, y se llega a la utilidad o pérdida neta del periodo.",
+        "Cada escalón cuenta una parte de la historia. Una utilidad bruta sana con pérdida final indica que el problema no es el precio ni el costo, sino los gastos. Leer el estado por escalones es lo que permite diagnosticar, no solo saber el resultado."
+      ],
+      "example": {
+        "title": "Estado de resultados de marzo, papelería",
+        "steps": [
+          "Ventas netas: $48,000. Costo de ventas: $29,000. Utilidad bruta: $19,000.",
+          "Gastos de operación: renta $5,000, sueldos $7,000, luz y servicios $1,800, papelería y otros $700. Total: $14,500.",
+          "Utilidad de operación y, en este ejemplo sin otros conceptos ni impuestos, utilidad neta del mes: $19,000 − $14,500 = $4,500. El negocio sí ganó en marzo."
+        ]
+      },
+      "keyIdea": "Estado de resultados = periodo (película). Responde si se ganó o se perdió entre dos fechas.",
+      "commonError": "Incluir en el estado de resultados las cuentas del balance, como Caja o Proveedores. Ahí solo van ingresos, costos y gastos del periodo.",
+      "activity": "Elabora el estado de resultados de un mes con estos datos: ventas $72,000, costo de ventas $43,200, renta $6,000, sueldos $9,500, servicios $2,100 y publicidad $900. Di cuál es la utilidad bruta, la de operación y dónde convendría recortar si se quisiera mejorar el resultado.",
+      "quiz": {
+        "questions": [
+          {
+            "id": 40201,
+            "sortOrder": 1,
+            "statement": "El estado de resultados cubre:",
+            "options": [
+              {
+                "id": 402011,
+                "text": "Una fecha exacta",
+                "isCorrect": false
+              },
+              {
+                "id": 402012,
+                "text": "Un periodo de tiempo",
+                "isCorrect": true
+              },
+              {
+                "id": 402013,
+                "text": "Solo un día",
+                "isCorrect": false
+              },
+              {
+                "id": 402014,
+                "text": "El historial desde que nació la empresa en una sola cifra",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Es la película del periodo: ingresos y egresos entre dos fechas."
+          },
+          {
+            "id": 40202,
+            "sortOrder": 2,
+            "statement": "Ventas $50,000, costo $30,000 y gastos $12,000. La utilidad neta (sin otros conceptos) es:",
+            "options": [
+              {
+                "id": 402021,
+                "text": "$32,000",
+                "isCorrect": false
+              },
+              {
+                "id": 402022,
+                "text": "$20,000",
+                "isCorrect": false
+              },
+              {
+                "id": 402023,
+                "text": "$8,000",
+                "isCorrect": true
+              },
+              {
+                "id": 402024,
+                "text": "$68,000",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "50,000 − 30,000 = 20,000 de utilidad bruta; 20,000 − 12,000 = $8,000."
+          }
+        ]
+      }
+    },
+    {
+      "id": 403,
+      "sortOrder": 3,
+      "title": "El balance general o estado de situación financiera",
+      "objective": "Elaborar un balance general básico, ordenar activo circulante y no circulante, y verificar la ecuación contable.",
+      "explanation": [
+        "El balance general, también llamado estado de situación financiera, es la foto del negocio en una fecha exacta: muestra el activo (lo que tiene), el pasivo (lo que debe) y el capital contable (lo que corresponde a los dueños) en ese día. Su pregunta central es: ¿qué tiene el negocio, cuánto debe y cuánto es realmente de los dueños?",
+        "El activo se ordena por disponibilidad. El activo circulante se convierte en dinero en menos de un año: caja, bancos, clientes e inventarios. El activo no circulante dura más de un año: equipo, mobiliario, vehículos y locales. El pasivo también se ordena por vencimiento: circulante, si se paga en menos de un año (proveedores, préstamos cortos, impuestos por pagar), y no circulante, a más de un año.",
+        "El balance siempre debe cumplir la ecuación: total activo = total pasivo + capital contable. De hecho, su nombre viene de esa balanza: si no cuadra, hay un error en los registros anteriores."
+      ],
+      "example": {
+        "title": "Balance al 31 de marzo",
+        "steps": [
+          "Activo circulante: Caja $2,000, Bancos $18,000, Inventarios $12,000. Subtotal: $32,000. Activo no circulante: Equipo $10,000. Total activo: $42,000.",
+          "Pasivo circulante: Proveedores $7,000. Pasivo no circulante: Préstamo bancario $15,000. Total pasivo: $22,000.",
+          "Capital contable: $20,000. Comprobación: $42,000 = $22,000 + $20,000. El balance cuadra."
+        ]
+      },
+      "keyIdea": "Balance = foto a una fecha. Activo circulante: vence o se usa en menos de un año; no circulante: más de un año.",
+      "commonError": "Clasificar el inventario como activo no circulante. La mercancía está destinada a venderse en el corto plazo: es circulante.",
+      "activity": "Clasifica y ordena en un balance: bancos $25,000, proveedores $9,000, equipo de cómputo $18,000, clientes $6,500, préstamo a 3 años $30,000, caja $3,500, inventarios $14,000 y capital $28,000. Suma cada grupo, verifica la ecuación y escribe qué haría falta si no cuadra.",
+      "quiz": {
+        "questions": [
+          {
+            "id": 40301,
+            "sortOrder": 1,
+            "statement": "El balance general muestra la situación del negocio:",
+            "options": [
+              {
+                "id": 403011,
+                "text": "Durante todo el año, día por día",
+                "isCorrect": false
+              },
+              {
+                "id": 403012,
+                "text": "A una fecha determinada",
+                "isCorrect": true
+              },
+              {
+                "id": 403013,
+                "text": "Solo cuando hay utilidades",
+                "isCorrect": false
+              },
+              {
+                "id": 403014,
+                "text": "Antes de iniciar operaciones",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Es una foto a una fecha: activo, pasivo y capital en ese día."
+          },
+          {
+            "id": 40302,
+            "sortOrder": 2,
+            "statement": "Una deuda que se pagará dentro de 3 años es un pasivo:",
+            "options": [
+              {
+                "id": 403021,
+                "text": "Circulante",
+                "isCorrect": false
+              },
+              {
+                "id": 403022,
+                "text": "No circulante",
+                "isCorrect": true
+              },
+              {
+                "id": 403023,
+                "text": "Inexistente hasta que venza",
+                "isCorrect": false
+              },
+              {
+                "id": 403024,
+                "text": "Capital contable",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Vence a más de un año, por lo que se clasifica como pasivo no circulante."
+          }
+        ]
+      }
+    },
+    {
+      "id": 404,
+      "sortOrder": 4,
+      "title": "Flujo de efectivo y cambios en el capital contable",
+      "objective": "Explicar por qué un negocio puede tener utilidad y quedarse sin efectivo, y cómo cambia el capital de un periodo a otro.",
+      "explanation": [
+        "El estado de flujo de efectivo explica cómo se movió el dinero real —caja y bancos— durante un periodo, clasificado en tres actividades: operación (cobros y pagos del negocio diario), inversión (compra o venta de equipo y otros bienes duraderos) y financiamiento (préstamos recibidos o pagados, aportaciones y retiros de los dueños).",
+        "Este estado resuelve una aparente contradicción: un negocio puede vender mucho, tener utilidad en papel y quedarse sin dinero. La causa típica es vender a crédito: la utilidad ya se registró, pero el efectivo aún está en manos de los clientes. Utilidad y efectivo no son lo mismo, y confundirlos es causa frecuente de quiebra de negocios pequeños.",
+        "El estado de cambios en el capital contable, por su parte, explica cómo pasó el capital de un saldo inicial a uno final: aportaciones nuevas, utilidades del periodo que aumentan el capital, pérdidas que lo disminuyen y retiros de los dueños que también lo reducen."
+      ],
+      "example": {
+        "title": "Utilidad sí, efectivo no",
+        "steps": [
+          "La tienda vendió en el mes $60,000, todo a crédito a 30 días, y su utilidad fue de $10,000.",
+          "Pero pagó en efectivo renta y sueldos por $18,000. Entradas de efectivo por ventas: $0 todavía.",
+          "Flujo de operación del mes: negativo, aunque el estado de resultados muestra utilidad. La lección: hay que vigilar los cobros, no solo las ventas."
+        ]
+      },
+      "keyIdea": "Utilidad no es efectivo. El flujo de efectivo sigue el dinero; el estado de resultados sigue los ingresos y egresos devengados.",
+      "commonError": "Repartir como ganancia todo lo que hay en caja. Parte de ese efectivo puede ser de préstamos o estar comprometido para pagar proveedores e impuestos.",
+      "activity": "Clasifica cada movimiento como actividad de operación, inversión o financiamiento: cobro a un cliente, pago de sueldos, compra de una computadora, préstamo recibido del banco, aportación del dueño, pago del préstamo y pago a un proveedor.",
+      "quiz": {
+        "questions": [
+          {
+            "id": 40401,
+            "sortOrder": 1,
+            "statement": "Un negocio con utilidad puede quedarse sin efectivo principalmente cuando:",
+            "options": [
+              {
+                "id": 404011,
+                "text": "Vende a crédito y aún no cobra, pero ya pagó sus gastos",
+                "isCorrect": true
+              },
+              {
+                "id": 404012,
+                "text": "Tiene demasiado inventario bonito",
+                "isCorrect": false
+              },
+              {
+                "id": 404013,
+                "text": "Su balance cuadra",
+                "isCorrect": false
+              },
+              {
+                "id": 404014,
+                "text": "Contrata a un contador",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "La utilidad se registra al vender; el efectivo llega cuando el cliente paga."
+          },
+          {
+            "id": 40402,
+            "sortOrder": 2,
+            "statement": "Comprar una maquinaria pagando de bancos se clasifica en el flujo de efectivo como actividad de:",
+            "options": [
+              {
+                "id": 404021,
+                "text": "Operación",
+                "isCorrect": false
+              },
+              {
+                "id": 404022,
+                "text": "Inversión",
+                "isCorrect": true
+              },
+              {
+                "id": 404023,
+                "text": "Financiamiento",
+                "isCorrect": false
+              },
+              {
+                "id": 404024,
+                "text": "No se clasifica",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Comprar bienes duraderos para el negocio es una actividad de inversión."
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,338 @@
+{
+  "level": {
+    "id": 1,
+    "title": "Fundamentos: qué es la contabilidad y para qué sirve",
+    "goal": "Al terminar este nivel el alumno explica con sus palabras qué es la contabilidad, conoce su origen, distingue a sus usuarios y reconoce los tipos de contabilidad y las entidades económicas."
+  },
+  "topics": [
+    {
+      "id": 101,
+      "sortOrder": 1,
+      "title": "¿Qué es la contabilidad?",
+      "objective": "Definir la contabilidad y explicar por qué se le llama el lenguaje de los negocios.",
+      "explanation": [
+        "La contabilidad es la técnica que registra, clasifica y resume, en términos de dinero, las operaciones de un negocio o de una persona, para después interpretar los resultados. No es solo anotar números: es convertir todo lo que pasa en un negocio —compras, ventas, pagos, deudas— en información ordenada que se puede entender.",
+        "Por eso se dice que la contabilidad es el lenguaje de los negocios. Igual que un idioma permite comunicarse, la contabilidad permite que el dueño, un banco o un socio entiendan cómo está un negocio sin estar presentes todos los días: cuánto tiene, cuánto debe, cuánto vende y si gana o pierde.",
+        "Para que ese lenguaje funcione, toda operación debe tener un comprobante (una nota, una factura o un recibo), debe medirse en dinero y debe registrarse en orden cronológico. Una operación que no se registra es como si no hubiera pasado: nadie podrá comprobarla después."
+      ],
+      "example": {
+        "title": "La papelería de Ana",
+        "steps": [
+          "Lunes: Ana compra cuadernos por $2,000 y paga en efectivo. Operación: salió dinero y entró mercancía.",
+          "Martes: vende $650 en cuadernos y plumas. Operación: entró dinero y salió mercancía.",
+          "Miércoles: paga $300 de luz. Operación: salió dinero por un gasto.",
+          "Al final de la semana, con esos registros ordenados, Ana puede responder: ¿cuánto vendí?, ¿cuánto gasté?, ¿me quedó ganancia? Sin registros, solo tendría una impresión, no una respuesta."
+        ]
+      },
+      "keyIdea": "Contabilidad = registrar + clasificar + resumir + interpretar. Si falta el registro, no hay información confiable.",
+      "commonError": "Confundir contabilidad con solo guardar facturas. Guardar papeles no es contabilidad si nunca se registran, se ordenan ni se interpretan.",
+      "activity": "Durante un día, anota en una libreta o en la app cinco operaciones de dinero de tu casa o de un negocio conocido (qué pasó, cuánto fue y si entró o salió dinero). Al final escribe una frase: ¿ese día entró o salió más dinero?",
+      "quiz": {
+        "questions": [
+          {
+            "id": 10101,
+            "sortOrder": 1,
+            "statement": "¿Qué hace la contabilidad con las operaciones de un negocio?",
+            "options": [
+              {
+                "id": 101011,
+                "text": "Las guarda en una caja sin orden",
+                "isCorrect": false
+              },
+              {
+                "id": 101012,
+                "text": "Las registra, clasifica, resume e interpreta en términos de dinero",
+                "isCorrect": true
+              },
+              {
+                "id": 101013,
+                "text": "Las publica en redes sociales",
+                "isCorrect": false
+              },
+              {
+                "id": 101014,
+                "text": "Las convierte en publicidad",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "La contabilidad trabaja en cuatro pasos: registrar, clasificar, resumir e interpretar."
+          },
+          {
+            "id": 10102,
+            "sortOrder": 2,
+            "statement": "¿Por qué se dice que la contabilidad es el lenguaje de los negocios?",
+            "options": [
+              {
+                "id": 101021,
+                "text": "Porque todos los negocios hablan igual",
+                "isCorrect": false
+              },
+              {
+                "id": 101022,
+                "text": "Porque permite comunicar la situación económica de un negocio a quien no está en él",
+                "isCorrect": true
+              },
+              {
+                "id": 101023,
+                "text": "Porque se aprende como un idioma extranjero",
+                "isCorrect": false
+              },
+              {
+                "id": 101024,
+                "text": "Porque usa palabras difíciles",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Comunica cuánto se tiene, cuánto se debe y si se gana o se pierde, sin necesidad de estar presente."
+          }
+        ]
+      }
+    },
+    {
+      "id": 102,
+      "sortOrder": 2,
+      "title": "Historia de la contabilidad",
+      "objective": "Ubicar los momentos clave de la historia contable y explicar el aporte de Luca Pacioli.",
+      "explanation": [
+        "La contabilidad nació por necesidad. Hace miles de años, en Mesopotamia y Egipto, los templos y comerciantes llevaban cuentas en tablillas de arcilla y papiros: cuánto grano entraba, cuánto salía y a quién se le debía. Cuando el comercio creció en las ciudades italianas del Renacimiento, esos apuntes sueltos ya no alcanzaban.",
+        "En 1494, el fraile y matemático italiano Luca Pacioli publicó en su obra Summa de arithmetica el método de la partida doble, que ya usaban los comerciantes de Venecia. Pacioli no lo inventó, pero fue el primero en explicarlo por escrito, por eso se le conoce como el padre de la contabilidad. Su idea central sigue vigente hoy: en cada operación hay una doble cara, algo que entra y algo que sale, y ambas deben cuadrar.",
+        "En los siglos siguientes llegaron la Revolución Industrial (las fábricas necesitaron calcular costos), las primeras leyes fiscales y, en el siglo XX, las normas profesionales. Hoy la contabilidad es electrónica: en México los registros y las facturas se llevan en sistemas y se envían al SAT (Servicio de Administración Tributaria) por medios digitales, pero la lógica de Pacioli es la misma."
+      ],
+      "example": {
+        "title": "De la tablilla a la app",
+        "steps": [
+          "Un comerciante de 1490 anota en su libro: «debo a Marco 20 monedas por tela» y en otra página: «tengo tela que vale 20 monedas». Esa es la partida doble en acción.",
+          "Una tienda de hoy hace lo mismo con un sistema: registra la compra de mercancía y, al mismo tiempo, la deuda con el proveedor o la salida de efectivo.",
+          "Cambió el soporte —arcilla, papel, computadora, aplicación— pero no cambió la pregunta: ¿de dónde salió el valor y a dónde fue?"
+        ]
+      },
+      "keyIdea": "1494, Luca Pacioli y la partida doble: el hecho histórico que marca el inicio de la contabilidad moderna.",
+      "commonError": "Creer que Pacioli inventó la contabilidad. La contabilidad existía desde la antigüedad; Pacioli sistematizó y difundió el método de la partida doble.",
+      "activity": "Ordena en una línea de tiempo estos hechos: facturación electrónica en México, tablillas de arcilla en Mesopotamia, publicación de Pacioli (1494) y Revolución Industrial. Escribe junto a cada uno qué problema resolvió.",
+      "quiz": {
+        "questions": [
+          {
+            "id": 10201,
+            "sortOrder": 1,
+            "statement": "¿Quién es considerado el padre de la contabilidad y por qué?",
+            "options": [
+              {
+                "id": 102011,
+                "text": "Adam Smith, por escribir sobre economía",
+                "isCorrect": false
+              },
+              {
+                "id": 102012,
+                "text": "Luca Pacioli, por publicar en 1494 el método de la partida doble",
+                "isCorrect": true
+              },
+              {
+                "id": 102013,
+                "text": "Un contador del SAT, por crear la factura electrónica",
+                "isCorrect": false
+              },
+              {
+                "id": 102014,
+                "text": "Nadie, la contabilidad no tiene historia",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Pacioli publicó en 1494 la primera explicación escrita de la partida doble."
+          },
+          {
+            "id": 10202,
+            "sortOrder": 2,
+            "statement": "¿Qué problema hizo necesaria la contabilidad desde la antigüedad?",
+            "options": [
+              {
+                "id": 102021,
+                "text": "Decorar los templos",
+                "isCorrect": false
+              },
+              {
+                "id": 102022,
+                "text": "Saber cuánto se tenía, cuánto salía y cuánto se debía cuando ya no alcanzaba la memoria",
+                "isCorrect": true
+              },
+              {
+                "id": 102023,
+                "text": "Enseñar matemáticas en las escuelas",
+                "isCorrect": false
+              },
+              {
+                "id": 102024,
+                "text": "Cobrar impuestos en monedas de oro",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Los registros nacen cuando las operaciones son tantas que la memoria ya no basta."
+          }
+        ]
+      }
+    },
+    {
+      "id": 103,
+      "sortOrder": 3,
+      "title": "¿Para quién es la información contable? Usuarios y tipos de contabilidad",
+      "objective": "Distinguir usuarios internos y externos, y diferenciar contabilidad financiera, administrativa y fiscal.",
+      "explanation": [
+        "La información contable no se prepara para una sola persona. Los usuarios internos son quienes dirigen el negocio: el dueño, los gerentes y los jefes de área. La usan a diario para decidir: ¿puedo bajar un precio?, ¿alcanza para contratar a alguien?, ¿qué producto se vende más?",
+        "Los usuarios externos están fuera del negocio, pero también deciden con esa información: un banco decide si presta dinero, un proveedor decide si vende a crédito, un inversionista decide si pone su dinero y el gobierno verifica el pago de impuestos.",
+        "Según quién la usa y para qué, hay tres ramas principales. La contabilidad financiera resume el negocio para usuarios externos y sigue reglas formales. La contabilidad administrativa es para uso interno, no tiene formato obligatorio y mira hacia el futuro (presupuestos, costos, metas). La contabilidad fiscal se enfoca en calcular y comprobar los impuestos conforme a las leyes."
+      ],
+      "example": {
+        "title": "La misma tienda, tres miradas",
+        "steps": [
+          "Financiera: la dueña entrega al banco un resumen del año para pedir un préstamo.",
+          "Administrativa: la dueña compara qué día de la semana vende más para decidir su horario.",
+          "Fiscal: la dueña calcula cuánto impuesto debe pagar por sus ventas del mes."
+        ]
+      },
+      "keyIdea": "Internos deciden dentro del negocio; externos deciden sobre el negocio desde fuera. La rama se define por el usuario y el propósito.",
+      "commonError": "Pensar que la contabilidad administrativa sigue el mismo formato obligatorio que la fiscal. La administrativa es libre: se diseña según lo que la dirección necesita saber.",
+      "activity": "Clasifica como interno o externo: el dueño, el banco, un proveedor, el gerente de ventas, el SAT y un posible socio inversionista. Junto a cada uno escribe qué le interesa saber del negocio.",
+      "quiz": {
+        "questions": [
+          {
+            "id": 10301,
+            "sortOrder": 1,
+            "statement": "Un banco que revisa la información de una empresa para decidir un préstamo es un usuario:",
+            "options": [
+              {
+                "id": 103011,
+                "text": "Interno",
+                "isCorrect": false
+              },
+              {
+                "id": 103012,
+                "text": "Externo",
+                "isCorrect": true
+              },
+              {
+                "id": 103013,
+                "text": "Administrativo",
+                "isCorrect": false
+              },
+              {
+                "id": 103014,
+                "text": "Fiscal",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "El banco no dirige el negocio; decide desde fuera, por eso es usuario externo."
+          },
+          {
+            "id": 10302,
+            "sortOrder": 2,
+            "statement": "¿Qué rama de la contabilidad se usa para presupuestos y decisiones internas, sin formato obligatorio?",
+            "options": [
+              {
+                "id": 103021,
+                "text": "Fiscal",
+                "isCorrect": false
+              },
+              {
+                "id": 103022,
+                "text": "Financiera",
+                "isCorrect": false
+              },
+              {
+                "id": 103023,
+                "text": "Administrativa",
+                "isCorrect": true
+              },
+              {
+                "id": 103024,
+                "text": "De auditoría",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "La contabilidad administrativa sirve a la dirección y se adapta a sus necesidades."
+          }
+        ]
+      }
+    },
+    {
+      "id": 104,
+      "sortOrder": 4,
+      "title": "La entidad económica y los principios básicos",
+      "objective": "Explicar el principio de entidad y los postulados básicos que hacen confiable la información.",
+      "explanation": [
+        "El principio de entidad dice algo sencillo y fundamental: el negocio es una persona distinta de su dueño. El dinero de la tienda no es el dinero de la casa, aunque la dueña sea la misma persona. Si se mezclan, ya nadie sabe si el negocio gana o si solo está pagando los gastos personales de la familia.",
+        "En México, las Normas de Información Financiera (NIF) reúnen los postulados básicos que ordenan la contabilidad. Los más importantes para empezar son: sustancia económica (importa lo que realmente pasa, no solo la forma del papel), negocio en marcha (se registra suponiendo que la empresa seguirá operando), devengación contable (las operaciones se registran cuando ocurren, no cuando se cobra o se paga) y valuación (todo se mide en dinero, en la moneda del país).",
+        "Estos principios no son adorno teórico: son las reglas que hacen que la información de dos negocios distintos se pueda comparar y que un banco o un socio puedan confiar en ella."
+      ],
+      "example": {
+        "title": "El error de la caja única",
+        "steps": [
+          "Don Luis paga de la caja de su taller la colegiatura de su hijo y también las refacciones del taller, sin distinguir.",
+          "Al fin de mes la caja está vacía y Don Luis no sabe si el taller pierde dinero o si el problema es la mezcla.",
+          "Solución contable: aplicar la entidad. La colegiatura es un retiro personal del dueño, no un gasto del taller, y se registra aparte."
+        ]
+      },
+      "keyIdea": "Entidad: negocio y dueño son distintos. Devengación: se registra cuando ocurre la operación, aunque el dinero se mueva después.",
+      "commonError": "Registrar una venta solo cuando el cliente paga. Con la devengación, la venta se registra cuando se realiza; el derecho de cobro queda registrado mientras tanto.",
+      "activity": "Lee estos casos y di qué postulado se aplica: a) vendiste hoy a crédito y el cliente pagará en 30 días; ya registras la venta. b) sacaste dinero del negocio para un gasto de tu casa; lo anotas como retiro, no como gasto. c) registras la compra de una máquina por lo que realmente costó, en pesos.",
+      "quiz": {
+        "questions": [
+          {
+            "id": 10401,
+            "sortOrder": 1,
+            "statement": "Si el dueño paga un gasto personal con dinero del negocio y lo anota como gasto del negocio, ¿qué principio se rompe?",
+            "options": [
+              {
+                "id": 104011,
+                "text": "Negocio en marcha",
+                "isCorrect": false
+              },
+              {
+                "id": 104012,
+                "text": "Entidad económica",
+                "isCorrect": true
+              },
+              {
+                "id": 104013,
+                "text": "Valuación",
+                "isCorrect": false
+              },
+              {
+                "id": 104014,
+                "text": "Dualidad económica",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "El principio de entidad separa el patrimonio del dueño del patrimonio del negocio."
+          },
+          {
+            "id": 10402,
+            "sortOrder": 2,
+            "statement": "Vendes mercancía hoy y el cliente pagará dentro de un mes. Según la devengación contable, la venta se registra:",
+            "options": [
+              {
+                "id": 104021,
+                "text": "Cuando el cliente pague",
+                "isCorrect": false
+              },
+              {
+                "id": 104022,
+                "text": "El mes siguiente",
+                "isCorrect": false
+              },
+              {
+                "id": 104023,
+                "text": "Hoy, cuando se realiza la operación",
+                "isCorrect": true
+              },
+              {
+                "id": 104024,
+                "text": "Solo si hay factura en papel",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "La devengación registra las operaciones cuando ocurren, no cuando entra o sale el efectivo."
+          }
+        ]
+      }
+    }
+  ]
+}

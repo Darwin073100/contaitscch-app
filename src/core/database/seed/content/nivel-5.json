@@ -1,0 +1,337 @@
+{
+  "level": {
+    "id": 5,
+    "title": "Aplicación práctica: el negocio real en México",
+    "goal": "Al terminar este nivel el alumno controla inventarios con un método sencillo, calcula la depreciación de un activo, identifica los conceptos básicos de una nómina y reconoce el IVA y el ISR en operaciones cotidianas. Los temas fiscales se presentan de forma introductoria y general."
+  },
+  "topics": [
+    {
+      "id": 501,
+      "sortOrder": 1,
+      "title": "Inventarios y costo de ventas",
+      "objective": "Calcular el costo de ventas con la fórmula de inventarios y comparar los métodos PEPS y promedio ponderado de forma básica.",
+      "explanation": [
+        "El inventario es la mercancía disponible para venderse. Controlarlo importa por dos razones: saber cuánto cuesta lo que se vendió (el costo de ventas) y detectar faltantes, robos o mercancía dañada comparando el registro con el conteo físico.",
+        "La fórmula central es: Costo de ventas = Inventario inicial + Compras netas − Inventario final. Si al inicio había $10,000, se compraron $25,000 y al final quedan $8,000, lo que se vendió costó $27,000. Lo que no está en el almacén ni se devolvió, se vendió… o se perdió, y el conteo físico es lo que permite distinguirlo.",
+        "Cuando el precio de compra cambia, hay que decidir qué costo se asigna a lo vendido. En el método PEPS (primeras entradas, primeras salidas) se supone que sale primero lo más antiguo. En el promedio ponderado, todas las unidades comparten un costo promedio. Ambos son aceptados; lo importante es aplicar uno solo de manera consistente."
+      ],
+      "example": {
+        "title": "Costo promedio en una tiendita",
+        "steps": [
+          "Se compran 10 productos a $100 cada uno y después 10 más a $120 cada uno. Costo total: $2,200 entre 20 unidades.",
+          "Costo promedio por unidad: $2,200 ÷ 20 = $110.",
+          "Si se venden 12 unidades, el costo de ventas es 12 × $110 = $1,320, y quedan 8 unidades valuadas en $880."
+        ]
+      },
+      "keyIdea": "Costo de ventas = Inventario inicial + Compras − Inventario final. El conteo físico verifica lo que dice el papel.",
+      "commonError": "No contar el inventario final y «estimarlo». Un inventario final inflado reduce el costo de ventas y muestra una utilidad que no existe.",
+      "activity": "Calcula el costo de ventas: inventario inicial $15,000, compras $40,000, devoluciones sobre compras $2,000 e inventario final $11,000. Después explica qué pasaría con la utilidad si el inventario final se hubiera contado mal, en $16,000.",
+      "quiz": {
+        "questions": [
+          {
+            "id": 50101,
+            "sortOrder": 1,
+            "statement": "Con inventario inicial de $10,000, compras de $25,000 e inventario final de $8,000, el costo de ventas es:",
+            "options": [
+              {
+                "id": 501011,
+                "text": "$43,000",
+                "isCorrect": false
+              },
+              {
+                "id": 501012,
+                "text": "$27,000",
+                "isCorrect": true
+              },
+              {
+                "id": 501013,
+                "text": "$17,000",
+                "isCorrect": false
+              },
+              {
+                "id": 501014,
+                "text": "$8,000",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "10,000 + 25,000 − 8,000 = $27,000."
+          },
+          {
+            "id": 50102,
+            "sortOrder": 2,
+            "statement": "El método PEPS supone que la mercancía que sale primero es:",
+            "options": [
+              {
+                "id": 501021,
+                "text": "La más cara",
+                "isCorrect": false
+              },
+              {
+                "id": 501022,
+                "text": "La más nueva",
+                "isCorrect": false
+              },
+              {
+                "id": 501023,
+                "text": "La primera que entró",
+                "isCorrect": true
+              },
+              {
+                "id": 501024,
+                "text": "La dañada",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "PEPS: primeras entradas, primeras salidas."
+          }
+        ]
+      }
+    },
+    {
+      "id": 502,
+      "sortOrder": 2,
+      "title": "Depreciación de activos fijos",
+      "objective": "Explicar por qué se deprecia un activo y calcular la depreciación anual y mensual por el método de línea recta.",
+      "explanation": [
+        "Un equipo de cómputo, un vehículo o una maquinaria no se gastan en un solo día: sirven durante varios años, pero con el uso y el tiempo pierden valor. La depreciación es el reparto ordenado de ese costo entre los años de vida útil del bien, para reconocer en cada periodo el gasto que corresponde.",
+        "En el método de línea recta, el más sencillo y usado para aprender: Depreciación anual = (Costo del bien − Valor de desecho) ÷ Años de vida útil. El valor de desecho es lo que se estima que valdrá el bien al final de su vida útil; muchas veces, para simplificar, se toma como cero.",
+        "La depreciación es un gasto que no implica salida de dinero en ese momento: el dinero salió cuando se compró el bien. Por eso se le llama un cargo virtual, y por eso un negocio puede tener ese gasto registrado y, aun así, tener efectivo en caja."
+      ],
+      "example": {
+        "title": "Una computadora de $18,000 con vida útil de 3 años",
+        "steps": [
+          "Depreciación anual = $18,000 ÷ 3 = $6,000 por año.",
+          "Depreciación mensual = $6,000 ÷ 12 = $500 por mes.",
+          "Al final del primer año, la depreciación acumulada es $6,000 y el valor en libros del equipo es $18,000 − $6,000 = $12,000."
+        ]
+      },
+      "keyIdea": "Línea recta: costo entre años de vida útil. La depreciación es gasto sin salida de efectivo en el periodo.",
+      "commonError": "Registrar toda la compra del equipo como gasto del mes de la compra. Eso hunde el resultado de un mes y deja sin gasto a los demás, aunque el equipo se use en todos.",
+      "activity": "Un repartidor compra una motocicleta de trabajo por $48,000 con vida útil estimada de 4 años y valor de desecho de $0. Calcula la depreciación anual y mensual, y el valor en libros al terminar el segundo año.",
+      "quiz": {
+        "questions": [
+          {
+            "id": 50201,
+            "sortOrder": 1,
+            "statement": "Un bien costó $30,000, con vida útil de 5 años y sin valor de desecho. Su depreciación anual en línea recta es:",
+            "options": [
+              {
+                "id": 502011,
+                "text": "$30,000",
+                "isCorrect": false
+              },
+              {
+                "id": 502012,
+                "text": "$6,000",
+                "isCorrect": true
+              },
+              {
+                "id": 502013,
+                "text": "$5,000",
+                "isCorrect": false
+              },
+              {
+                "id": 502014,
+                "text": "$15,000",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "30,000 ÷ 5 = $6,000 por año."
+          },
+          {
+            "id": 50202,
+            "sortOrder": 2,
+            "statement": "La depreciación de cada mes representa:",
+            "options": [
+              {
+                "id": 502021,
+                "text": "Una salida de efectivo mensual al proveedor",
+                "isCorrect": false
+              },
+              {
+                "id": 502022,
+                "text": "Un gasto del periodo sin salida de efectivo en ese momento",
+                "isCorrect": true
+              },
+              {
+                "id": 502023,
+                "text": "Un ingreso del negocio",
+                "isCorrect": false
+              },
+              {
+                "id": 502024,
+                "text": "Un impuesto municipal",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "El desembolso ocurrió al comprar el bien; la depreciación solo distribuye su costo."
+          }
+        ]
+      }
+    },
+    {
+      "id": 503,
+      "sortOrder": 3,
+      "title": "Nómina básica: lo que se paga y lo que se retiene",
+      "objective": "Identificar percepciones, deducciones y el sueldo neto, y registrar de forma sencilla el gasto de personal.",
+      "explanation": [
+        "La nómina es el documento donde se calcula lo que se paga a cada trabajador. Su lógica es una resta ordenada: primero se suman las percepciones —sueldo, horas extra, bonos y otras prestaciones en dinero— y a ese total se le restan las deducciones.",
+        "Las deducciones típicas son las retenciones que el patrón hace por cuenta del trabajador y entrega a las autoridades o instituciones, como el impuesto sobre la renta (ISR) de sueldos y las cuotas al seguro social. El resultado de percepciones menos deducciones es el sueldo neto: lo que efectivamente recibe el trabajador.",
+        "Para la contabilidad, el gasto del negocio no es solo el neto: es el total de percepciones más las cuotas y aportaciones que corresponden al patrón. Registrar únicamente «lo que salió de la caja» subestima el costo real de tener personal. Esta lección es introductoria: el cálculo oficial de una nómina sigue tablas y disposiciones vigentes que deben consultarse en cada periodo."
+      ],
+      "example": {
+        "title": "Una quincena simplificada",
+        "steps": [
+          "Percepciones: sueldo quincenal $6,000 + bono $500 = $6,500.",
+          "Deducciones (ejemplo didáctico): ISR retenido $550 y cuota al seguro social $320. Total deducciones: $870.",
+          "Sueldo neto a pagar: $6,500 − $870 = $5,630. Las retenciones no desaparecen: el negocio las debe enterar a quien corresponda, por eso quedan como un pasivo hasta que se pagan."
+        ]
+      },
+      "keyIdea": "Percepciones − Deducciones = Sueldo neto. Lo retenido es dinero del trabajador que el negocio guarda temporalmente: es un pasivo, no un ingreso.",
+      "commonError": "Quedarse con las retenciones como si fueran del negocio o registrarlas como ingreso. Deben enterarse; mientras tanto, son una obligación.",
+      "activity": "Calcula el neto de un trabajador con percepciones de $8,200, ISR retenido de $740 y cuota de seguro social de $410. Después escribe el asiento sencillo: cargo a gasto de sueldos, abonos a impuestos por pagar, cuotas por pagar y bancos.",
+      "quiz": {
+        "questions": [
+          {
+            "id": 50301,
+            "sortOrder": 1,
+            "statement": "Si las percepciones son $7,000 y las deducciones $950, el sueldo neto es:",
+            "options": [
+              {
+                "id": 503011,
+                "text": "$7,950",
+                "isCorrect": false
+              },
+              {
+                "id": 503012,
+                "text": "$6,050",
+                "isCorrect": true
+              },
+              {
+                "id": 503013,
+                "text": "$950",
+                "isCorrect": false
+              },
+              {
+                "id": 503014,
+                "text": "$7,000",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "7,000 − 950 = $6,050 es lo que recibe el trabajador."
+          },
+          {
+            "id": 50302,
+            "sortOrder": 2,
+            "statement": "El ISR retenido al trabajador, antes de enterarse, se clasifica para el negocio como:",
+            "options": [
+              {
+                "id": 503021,
+                "text": "Ingreso",
+                "isCorrect": false
+              },
+              {
+                "id": 503022,
+                "text": "Activo",
+                "isCorrect": false
+              },
+              {
+                "id": 503023,
+                "text": "Pasivo (impuestos por pagar)",
+                "isCorrect": true
+              },
+              {
+                "id": 503024,
+                "text": "Capital",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Es dinero ajeno que el negocio debe entregar: una obligación."
+          }
+        ]
+      }
+    },
+    {
+      "id": 504,
+      "sortOrder": 4,
+      "title": "Impuestos básicos en México: IVA e ISR (introducción)",
+      "objective": "Distinguir el IVA trasladado del IVA acreditable y explicar, en forma general, cómo se determina un pago de ISR.",
+      "explanation": [
+        "El Impuesto al Valor Agregado (IVA) grava el consumo. En términos generales, la tasa general en México es del 16 %. El negocio cobra IVA en sus ventas —IVA trasladado— y paga IVA en muchas de sus compras relacionadas con su actividad —IVA acreditable—. Periódicamente compara ambos: si trasladó más de lo que puede acreditar, paga la diferencia al SAT; si acreditó más, puede tener saldo a favor, conforme a las reglas vigentes.",
+        "Por eso se dice que el IVA no es ingreso del negocio: es un impuesto que el consumidor final paga y que el negocio solo recauda y entera. Contar el IVA cobrado como si fuera ganancia es un error que se paga caro al momento de declarar.",
+        "El Impuesto Sobre la Renta (ISR) grava las ganancias o ingresos, según el régimen fiscal de cada contribuyente. En forma general, se calcula aplicando la tasa o tarifa que marca la ley a la base que resulta de restar, de los ingresos, las deducciones autorizadas, y se entera con pagos provisionales y una declaración anual. Esta lección solo ubica los conceptos: los montos, tasas por régimen y procedimientos vigentes deben verificarse siempre en las disposiciones oficiales del periodo correspondiente."
+      ],
+      "example": {
+        "title": "IVA de un mes, ejemplo didáctico con tasa general del 16 %",
+        "steps": [
+          "Ventas del mes sin IVA: $50,000. IVA trasladado cobrado a clientes: $50,000 × 16 % = $8,000.",
+          "Compras y gastos con IVA acreditable: base $30,000. IVA pagado a proveedores: $30,000 × 16 % = $4,800.",
+          "IVA por pagar del mes: $8,000 − $4,800 = $3,200. Esa diferencia se entera al SAT; nunca fue dinero del negocio."
+        ]
+      },
+      "keyIdea": "IVA por pagar = IVA trasladado − IVA acreditable. ISR: grava la ganancia o los ingresos según el régimen, no el dinero total que pasa por la caja.",
+      "commonError": "Sumar el IVA cobrado a las ventas como si fuera ingreso propio. La venta es el importe sin IVA; el impuesto se registra aparte, como una obligación.",
+      "activity": "Con tasa general del 16 %, calcula el IVA por pagar de un mes con ventas sin IVA de $80,000 y compras y gastos acreditables sin IVA de $45,000. Después explica, en dos líneas, por qué ese IVA no es ganancia.",
+      "quiz": {
+        "questions": [
+          {
+            "id": 50401,
+            "sortOrder": 1,
+            "statement": "El IVA que un negocio cobra en sus ventas se llama:",
+            "options": [
+              {
+                "id": 504011,
+                "text": "IVA acreditable",
+                "isCorrect": false
+              },
+              {
+                "id": 504012,
+                "text": "IVA trasladado",
+                "isCorrect": true
+              },
+              {
+                "id": 504013,
+                "text": "ISR",
+                "isCorrect": false
+              },
+              {
+                "id": 504014,
+                "text": "IVA a favor siempre",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Trasladado es el que se cobra al cliente; acreditable es el que se paga en compras de la actividad."
+          },
+          {
+            "id": 50402,
+            "sortOrder": 2,
+            "statement": "Si el IVA trasladado es $10,000 y el acreditable es $6,500, el IVA por pagar es:",
+            "options": [
+              {
+                "id": 504021,
+                "text": "$16,500",
+                "isCorrect": false
+              },
+              {
+                "id": 504022,
+                "text": "$6,500",
+                "isCorrect": false
+              },
+              {
+                "id": 504023,
+                "text": "$3,500",
+                "isCorrect": true
+              },
+              {
+                "id": 504024,
+                "text": "$0",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "10,000 − 6,500 = $3,500 se entera al SAT."
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,7 +1,8 @@
 import avanzado from './content/avanzado.json';
 import basico from './content/basico.json';
 import intermedio from './content/intermedio.json';
-import manifestJson from './content/manifest.json';
+// Temporal (refactorización v2, F2): el seeder sigue con el contenido v2 hasta migrar SQLite (F3).
+import manifestJson from './content/manifest.v2.json';
 import {
   LevelContentSchema,
   ManifestSchema,

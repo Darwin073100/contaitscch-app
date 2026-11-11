@@ -1,0 +1,134 @@
+[
+  {
+    "term": "Activo",
+    "definition": "Bienes y derechos que posee un negocio."
+  },
+  {
+    "term": "Activo circulante",
+    "definition": "Activo que se convierte en dinero o se consume en menos de un año."
+  },
+  {
+    "term": "Abono",
+    "definition": "Anotación en el Haber (lado derecho) de una cuenta."
+  },
+  {
+    "term": "Balanza de comprobación",
+    "definition": "Lista de saldos del mayor que comprueba que los deudores igualan a los acreedores."
+  },
+  {
+    "term": "Capital contable",
+    "definition": "Parte del activo que corresponde a los dueños: aportaciones más resultados acumulados."
+  },
+  {
+    "term": "Cargo",
+    "definition": "Anotación en el Debe (lado izquierdo) de una cuenta."
+  },
+  {
+    "term": "Catálogo de cuentas",
+    "definition": "Lista ordenada y codificada de las cuentas de un negocio."
+  },
+  {
+    "term": "CFDI",
+    "definition": "Comprobante fiscal digital por internet; la factura electrónica en México."
+  },
+  {
+    "term": "Costo de ventas",
+    "definition": "Costo de la mercancía vendida o del servicio prestado en un periodo."
+  },
+  {
+    "term": "Cuenta",
+    "definition": "Registro donde se acumulan los movimientos de un mismo concepto."
+  },
+  {
+    "term": "Depreciación",
+    "definition": "Distribución del costo de un activo fijo entre sus años de vida útil."
+  },
+  {
+    "term": "Devengación",
+    "definition": "Registrar las operaciones cuando ocurren, no cuando se cobra o se paga."
+  },
+  {
+    "term": "Ecuación contable",
+    "definition": "Activo = Pasivo + Capital."
+  },
+  {
+    "term": "Entidad económica",
+    "definition": "Negocio distinto de su dueño para fines contables."
+  },
+  {
+    "term": "Gasto",
+    "definition": "Erogación necesaria para operar, no atada a una venta específica."
+  },
+  {
+    "term": "Haber",
+    "definition": "Lado derecho de una cuenta."
+  },
+  {
+    "term": "Ingreso",
+    "definition": "Valor ganado por la actividad principal del negocio."
+  },
+  {
+    "term": "Inventario",
+    "definition": "Mercancía disponible para la venta."
+  },
+  {
+    "term": "IVA acreditable",
+    "definition": "IVA pagado en compras y gastos de la actividad, acreditable según las reglas vigentes."
+  },
+  {
+    "term": "IVA trasladado",
+    "definition": "IVA cobrado a los clientes en las ventas."
+  },
+  {
+    "term": "Libro diario",
+    "definition": "Registro cronológico de las operaciones."
+  },
+  {
+    "term": "Libro mayor",
+    "definition": "Registro clasificado por cuenta de todos los movimientos."
+  },
+  {
+    "term": "Liquidez corriente",
+    "definition": "Activo circulante entre pasivo circulante."
+  },
+  {
+    "term": "Margen de contribución",
+    "definition": "Precio de venta menos costo variable por unidad."
+  },
+  {
+    "term": "NIF",
+    "definition": "Normas de Información Financiera vigentes en México."
+  },
+  {
+    "term": "Partida doble",
+    "definition": "Método en el que cada operación afecta al menos dos cuentas y los cargos igualan a los abonos."
+  },
+  {
+    "term": "Pasivo",
+    "definition": "Obligaciones y deudas del negocio con terceros."
+  },
+  {
+    "term": "Punto de equilibrio",
+    "definition": "Nivel de ventas donde no hay utilidad ni pérdida."
+  },
+  {
+    "term": "Saldo acreedor",
+    "definition": "Saldo donde el Haber es mayor que el Debe."
+  },
+  {
+    "term": "Saldo deudor",
+    "definition": "Saldo donde el Debe es mayor que el Haber."
+  },
+  {
+    "term": "SAT",
+    "definition": "Servicio de Administración Tributaria, autoridad fiscal federal en México."
+  },
+  {
+    "term": "Utilidad bruta",
+    "definition": "Ingresos menos costo de ventas."
+  },
+  {
+    "term": "Utilidad neta",
+    "definition": "Resultado final del periodo después de todos los ingresos, costos, gastos e impuestos."
+  }
+]

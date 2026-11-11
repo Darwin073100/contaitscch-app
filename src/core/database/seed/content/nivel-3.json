@@ -1,0 +1,339 @@
+{
+  "level": {
+    "id": 3,
+    "title": "Registro de operaciones y el ciclo contable",
+    "goal": "Al terminar este nivel el alumno registra asientos en el libro diario, los pasa al mayor, obtiene saldos y elabora una balanza de comprobación, siguiendo las etapas del ciclo contable."
+  },
+  "topics": [
+    {
+      "id": 301,
+      "sortOrder": 1,
+      "title": "El libro diario y el asiento contable",
+      "objective": "Registrar operaciones en el libro diario con fecha, cuentas, cargos, abonos y una breve descripción.",
+      "explanation": [
+        "El libro diario es el registro cronológico de las operaciones: ahí se anota cada hecho el día en que ocurre, en el orden en que ocurre. Cada anotación se llama asiento contable y tiene una estructura fija: fecha, número de asiento, cuentas que se cargan, cuentas que se abonan (escritas con sangría) y un concepto breve que explica la operación.",
+        "Por convención, en el asiento primero se escriben los cargos y después los abonos, y al final se comprueba que ambos totales sean iguales antes de darlo por terminado. El concepto no es decorativo: meses después, es lo único que explica por qué se hizo ese movimiento.",
+        "Un asiento puede ser simple, con un cargo y un abono, o compuesto, con varias cuentas en uno o en ambos lados, como cuando una compra se paga parte en efectivo y parte a crédito."
+      ],
+      "example": {
+        "title": "Asiento de una venta a crédito por $5,000",
+        "steps": [
+          "Fecha: 12 de marzo. Asiento 14.",
+          "Cargo: Clientes $5,000.",
+          "Abono: Ventas $5,000.",
+          "Concepto: Venta de mercancía a crédito a Comercial Luna, factura 108. Cargos = abonos: el asiento está completo."
+        ]
+      },
+      "keyIdea": "Diario = orden cronológico. Asiento = fecha + cargos + abonos + concepto, con cargos igual a abonos.",
+      "commonError": "Escribir el asiento sin concepto o sin fecha. Sin esos datos, el registro no se puede auditar ni entender después.",
+      "activity": "Redacta en formato de diario tres asientos: a) aportación inicial del dueño, $30,000 en efectivo; b) compra de mercancía a crédito, $7,500; c) pago de servicios (luz y agua) por $950 en efectivo, explicando en el concepto cada uno.",
+      "quiz": {
+        "questions": [
+          {
+            "id": 30101,
+            "sortOrder": 1,
+            "statement": "¿Cuál es la característica principal del libro diario?",
+            "options": [
+              {
+                "id": 301011,
+                "text": "Registra por orden alfabético",
+                "isCorrect": false
+              },
+              {
+                "id": 301012,
+                "text": "Registra las operaciones en orden cronológico",
+                "isCorrect": true
+              },
+              {
+                "id": 301013,
+                "text": "Solo registra ventas",
+                "isCorrect": false
+              },
+              {
+                "id": 301014,
+                "text": "Solo se usa al final del año",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "El diario sigue el tiempo: cada operación se anota el día en que ocurre."
+          },
+          {
+            "id": 30102,
+            "sortOrder": 2,
+            "statement": "En un asiento, las cuentas que se abonan se escriben tradicionalmente:",
+            "options": [
+              {
+                "id": 301021,
+                "text": "Antes que los cargos",
+                "isCorrect": false
+              },
+              {
+                "id": 301022,
+                "text": "Con sangría, después de los cargos",
+                "isCorrect": true
+              },
+              {
+                "id": 301023,
+                "text": "En otro libro",
+                "isCorrect": false
+              },
+              {
+                "id": 301024,
+                "text": "En rojo y sin monto",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Primero los cargos; después, con sangría, los abonos, y al final el concepto."
+          }
+        ]
+      }
+    },
+    {
+      "id": 302,
+      "sortOrder": 2,
+      "title": "El libro mayor y los saldos",
+      "objective": "Trasladar los asientos del diario al mayor y calcular el saldo de cada cuenta.",
+      "explanation": [
+        "El libro mayor reúne la información del diario, pero clasificada por cuenta. Pasar un asiento al mayor —a esta acción se le llama mayorizar— significa llevar cada cargo y cada abono del diario a la cuenta T que le corresponde. El diario responde ¿qué pasó cada día?; el mayor responde ¿cuánto lleva acumulado cada cuenta?",
+        "En el mayor, cada cuenta acumula sus movimientos: la suma de sus cargos, la suma de sus abonos y su saldo. Una cuenta con solo cargos tendrá saldo deudor igual a esa suma; una cuenta de pasivo con abonos tendrá saldo acreedor.",
+        "El mayor es el paso intermedio indispensable: de sus saldos salen la balanza de comprobación y, después, los estados financieros. Si el mayor está mal, todo lo demás estará mal."
+      ],
+      "example": {
+        "title": "Mayorizando la cuenta Bancos",
+        "steps": [
+          "Del diario llegan: cargo $30,000 (aportación depositada), cargo $5,000 (cobro a un cliente), abono $950 (pago de servicios) y abono $7,000 (pago a proveedor).",
+          "Total cargos: $35,000. Total abonos: $7,950.",
+          "Saldo deudor = $35,000 − $7,950 = $27,050. Ese debe ser el dinero disponible en el banco, y debe coincidir con el estado de cuenta bancario."
+        ]
+      },
+      "keyIdea": "Diario clasifica por fecha; mayor clasifica por cuenta. El saldo del mayor es la foto acumulada de cada cuenta.",
+      "commonError": "Mayorizar un cargo en el lado del Haber de la cuenta. Un solo lado cambiado invierte el saldo y descuadra todo el trabajo posterior.",
+      "activity": "Con los asientos de tu actividad de la lección N3-L1, abre las cuentas T de Caja, Inventarios, Proveedores y Capital, mayoriza cada asiento y calcula el saldo de cada cuenta.",
+      "quiz": {
+        "questions": [
+          {
+            "id": 30201,
+            "sortOrder": 1,
+            "statement": "Mayorizar significa:",
+            "options": [
+              {
+                "id": 302011,
+                "text": "Borrar el diario",
+                "isCorrect": false
+              },
+              {
+                "id": 302012,
+                "text": "Trasladar los cargos y abonos del diario a las cuentas del mayor",
+                "isCorrect": true
+              },
+              {
+                "id": 302013,
+                "text": "Sumar solo las ventas",
+                "isCorrect": false
+              },
+              {
+                "id": 302014,
+                "text": "Cerrar el negocio",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Mayorizar es pasar cada movimiento del diario a su cuenta correspondiente en el mayor."
+          },
+          {
+            "id": 30202,
+            "sortOrder": 2,
+            "statement": "En el mayor, la cuenta de un préstamo bancario normalmente presentará saldo:",
+            "options": [
+              {
+                "id": 302021,
+                "text": "Deudor",
+                "isCorrect": false
+              },
+              {
+                "id": 302022,
+                "text": "Cero",
+                "isCorrect": false
+              },
+              {
+                "id": 302023,
+                "text": "Acreedor, porque el pasivo crece con abonos",
+                "isCorrect": true
+              },
+              {
+                "id": 302024,
+                "text": "Negativo en Caja",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "El pasivo es de naturaleza acreedora: su saldo normal aparece en el Haber."
+          }
+        ]
+      }
+    },
+    {
+      "id": 303,
+      "sortOrder": 3,
+      "title": "La balanza de comprobación",
+      "objective": "Elaborar una balanza de comprobación y explicar qué errores detecta y cuáles no.",
+      "explanation": [
+        "La balanza de comprobación es una lista de todas las cuentas del mayor con sus saldos, colocados en dos columnas: saldos deudores y saldos acreedores. Si el trabajo se hizo bien, la suma de ambas columnas debe ser exactamente igual, porque cada operación se registró por partida doble.",
+        "La balanza es una prueba, no un estado financiero: sirve para comprobar la igualdad aritmética y para tener, en un solo lugar, todos los saldos desde los cuales se prepararán los estados financieros.",
+        "Hay errores que la balanza no detecta: omitir por completo una operación (no hay cargos ni abonos, y sigue cuadrando), registrar una operación dos veces, cargar una cuenta equivocada pero del mismo grupo, o registrar un monto incorrecto en ambos lados. La balanza cuadra la forma, no garantiza que el fondo esté bien."
+      ],
+      "example": {
+        "title": "Balanza sencilla al 31 de marzo",
+        "steps": [
+          "Saldos deudores: Caja $2,000; Bancos $18,000; Inventarios $12,000; Equipo $10,000. Total deudores: $42,000.",
+          "Saldos acreedores: Proveedores $7,000; Préstamo bancario $15,000; Capital $20,000. Total acreedores: $42,000. Totales iguales: la balanza comprueba.",
+          "Si los totales difirieran por $100, habría que buscar: un asiento sin cuadrar, una mayorización en el lado contrario o una suma mal hecha."
+        ]
+      },
+      "keyIdea": "Balanza: total de saldos deudores = total de saldos acreedores. Comprueba la igualdad, no la exactitud de cada operación.",
+      "commonError": "Presentar la balanza de comprobación a un banco como si fuera un estado financiero. Es un papel de trabajo interno; los estados financieros se preparan a partir de ella.",
+      "activity": "Con los saldos de tu mayor de la actividad anterior, arma la balanza de comprobación en dos columnas y verifica la igualdad. Después omite a propósito un asiento completo y comprueba que la balanza sigue cuadrando: escribe por qué ocurre eso.",
+      "quiz": {
+        "questions": [
+          {
+            "id": 30301,
+            "sortOrder": 1,
+            "statement": "Si la balanza de comprobación no cuadra, significa que:",
+            "options": [
+              {
+                "id": 303011,
+                "text": "El negocio perdió dinero",
+                "isCorrect": false
+              },
+              {
+                "id": 303012,
+                "text": "Hay al menos un error de registro, de mayorización o de suma",
+                "isCorrect": true
+              },
+              {
+                "id": 303013,
+                "text": "Se debe pagar más impuestos",
+                "isCorrect": false
+              },
+              {
+                "id": 303014,
+                "text": "Hay que cerrar las cuentas",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "La desigualdad entre columnas siempre revela un error de procedimiento."
+          },
+          {
+            "id": 30302,
+            "sortOrder": 2,
+            "statement": "¿Cuál de estos errores NO detecta la balanza de comprobación?",
+            "options": [
+              {
+                "id": 303021,
+                "text": "Un asiento con cargos distintos a los abonos",
+                "isCorrect": false
+              },
+              {
+                "id": 303022,
+                "text": "Una mayorización puesta en el lado contrario",
+                "isCorrect": false
+              },
+              {
+                "id": 303023,
+                "text": "Omitir por completo el registro de una operación",
+                "isCorrect": true
+              },
+              {
+                "id": 303024,
+                "text": "Una suma mal hecha en una cuenta",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Si la operación nunca se registró, no hay cargos ni abonos que descuadren: la balanza sigue en igualdad."
+          }
+        ]
+      }
+    },
+    {
+      "id": 304,
+      "sortOrder": 4,
+      "title": "El ciclo contable completo",
+      "objective": "Ordenar las etapas del ciclo contable desde el comprobante hasta los estados financieros y el cierre.",
+      "explanation": [
+        "Todo el trabajo contable de un periodo sigue un ciclo que se repite cada mes o cada año. Empieza con la documentación fuente: facturas, notas, recibos y estados de cuenta que comprueban que la operación existió. Sin documento, no hay registro válido.",
+        "Después vienen, en orden: el análisis de la operación (qué cuentas se afectan y cómo), el registro en el libro diario, la mayorización, la balanza de comprobación, los ajustes necesarios (por ejemplo, reconocer gastos ya ocurridos aún no pagados), la balanza ajustada, la elaboración de los estados financieros y, al cierre del periodo, los asientos de cierre que dejan las cuentas de ingresos y gastos en cero para empezar el siguiente periodo.",
+        "Conocer el ciclo completo evita el error más común del principiante: querer saltar del comprobante directo al estado financiero. Cada etapa alimenta a la siguiente, y un error temprano se arrastra hasta el final."
+      ],
+      "example": {
+        "title": "El ciclo en un mes de una tienda",
+        "steps": [
+          "1 al 30: se juntan facturas y notas (documentos fuente) y se analiza cada operación.",
+          "Cada día: se registra en el diario. Cada semana: se mayoriza.",
+          "31 de mes: balanza de comprobación; se ajusta, por ejemplo, la renta del local que corresponde al mes.",
+          "Inicio del mes siguiente: con la balanza ajustada se preparan los estados financieros del mes y se decide con información real."
+        ]
+      },
+      "keyIdea": "Orden del ciclo: documento → análisis → diario → mayor → balanza → ajustes → estados financieros → cierre.",
+      "commonError": "Hacer los estados financieros antes de los ajustes. Sin ajustes, gastos e ingresos quedan en el periodo equivocado y el resultado sale falso.",
+      "activity": "Te dan estas etapas desordenadas: estados financieros, registro en diario, ajustes, documentos fuente, mayor, balanza de comprobación, cierre y análisis. Ordénalas, numéralas y escribe en una frase qué se obtiene al terminar cada una.",
+      "quiz": {
+        "questions": [
+          {
+            "id": 30401,
+            "sortOrder": 1,
+            "statement": "¿Cuál es la primera etapa del ciclo contable?",
+            "options": [
+              {
+                "id": 304011,
+                "text": "La balanza de comprobación",
+                "isCorrect": false
+              },
+              {
+                "id": 304012,
+                "text": "Reunir y analizar la documentación fuente",
+                "isCorrect": true
+              },
+              {
+                "id": 304013,
+                "text": "El cierre de cuentas",
+                "isCorrect": false
+              },
+              {
+                "id": 304014,
+                "text": "El estado de resultados",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Sin comprobantes no hay nada válido que registrar: el ciclo empieza en los documentos."
+          },
+          {
+            "id": 30402,
+            "sortOrder": 2,
+            "statement": "Los asientos de cierre sirven para:",
+            "options": [
+              {
+                "id": 304021,
+                "text": "Pagar los impuestos del año",
+                "isCorrect": false
+              },
+              {
+                "id": 304022,
+                "text": "Dejar en cero las cuentas de ingresos y gastos al terminar el periodo",
+                "isCorrect": true
+              },
+              {
+                "id": 304023,
+                "text": "Abrir una cuenta bancaria",
+                "isCorrect": false
+              },
+              {
+                "id": 304024,
+                "text": "Corregir la balanza",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "El cierre traslada el resultado al capital y reinicia las cuentas de resultados para el siguiente periodo."
+          }
+        ]
+      }
+    }
+  ]
+}

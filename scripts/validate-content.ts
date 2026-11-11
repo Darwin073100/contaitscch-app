@@ -2,36 +2,47 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+import type { ZodType } from 'zod';
+
 import {
-  LevelContentSchema,
+  FinalExamSchema,
+  GlossarySchema,
+  LevelFileSchema,
   ManifestSchema,
   validateCourse,
-  type LevelContent,
-} from '../src/core/database/seed/contentSchema';
+  type LevelFile,
+} from '../src/core/database/seed/courseSchema';
 
 const contentDir = join(__dirname, '..', 'src', 'core', 'database', 'seed', 'content');
-const readJson = (file: string): unknown =>
-  JSON.parse(readFileSync(join(contentDir, file), 'utf8'));
-
 const errors: string[] = [];
-const manifest = ManifestSchema.safeParse(readJson('manifest.json'));
 
-if (!manifest.success) {
-  errors.push(`manifest.json:\n${manifest.error.message}`);
-} else {
-  const levels: LevelContent[] = [];
-  for (const file of manifest.data.levels) {
-    try {
-      const parsed = LevelContentSchema.safeParse(readJson(file));
-      if (parsed.success) levels.push(parsed.data);
-      else errors.push(`${file}:\n${parsed.error.message}`);
-    } catch (e) {
-      errors.push(`${file}: ${(e as Error).message}`);
-    }
+/** Lee y valida un archivo; si falla, anota el error y devuelve undefined. */
+function parseFile<T>(file: string, schema: ZodType<T>): T | undefined {
+  try {
+    const parsed = schema.safeParse(JSON.parse(readFileSync(join(contentDir, file), 'utf8')));
+    if (parsed.success) return parsed.data;
+    errors.push(`${file}:\n${parsed.error.message}`);
+  } catch (e) {
+    errors.push(`${file}: ${(e as Error).message}`);
   }
+  return undefined;
+}
+
+const manifest = parseFile('manifest.json', ManifestSchema);
+if (manifest) {
+  const levels = manifest.levels
+    .map((file) => parseFile(file, LevelFileSchema))
+    .filter((l): l is LevelFile => l !== undefined);
+  const exam = parseFile(manifest.finalExam, FinalExamSchema);
+  const glossary = parseFile(manifest.glossary, GlossarySchema);
   errors.push(...validateCourse(levels));
+
   if (errors.length === 0) {
-    console.log(`Contenido válido: versión ${manifest.data.version}, ${levels.length} nivel(es).`);
+    console.log(
+      `Contenido válido: versión ${manifest.version}, ${levels.length} niveles, ` +
+        `${levels.reduce((n, l) => n + l.topics.length, 0)} temas, ` +
+        `${exam?.questions.length} preguntas de examen, ${glossary?.length} términos.`,
+    );
   }
 }
 

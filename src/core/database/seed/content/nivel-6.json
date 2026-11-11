@@ -1,0 +1,337 @@
+{
+  "level": {
+    "id": 6,
+    "title": "Análisis, decisiones y contabilidad responsable",
+    "goal": "Al terminar este nivel el alumno interpreta razones financieras sencillas, calcula el punto de equilibrio de un negocio pequeño y explica la importancia de la ética y de la contabilidad electrónica en México."
+  },
+  "topics": [
+    {
+      "id": 601,
+      "sortOrder": 1,
+      "title": "Razones financieras básicas",
+      "objective": "Calcular e interpretar liquidez corriente, endeudamiento y margen de utilidad neta.",
+      "explanation": [
+        "Una razón financiera es una división entre dos cifras de los estados financieros que, sola, dice poco, pero comparada —con meses anteriores o con el promedio del giro— dice mucho. Un número aislado no diagnostica; la comparación sí.",
+        "Tres razones para empezar. Liquidez corriente = Activo circulante ÷ Pasivo circulante: mide si lo que se puede convertir pronto en dinero alcanza para pagar lo que vence pronto; un resultado mayor que 1 indica que sí alcanza, al menos en papel. Endeudamiento = Pasivo total ÷ Activo total: muestra qué parte de los bienes se financió con deuda. Margen neto = Utilidad neta ÷ Ventas: indica cuántos centavos de ganancia quedan por cada peso vendido.",
+        "Interpretar no es solo calcular: hay que preguntar a qué se debe el resultado y si la tendencia mejora o empeora. Una liquidez alta con inventarios que no se venden, por ejemplo, puede esconder un problema."
+      ],
+      "example": {
+        "title": "Diagnóstico rápido de una tienda",
+        "steps": [
+          "Activo circulante $60,000 y pasivo circulante $40,000. Liquidez = 60,000 ÷ 40,000 = 1.5. Puede cubrir sus deudas cortas 1.5 veces.",
+          "Pasivo total $70,000 y activo total $140,000. Endeudamiento = 50 %. La mitad de los bienes se financió con deuda.",
+          "Utilidad neta $9,000 y ventas $150,000. Margen neto = 6 %. De cada peso vendido quedan 6 centavos de ganancia."
+        ]
+      },
+      "keyIdea": "Razón sin comparación es solo un número. Compara contra periodos anteriores y contra el giro del negocio.",
+      "commonError": "Concluir que una liquidez muy alta siempre es buena. Demasiado dinero detenido en inventario o en caja puede significar recursos sin aprovechar.",
+      "activity": "Con activo circulante de $85,000, pasivo circulante de $50,000, pasivo total de $95,000, activo total de $190,000, ventas de $220,000 y utilidad neta de $17,600, calcula las tres razones de la lección y escribe una conclusión de una línea para cada una.",
+      "quiz": {
+        "questions": [
+          {
+            "id": 60101,
+            "sortOrder": 1,
+            "statement": "La liquidez corriente se calcula como:",
+            "options": [
+              {
+                "id": 601011,
+                "text": "Pasivo total ÷ activo total",
+                "isCorrect": false
+              },
+              {
+                "id": 601012,
+                "text": "Activo circulante ÷ pasivo circulante",
+                "isCorrect": true
+              },
+              {
+                "id": 601013,
+                "text": "Utilidad ÷ ventas",
+                "isCorrect": false
+              },
+              {
+                "id": 601014,
+                "text": "Ventas ÷ costos",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Compara lo que pronto será dinero contra lo que pronto hay que pagar."
+          },
+          {
+            "id": 60102,
+            "sortOrder": 2,
+            "statement": "Un margen neto del 5 % significa que:",
+            "options": [
+              {
+                "id": 601021,
+                "text": "Se debe el 5 % del negocio",
+                "isCorrect": false
+              },
+              {
+                "id": 601022,
+                "text": "Por cada peso vendido quedan 5 centavos de utilidad neta",
+                "isCorrect": true
+              },
+              {
+                "id": 601023,
+                "text": "El 5 % de la mercancía se perdió",
+                "isCorrect": false
+              },
+              {
+                "id": 601024,
+                "text": "Las ventas crecieron 5 %",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Margen neto = utilidad neta entre ventas: es la ganancia que queda por peso vendido."
+          }
+        ]
+      }
+    },
+    {
+      "id": 602,
+      "sortOrder": 2,
+      "title": "Punto de equilibrio: cuánto hay que vender para no perder",
+      "objective": "Separar costos fijos y variables y calcular el punto de equilibrio en pesos y en unidades.",
+      "explanation": [
+        "Los costos fijos no cambian aunque se venda mucho o poco: renta, sueldos base y servicios fijos. Los costos variables cambian con las ventas: la mercancía, los insumos por pieza y las comisiones. La diferencia entre el precio de venta y el costo variable por unidad se llama margen de contribución: es lo que cada venta aporta, primero para cubrir los fijos y después para generar utilidad.",
+        "El punto de equilibrio es el nivel de ventas donde el negocio ni gana ni pierde: las ventas alcanzan justo para cubrir costos variables y fijos. Fórmula en unidades: Costos fijos totales ÷ Margen de contribución por unidad. Fórmula en pesos: Costos fijos ÷ (Margen de contribución ÷ Precio), o directamente fijos entre el porcentaje de margen.",
+        "Saber este número cambia las decisiones: dice cuántas unidades mínimas hay que vender al mes, si un descuento es viable y si un nuevo gasto fijo (otro empleado, un local más grande) es sostenible."
+      ],
+      "example": {
+        "title": "Una cafetería pequeña",
+        "steps": [
+          "Precio por bebida: $50. Costo variable por bebida: $30. Margen de contribución: $20 por bebida.",
+          "Costos fijos del mes: renta, sueldos y servicios por $20,000.",
+          "Punto de equilibrio: $20,000 ÷ $20 = 1,000 bebidas al mes. Vendiendo la número 1,001 empieza la utilidad. En pesos: 1,000 × $50 = $50,000 de ventas mínimas."
+        ]
+      },
+      "keyIdea": "Punto de equilibrio = Fijos ÷ Margen de contribución. Abajo de ese punto se pierde; arriba, se gana.",
+      "commonError": "Dividir los costos fijos entre el precio de venta, olvidando restar el costo variable. Cada unidad vendida también cuesta, y eso debe salir primero del precio.",
+      "activity": "Un taller vende un servicio a $400 con costo variable de $250 por servicio y costos fijos mensuales de $30,000. Calcula el margen de contribución, el punto de equilibrio en servicios y en pesos, y qué pasa si suma un gasto fijo nuevo de $6,000.",
+      "quiz": {
+        "questions": [
+          {
+            "id": 60201,
+            "sortOrder": 1,
+            "statement": "Con costos fijos de $12,000 y margen de contribución de $40 por unidad, el punto de equilibrio es:",
+            "options": [
+              {
+                "id": 602011,
+                "text": "300 unidades",
+                "isCorrect": true
+              },
+              {
+                "id": 602012,
+                "text": "480 unidades",
+                "isCorrect": false
+              },
+              {
+                "id": 602013,
+                "text": "12,040 unidades",
+                "isCorrect": false
+              },
+              {
+                "id": 602014,
+                "text": "40 unidades",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "12,000 ÷ 40 = 300 unidades."
+          },
+          {
+            "id": 60202,
+            "sortOrder": 2,
+            "statement": "La renta del local es un ejemplo clásico de:",
+            "options": [
+              {
+                "id": 602021,
+                "text": "Costo variable",
+                "isCorrect": false
+              },
+              {
+                "id": 602022,
+                "text": "Ingreso",
+                "isCorrect": false
+              },
+              {
+                "id": 602023,
+                "text": "Costo fijo",
+                "isCorrect": true
+              },
+              {
+                "id": 602024,
+                "text": "Costo de ventas unitario",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "La renta se paga igual se venda poco o mucho: es fija."
+          }
+        ]
+      }
+    },
+    {
+      "id": 603,
+      "sortOrder": 3,
+      "title": "Ética contable y responsabilidad profesional",
+      "objective": "Explicar por qué la honestidad es un requisito técnico de la contabilidad y qué conductas la rompen.",
+      "explanation": [
+        "La información contable sirve porque otros confían en ella: un banco presta, un socio invierte y un cliente paga sobre la base de esos números. Si los números se maquillan, todas esas decisiones se toman engañadas, y el daño no es solo moral: hay sanciones legales, fiscales y profesionales.",
+        "La ética contable se resume en conductas concretas: registrar las operaciones reales, completas y en su periodo; no inflar ventas ni esconder deudas; no mezclar el dinero personal con el del negocio; guardar la confidencialidad de la información de los clientes y decir «no sé» o «eso no se puede» cuando una petición pide falsear información.",
+        "En México, quien ejerce profesionalmente se rige además por códigos de ética de la profesión y por las Normas de Información Financiera. Para el estudiante, la regla práctica es simple: si un registro no podría explicarse abiertamente frente al dueño, al banco y a la autoridad, ese registro está mal."
+      ],
+      "example": {
+        "title": "La venta que no existió",
+        "steps": [
+          "Para conseguir un préstamo, el dueño pide registrar en diciembre una venta grande que «seguramente» se hará en enero.",
+          "Eso rompe la devengación y la honestidad del registro: en diciembre esa venta no ocurrió.",
+          "La respuesta profesional: registrar en enero cuando ocurra, y entregar al banco información real, explicando las ventas esperadas como proyección, no como hecho."
+        ]
+      },
+      "keyIdea": "La confianza es el producto de la contabilidad. Un número falso destruye el valor de todos los demás.",
+      "commonError": "Creer que ayudar al cliente es hacer lo que pide aunque sea falsear cifras. Ayudar es protegerlo también de las consecuencias de un registro falso.",
+      "activity": "Lee y valora cada caso con «correcto» o «incorrecto» y una razón: a) registrar una compra sin factura con una nota interna y decir que no hay comprobante; b) ocultar una deuda para mejorar el balance que verá el banco; c) negarse a registrar una venta ficticia y explicarlo por escrito al cliente; d) compartir la información de un cliente con otro negocio.",
+      "quiz": {
+        "questions": [
+          {
+            "id": 60301,
+            "sortOrder": 1,
+            "statement": "Registrar en este mes una venta que ocurrirá el mes siguiente, para mejorar los números, es:",
+            "options": [
+              {
+                "id": 603011,
+                "text": "Una práctica aceptable si luego sí se vende",
+                "isCorrect": false
+              },
+              {
+                "id": 603012,
+                "text": "Incorrecto: viola la devengación y la honestidad del registro",
+                "isCorrect": true
+              },
+              {
+                "id": 603013,
+                "text": "Obligatorio para conseguir préstamos",
+                "isCorrect": false
+              },
+              {
+                "id": 603014,
+                "text": "Un ajuste normal de cierre",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Las operaciones se registran cuando ocurren y como ocurrieron; anticiparlas falsea la información."
+          },
+          {
+            "id": 60302,
+            "sortOrder": 2,
+            "statement": "La confidencialidad en contabilidad significa:",
+            "options": [
+              {
+                "id": 603021,
+                "text": "No llevar registros",
+                "isCorrect": false
+              },
+              {
+                "id": 603022,
+                "text": "No revelar la información del cliente a terceros sin autorización",
+                "isCorrect": true
+              },
+              {
+                "id": 603023,
+                "text": "No hablar con el cliente",
+                "isCorrect": false
+              },
+              {
+                "id": 603024,
+                "text": "Guardar las facturas en casa",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "La información contable del cliente es reservada: solo se comparte con su autorización o por obligación legal."
+          }
+        ]
+      }
+    },
+    {
+      "id": 604,
+      "sortOrder": 4,
+      "title": "Contabilidad electrónica y herramientas digitales en México",
+      "objective": "Describir, en términos generales, la factura electrónica y la contabilidad electrónica, y cómo una aplicación ayuda a aprender y a registrar mejor.",
+      "explanation": [
+        "En México, la facturación se hace con comprobantes fiscales digitales por internet, conocidos como CFDI, que se emiten con los requisitos y por los medios que establece el SAT. La factura electrónica no es un PDF cualquiera: es un archivo con estructura y folio fiscal que la autoridad puede validar.",
+        "La contabilidad electrónica consiste en llevar los registros en sistemas digitales y, para los contribuyentes obligados, enviar al SAT por el buzón tributario archivos como el catálogo de cuentas y la balanza de comprobación, conforme a las reglas vigentes. El detalle de quién está obligado y con qué periodicidad cambia por régimen y por disposiciones, por lo que debe verificarse siempre en fuentes oficiales.",
+        "Para quien aprende, la tecnología no sustituye el razonamiento: un sistema carga y abona según se le configure, pero no sabe si la operación se clasificó bien. Por eso el orden de esta aplicación es el correcto: primero entender cuentas, partida doble y estados financieros, y después apoyarse en herramientas digitales que automatizan lo repetitivo sin esconder la lógica."
+      ],
+      "example": {
+        "title": "Del cuaderno al sistema, sin perder la lógica",
+        "steps": [
+          "La tienda registra en un sistema su venta del día. El sistema genera el asiento: cargo a Bancos y abono a Ventas, y emite el CFDI correspondiente.",
+          "Al fin de mes, el sistema suma el mayor, produce la balanza y arma los estados financieros con los mismos pasos del ciclo contable aprendido en el Nivel 3.",
+          "El contador revisa lo que el sistema no puede juzgar: que la clasificación sea correcta y que no falte ningún documento."
+        ]
+      },
+      "keyIdea": "Digitalizar no cambia la contabilidad: cambia la velocidad. La lógica —cuentas, partida doble, ciclo— sigue siendo la misma.",
+      "commonError": "Confiar en que, por usar un sistema, los registros ya están bien. El sistema procesa lo que se le captura; una cuenta mal elegida produce estados financieros malos, solo que más rápido.",
+      "activity": "Compara hacer a mano y en un sistema estas tareas: registrar 100 ventas, obtener el saldo de Clientes y armar la balanza del mes. Escribe para cada una qué automatiza la herramienta y qué sigue dependiendo del criterio de la persona.",
+      "quiz": {
+        "questions": [
+          {
+            "id": 60401,
+            "sortOrder": 1,
+            "statement": "En México, la factura electrónica oficial se conoce como:",
+            "options": [
+              {
+                "id": 604011,
+                "text": "Nota de remisión",
+                "isCorrect": false
+              },
+              {
+                "id": 604012,
+                "text": "CFDI, emitido conforme a los requisitos del SAT",
+                "isCorrect": true
+              },
+              {
+                "id": 604013,
+                "text": "Recibo en papel membretado",
+                "isCorrect": false
+              },
+              {
+                "id": 604014,
+                "text": "Estado de cuenta bancario",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "El CFDI es el comprobante fiscal digital por internet con validez ante el SAT."
+          },
+          {
+            "id": 60402,
+            "sortOrder": 2,
+            "statement": "La principal ventaja de un sistema contable, sin perder la lógica aprendida, es que:",
+            "options": [
+              {
+                "id": 604021,
+                "text": "Elimina la necesidad de entender la partida doble",
+                "isCorrect": false
+              },
+              {
+                "id": 604022,
+                "text": "Automatiza registros repetitivos, sumas y reportes, mientras la clasificación sigue siendo responsabilidad de la persona",
+                "isCorrect": true
+              },
+              {
+                "id": 604023,
+                "text": "Garantiza que no haya errores de criterio",
+                "isCorrect": false
+              },
+              {
+                "id": 604024,
+                "text": "Sustituye por completo al contador en todos los casos",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "La herramienta da velocidad y orden; el juicio contable sigue siendo humano."
+          }
+        ]
+      }
+    }
+  ]
+}
