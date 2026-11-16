@@ -7,7 +7,11 @@ export type DomainEvent =
   /** Se aprobaron por primera vez los 4 temas de un nivel. */
   | { type: 'LevelCompleted'; levelId: number }
   /** Se aprobó por primera vez el examen integrador. */
-  | { type: 'FinalExamPassed' };
+  | { type: 'FinalExamPassed' }
+  /** El avance local cambió por la nube (sincronización, restauración o reinicio). */
+  | { type: 'ProgressSynced' }
+  /** Terminó un intento de sincronización (bien o mal): el indicador debe refrescarse. */
+  | { type: 'SyncStateChanged' };
 
 export type DomainEventListener = (event: DomainEvent) => void;
 

@@ -9,11 +9,15 @@ import type { LocalUserRepository } from '../repositories/LocalUserRepository';
 
 export type LoginError = 'INVALID_CREDENTIALS' | 'NETWORK';
 
+/** Lo único que necesita de SyncProgressUseCase (quizzes): traer el avance de la nube. */
+export type ProgressRestorer = { execute(): Promise<unknown> };
+
 /**
  * Pide la sal del usuario, recalcula el hash con la contraseña escrita y abre sesión.
  * Si el correo no está verificado, la sesión se guarda igual con `emailVerified: false`
  * y la UI lleva a la pantalla de verificación.
- * Pendiente (sincronización): restaurar el avance de la nube (sync_progress) en un dispositivo nuevo.
+ * Al final trae el avance de la nube: en un teléfono nuevo se continúa donde se quedó. Si no se
+ * puede (sin red), la sincronización lo reintenta después; el inicio de sesión no falla por eso.
  */
 export class LoginUseCase {
   constructor(
@@ -21,6 +25,7 @@ export class LoginUseCase {
     private readonly hasher: PasswordHasher,
     private readonly users: LocalUserRepository,
     private readonly session: SessionWriter,
+    private readonly progress?: ProgressRestorer,
   ) {}
 
   async execute({ email, password }: LoginInput): Promise<Result<Session, LoginError>> {
@@ -40,6 +45,7 @@ export class LoginUseCase {
     const session: Session = { userId, apiToken, email: profile.email, emailVerified };
     await this.users.save({ ...profile, id: userId, emailVerified });
     await this.session.save(session);
+    await this.progress?.execute();
     return ok(session);
   }
 }

@@ -1,3 +1,4 @@
+import type { Connectivity } from '@/core/connectivity/Connectivity';
 import { quizProgress } from '@/core/database/schema';
 import {
   createSeededTestDatabase,
@@ -18,6 +19,8 @@ export type TestContainerOptions = {
   session?: Session | null;
   /** Cliente remoto; por defecto todas las llamadas fallan como sin red. */
   remote?: RemoteClient;
+  /** Por defecto sin red (como `remote`). */
+  connectivity?: Connectivity;
 };
 
 export const testUserSession: Session = {
@@ -26,6 +29,8 @@ export const testUserSession: Session = {
   email: 'ana@correo.com',
   emailVerified: true,
 };
+
+const offline: Connectivity = { isOnline: async () => false, onReconnect: () => () => {} };
 
 const offlineRemote: RemoteClient = {
   rpc: async () => ({ data: null, error: { message: 'Sin red en pruebas' } }),
@@ -66,5 +71,6 @@ export async function createTestContainer(options: TestContainerOptions = {}): P
     session,
     clock: testClock,
     remote: options.remote ?? offlineRemote,
+    connectivity: options.connectivity ?? offline,
   });
 }

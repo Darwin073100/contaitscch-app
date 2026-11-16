@@ -1,11 +1,21 @@
+import type { Connectivity } from '@/core/connectivity/Connectivity';
+import { err, ok, type Result } from '@/core/result/Result';
 import type { Tx, UnitOfWork } from '@/core/transaction/UnitOfWork';
 import type { CourseLesson, CourseLevel, CourseProgress } from '@/features/learning';
 
 import { FINAL_EXAM_ID, type GradableQuiz } from '../entities/Quiz';
 import type { QuizProgress } from '../entities/QuizProgress';
+import type { SyncState } from '../entities/Sync';
+import { mergeProgress } from '../policies/ProgressRules';
 import type { CourseProgressSource } from '../repositories/CourseProgressSource';
+import type {
+  ProgressRemote,
+  RemoteSyncError,
+  RemoteSyncResponse,
+} from '../repositories/ProgressRemote';
 import type { QuizProgressRepository } from '../repositories/QuizProgressRepository';
 import type { QuizReader } from '../repositories/QuizReader';
+import type { SyncStateRepository } from '../repositories/SyncStateRepository';
 
 /** Ejercicio de `questions` preguntas con 4 opciones; la correcta es la B (pregunta×10 + 2). */
 export function gradableQuiz(
@@ -49,13 +59,95 @@ export class InMemoryQuizReader implements QuizReader {
 
 export class InMemoryQuizProgressRepository implements QuizProgressRepository {
   readonly rows = new Map<number, QuizProgress>();
+  /** quizIds que la nube ya tiene en su versión actual. */
+  readonly synced = new Set<number>();
 
   async find(quizId: number) {
     return this.rows.get(quizId) ?? null;
   }
 
-  async save(progress: QuizProgress, _tx: Tx) {
+  async save(progress: QuizProgress, _tx: Tx, options: { synced?: boolean } = {}) {
     this.rows.set(progress.quizId, progress);
+    if (options.synced) this.synced.add(progress.quizId);
+    else this.synced.delete(progress.quizId);
+  }
+
+  async findPending() {
+    return [...this.rows.values()].filter((r) => !this.synced.has(r.quizId));
+  }
+
+  async countPending() {
+    return (await this.findPending()).length;
+  }
+
+  async deleteAll() {
+    this.rows.clear();
+    this.synced.clear();
+  }
+}
+
+export class InMemorySyncStateRepository implements SyncStateRepository {
+  state: SyncState = { generation: null, lastSyncedAt: null, lastError: null };
+
+  async get() {
+    return this.state;
+  }
+
+  async save(state: SyncState) {
+    this.state = state;
+  }
+}
+
+/**
+ * Nube de prueba con la misma regla de fusión que sync_progress. `fail` simula un error de red o
+ * de token; `onSync` deja simular cambios locales mientras la subida va en camino.
+ */
+export class FakeProgressRemote implements ProgressRemote {
+  readonly rows = new Map<number, QuizProgress>();
+  generation = 0;
+  fail: RemoteSyncError | null = null;
+  calls = 0;
+  onSync?: () => Promise<void>;
+
+  constructor(private readonly now: string) {}
+
+  async sync(
+    generation: number | null,
+    pending: QuizProgress[],
+  ): Promise<Result<RemoteSyncResponse, RemoteSyncError>> {
+    this.calls++;
+    await this.onSync?.();
+    if (this.fail) return err(this.fail);
+    const all = () => [...this.rows.values()].sort((a, b) => a.quizId - b.quizId);
+    if (generation !== this.generation) {
+      return ok({ status: 'replace', generation: this.generation, progress: all() });
+    }
+    for (const row of pending) {
+      // El servidor recorta las fechas a su now()
+      const capped = { ...row, updatedAt: row.updatedAt > this.now ? this.now : row.updatedAt };
+      const current = this.rows.get(row.quizId);
+      this.rows.set(row.quizId, current ? mergeProgress(current, capped) : capped);
+    }
+    return ok({ status: 'ok', generation: this.generation, syncedAt: this.now, progress: all() });
+  }
+
+  async reset(): Promise<Result<{ generation: number }, 'NETWORK' | 'INVALID_TOKEN'>> {
+    if (this.fail === 'NETWORK' || this.fail === 'INVALID_TOKEN') return err(this.fail);
+    this.rows.clear();
+    this.generation++;
+    return ok({ generation: this.generation });
+  }
+}
+
+export class FakeConnectivity implements Connectivity {
+  constructor(public online = true) {}
+
+  async isOnline() {
+    return this.online;
+  }
+
+  onReconnect() {
+    return () => undefined;
   }
 }
 

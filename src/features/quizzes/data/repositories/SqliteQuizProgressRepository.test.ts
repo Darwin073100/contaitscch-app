@@ -57,15 +57,36 @@ describe('SqliteQuizProgressRepository', () => {
     });
   });
 
-  it('una fila ya sincronizada vuelve a quedar pendiente al cambiar', async () => {
-    await uow.run((tx) => repo.save(progress(), tx));
-    db.update(quizProgress).set({ syncedAt: T1 }).run();
+  it('guardado como sincronizado no queda pendiente; al cambiar vuelve a estarlo', async () => {
+    await uow.run((tx) => repo.save(progress(), tx, { synced: true }));
+
+    const [synced] = db.select().from(quizProgress).all();
+    expect(synced).toMatchObject({ userId: TEST_USER_ID, syncedAt: T1, updatedAt: T1 });
+    expect(await repo.countPending()).toBe(0);
 
     await uow.run((tx) => repo.save(progress({ attempts: 2, updatedAt: T2 }), tx));
 
-    const [row] = db.select().from(quizProgress).all();
-    expect(row).toMatchObject({ userId: TEST_USER_ID, syncedAt: T1, updatedAt: T2 });
-    expect(row.syncedAt).not.toBe(row.updatedAt);
+    expect(await repo.countPending()).toBe(1);
+    expect(await repo.findPending()).toEqual([progress({ attempts: 2, updatedAt: T2 })]);
+  });
+
+  it('una fila marcada a mano con otra fecha también cuenta como pendiente', async () => {
+    await uow.run((tx) => repo.save(progress({ updatedAt: T2 }), tx));
+    db.update(quizProgress).set({ syncedAt: T1 }).run();
+
+    expect(await repo.countPending()).toBe(1);
+  });
+
+  it('deleteAll borra solo el avance del usuario de la sesión', async () => {
+    await uow.run(async (tx) => {
+      await repo.save(progress(), tx);
+      await repo.save(progress({ quizId: 102 }), tx);
+    });
+
+    await uow.run((tx) => repo.deleteAll(tx));
+
+    expect(await repo.find(101)).toBeNull();
+    expect(await repo.countPending()).toBe(0);
   });
 
   it('un aprobado sin fecha de aprobación lo rechaza la base de datos', async () => {

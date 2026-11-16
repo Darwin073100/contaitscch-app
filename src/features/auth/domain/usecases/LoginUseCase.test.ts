@@ -37,13 +37,19 @@ function setup(
   } as AuthRemote;
   const savedUsers: Parameters<LocalUserRepository['save']>[0][] = [];
   const sessions: Session[] = [];
+  const restore = {
+    execute: jest.fn(async () => {
+      calls.push(`restore:${sessions.length}`);
+    }),
+  };
   const useCase = new LoginUseCase(
     remote,
     hasher,
     { save: async (u) => void savedUsers.push(u), markEmailVerified: async () => undefined },
     { save: async (s) => void sessions.push(s) },
+    restore,
   );
-  return { useCase, calls, savedUsers, sessions };
+  return { useCase, calls, savedUsers, sessions, restore };
 }
 
 describe('LoginUseCase', () => {
@@ -61,6 +67,7 @@ describe('LoginUseCase', () => {
     expect(calls).toEqual([
       'params:ana@correo.com',
       'login:ana@correo.com:hash(secreta123|sal-de-ana|75000)',
+      'restore:1',
     ]);
     expect(savedUsers).toEqual([{ ...profile, id: 'id-1', emailVerified: true }]);
     expect(sessions).toHaveLength(1);
@@ -96,5 +103,24 @@ describe('LoginUseCase', () => {
       err('NETWORK'),
     );
     expect(calls).toEqual(['params:ana@correo.com']);
+  });
+
+  it('al abrir sesión trae el avance de la nube (después de guardar la sesión)', async () => {
+    const { useCase, calls } = setup(
+      ok({ salt: 'sal', iterations: 60000 }),
+      ok({ userId: 'id-1', apiToken: 'token-1', emailVerified: true, profile }),
+    );
+
+    await useCase.execute({ email: 'ana@correo.com', password: 'secreta123' });
+
+    expect(calls.at(-1)).toBe('restore:1');
+  });
+
+  it('con credenciales incorrectas no intenta restaurar', async () => {
+    const { useCase, restore } = setup(ok({ salt: 'sal', iterations: 60000 }));
+
+    await useCase.execute({ email: 'ana@correo.com', password: 'mala' });
+
+    expect(restore.execute).not.toHaveBeenCalled();
   });
 });

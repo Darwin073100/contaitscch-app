@@ -46,3 +46,22 @@ export function mergeProgress(a: QuizProgress, b: QuizProgress): QuizProgress {
     updatedAt: a.updatedAt > b.updatedAt ? a.updatedAt : b.updatedAt,
   };
 }
+
+/**
+ * Concilia una fila local con la que devolvió la nube tras sincronizar.
+ * - Si la nube ya tiene el mismo contenido (aprobado, mejor puntaje e intentos), se adopta su fila
+ *   (sus fechas mandan: el servidor las recorta a now()) y queda sincronizada.
+ * - Si el teléfono tiene más (cambió mientras se subía), queda la fusión, pendiente de subir.
+ * Comparar contenido y no fechas evita que un reloj adelantado deje filas pendientes para siempre.
+ */
+export function reconcile(
+  local: QuizProgress | null,
+  remote: QuizProgress,
+): { progress: QuizProgress; synced: boolean } {
+  const merged = local ? mergeProgress(local, remote) : remote;
+  const sameContent =
+    merged.passed === remote.passed &&
+    merged.bestScore === remote.bestScore &&
+    merged.attempts === remote.attempts;
+  return sameContent ? { progress: remote, synced: true } : { progress: merged, synced: false };
+}

@@ -2,6 +2,7 @@
 // Vive fuera de src/app porque Expo Router trata cada archivo de src/app como una ruta.
 // Es el único lugar que importa rutas internas de las features (data/ y domain/).
 import type { Clock } from '@/core/clock/Clock';
+import type { Connectivity } from '@/core/connectivity/Connectivity';
 import type { AppDatabase } from '@/core/database/database';
 import { SqliteUnitOfWork } from '@/core/database/SqliteUnitOfWork';
 import { InMemoryDomainEventBus, type DomainEventBus } from '@/core/events/DomainEventBus';
@@ -25,13 +26,21 @@ import { GetCourseProgressUseCase } from '@/features/learning/domain/usecases/Ge
 import { GetSyllabusUseCase } from '@/features/learning/domain/usecases/GetSyllabusUseCase';
 import { GetTopicSessionUseCase } from '@/features/learning/domain/usecases/GetTopicSessionUseCase';
 import { SqliteLevelRepository } from '@/features/levels/data/repositories/SqliteLevelRepository';
+import { SupabaseRankingRemoteDataSource } from '@/features/leaderboard/data/datasources/SupabaseRankingRemoteDataSource';
+import { SqliteRankingCache } from '@/features/leaderboard/data/repositories/SqliteRankingCache';
+import { SyncAndFetchRankingUseCase } from '@/features/leaderboard/domain/usecases/SyncAndFetchRankingUseCase';
 import { GetLevelsOverviewUseCase } from '@/features/levels/domain/usecases/GetLevelsOverviewUseCase';
+import { SupabaseProgressRemoteDataSource } from '@/features/quizzes/data/datasources/SupabaseProgressRemoteDataSource';
 import { SqliteQuizProgressRepository } from '@/features/quizzes/data/repositories/SqliteQuizProgressRepository';
 import { SqliteQuizRepository } from '@/features/quizzes/data/repositories/SqliteQuizRepository';
+import { SqliteSyncStateRepository } from '@/features/quizzes/data/repositories/SqliteSyncStateRepository';
 import { CheckAnswerUseCase } from '@/features/quizzes/domain/usecases/CheckAnswerUseCase';
 import { GetFinalExamStatusUseCase } from '@/features/quizzes/domain/usecases/GetFinalExamStatusUseCase';
+import { GetSyncStatusUseCase } from '@/features/quizzes/domain/usecases/GetSyncStatusUseCase';
+import { ResetProgressUseCase } from '@/features/quizzes/domain/usecases/ResetProgressUseCase';
 import { StartQuizUseCase } from '@/features/quizzes/domain/usecases/StartQuizUseCase';
 import { SubmitQuizUseCase } from '@/features/quizzes/domain/usecases/SubmitQuizUseCase';
+import { SyncProgressUseCase } from '@/features/quizzes/domain/usecases/SyncProgressUseCase';
 
 export type Container = {
   clock: Clock;
@@ -39,6 +48,7 @@ export type Container = {
   session: SessionManager;
   /** Eventos de dominio (avance cambiado, nivel completado…) para refrescar y sincronizar. */
   events: DomainEventBus;
+  connectivity: Connectivity;
   auth: {
     registerUser: RegisterUserUseCase;
     login: LoginUseCase;
@@ -62,6 +72,15 @@ export type Container = {
     submitQuiz: SubmitQuizUseCase;
     getFinalExamStatus: GetFinalExamStatusUseCase;
   };
+  /** Avance en la nube: sincronizar, estado del indicador y "Reiniciar mi avance". */
+  progress: {
+    syncProgress: SyncProgressUseCase;
+    getSyncStatus: GetSyncStatusUseCase;
+    resetProgress: ResetProgressUseCase;
+  };
+  leaderboard: {
+    syncAndFetchRanking: SyncAndFetchRankingUseCase;
+  };
   glossary: {
     getGlossary: GetGlossaryUseCase;
   };
@@ -73,9 +92,16 @@ export type ContainerDeps = {
   session: SessionManager;
   clock: Clock;
   remote: RemoteClient;
+  connectivity: Connectivity;
 };
 
-export function createContainer({ db, session, clock, remote }: ContainerDeps): Container {
+export function createContainer({
+  db,
+  session,
+  clock,
+  remote,
+  connectivity,
+}: ContainerDeps): Container {
   const uow = new SqliteUnitOfWork(db);
   const events = new InMemoryDomainEventBus();
   const authRemote = new SupabaseAuthRemoteDataSource(remote);
@@ -88,14 +114,27 @@ export function createContainer({ db, session, clock, remote }: ContainerDeps): 
   const quizzes = new SqliteQuizRepository(db);
   const quizProgress = new SqliteQuizProgressRepository(db, session);
   const getCourseProgress = new GetCourseProgressUseCase(courseProgress);
+  const syncState = new SqliteSyncStateRepository(db, session, clock);
+  const progressRemote = new SupabaseProgressRemoteDataSource(remote, session);
+  const syncProgress = new SyncProgressUseCase(
+    quizProgress,
+    syncState,
+    progressRemote,
+    uow,
+    connectivity,
+    clock,
+    events,
+    session,
+  );
 
   return {
     clock,
     session,
     events,
+    connectivity,
     auth: {
       registerUser: new RegisterUserUseCase(authRemote, hasher, localUsers, session),
-      login: new LoginUseCase(authRemote, hasher, localUsers, session),
+      login: new LoginUseCase(authRemote, hasher, localUsers, session, syncProgress),
       verifyEmailCode: new VerifyEmailCodeUseCase(authRemote, localUsers, session),
       requestVerificationCode: new RequestVerificationCodeUseCase(authRemote, localUsers, session),
       logout: new LogoutUseCase(session),
@@ -121,6 +160,28 @@ export function createContainer({ db, session, clock, remote }: ContainerDeps): 
         events,
       ),
       getFinalExamStatus: new GetFinalExamStatusUseCase(quizzes, quizProgress, getCourseProgress),
+    },
+    progress: {
+      syncProgress,
+      getSyncStatus: new GetSyncStatusUseCase(quizProgress, syncState, connectivity),
+      resetProgress: new ResetProgressUseCase(
+        quizProgress,
+        syncState,
+        progressRemote,
+        uow,
+        connectivity,
+        clock,
+        events,
+      ),
+    },
+    leaderboard: {
+      syncAndFetchRanking: new SyncAndFetchRankingUseCase(
+        syncProgress,
+        new SupabaseRankingRemoteDataSource(remote, session),
+        new SqliteRankingCache(db, session),
+        connectivity,
+        clock,
+      ),
     },
     glossary: {
       getGlossary: new GetGlossaryUseCase(new SqliteGlossaryRepository(db)),

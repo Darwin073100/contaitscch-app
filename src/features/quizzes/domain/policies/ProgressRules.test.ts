@@ -1,5 +1,5 @@
 import type { QuizProgress } from '../entities/QuizProgress';
-import { applyResult, isPassing, mergeProgress } from './ProgressRules';
+import { applyResult, isPassing, mergeProgress, reconcile } from './ProgressRules';
 
 const T1 = '2026-11-01T10:00:00.000Z';
 const T2 = '2026-11-02T10:00:00.000Z';
@@ -91,5 +91,40 @@ describe('mergeProgress', () => {
     expect(mergeProgress(a, b)).toEqual(mergeProgress(b, a));
     expect(mergeProgress(mergeProgress(a, b), c)).toEqual(mergeProgress(a, mergeProgress(b, c)));
     expect(mergeProgress(a, a)).toEqual(a);
+  });
+});
+
+describe('reconcile', () => {
+  const remote = progress({ passed: true, bestScore: 2, attempts: 3, passedAt: T1, updatedAt: T2 });
+
+  it('fila nueva de la nube: se adopta sincronizada', () => {
+    expect(reconcile(null, remote)).toEqual({ progress: remote, synced: true });
+  });
+
+  it('mismo contenido: se adoptan las fechas del servidor aunque el reloj local vaya adelantado', () => {
+    const local = { ...remote, updatedAt: '2100-01-01T00:00:00.000Z' };
+
+    expect(reconcile(local, remote)).toEqual({ progress: remote, synced: true });
+  });
+
+  it('el teléfono tiene más (cambió durante la subida): queda la fusión, pendiente', () => {
+    const local = progress({
+      passed: true,
+      bestScore: 2,
+      attempts: 4,
+      passedAt: T1,
+      updatedAt: T3,
+    });
+
+    expect(reconcile(local, remote)).toEqual({
+      progress: { ...remote, attempts: 4, updatedAt: T3 },
+      synced: false,
+    });
+  });
+
+  it('la nube tiene más (otro teléfono): se adopta sin perder nada', () => {
+    const local = progress({ bestScore: 1, attempts: 1, updatedAt: T1 });
+
+    expect(reconcile(local, remote)).toEqual({ progress: remote, synced: true });
   });
 });
