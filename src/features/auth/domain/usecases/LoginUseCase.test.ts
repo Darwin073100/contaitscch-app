@@ -45,7 +45,11 @@ function setup(
   const useCase = new LoginUseCase(
     remote,
     hasher,
-    { save: async (u) => void savedUsers.push(u), markEmailVerified: async () => undefined },
+    {
+      save: async (u) => void savedUsers.push(u),
+      markEmailVerified: async () => undefined,
+      find: async () => null,
+    },
     { save: async (s) => void sessions.push(s) },
     restore,
   );

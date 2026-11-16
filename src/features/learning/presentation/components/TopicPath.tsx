@@ -4,7 +4,7 @@ import Svg, { Circle, Path } from 'react-native-svg';
 
 import { useThemeColors } from '@/shared/theme';
 
-import type { ExamNodeVm, TopicNodeVm } from '../viewmodels/syllabusMapVm';
+import type { GoalNodeVm, TopicNodeVm } from '../viewmodels/syllabusMapVm';
 import { EXAM_NODE_ANCHOR, EXAM_NODE_WIDTH, ExamNode } from './ExamNode';
 import { TOPIC_NODE_WIDTH, TopicNode, topicNodeAnchor } from './TopicNode';
 
@@ -35,13 +35,13 @@ function nodeBox(x: number, width: number, maxWidth: number) {
 
 type TopicPathProps = {
   nodes: TopicNodeVm[];
-  exam: ExamNodeVm;
+  goal: GoalNodeVm;
   onOpenTopic: (topicId: number) => void;
-  onOpenExam: () => void;
+  onOpenGoal: () => void;
 };
 
-/** Mapa del temario: camino curvo con los temas alternando a izquierda y derecha, y el examen al final. */
-export function TopicPath({ nodes, exam, onOpenTopic, onOpenExam }: TopicPathProps) {
+/** Ruta del nivel: camino curvo con los temas alternando a izquierda y derecha, y la meta al final. */
+export function TopicPath({ nodes, goal, onOpenTopic, onOpenGoal }: TopicPathProps) {
   const colors = useThemeColors();
   const [width, setWidth] = useState(0);
   const onLayout = (e: LayoutChangeEvent) => setWidth(e.nativeEvent.layout.width);
@@ -56,8 +56,8 @@ export function TopicPath({ nodes, exam, onOpenTopic, onOpenExam }: TopicPathPro
   const height = examPoint.y + EXAM_BOTTOM;
 
   const points = [...topicPoints, examPoint];
-  // Un tramo es sólido si su destino ya se alcanzó (tema completado o examen aprobado).
-  const reached = [...nodes.map((n) => n.status === 'completed'), exam.status === 'passed'];
+  // Un tramo es sólido si su origen ya está aprobado (como en el prototipo).
+  const reached = [false, ...nodes.map((n) => n.status === 'completed')];
   const segments = points
     .slice(1)
     .map((to, i) => ({ d: segment(points[i], to), solid: reached[i + 1] }));
@@ -68,13 +68,13 @@ export function TopicPath({ nodes, exam, onOpenTopic, onOpenExam }: TopicPathPro
         <>
           <Svg width={width} height={height}>
             {nodes.map((node, i) =>
-              node.status === 'active' ? (
+              node.status === 'active' || node.status === 'retry' ? (
                 <Circle
                   key={node.id}
                   cx={topicPoints[i].x}
                   cy={topicPoints[i].y}
                   r={HALO_RADIUS}
-                  fill={colors.amber}
+                  fill={node.status === 'retry' ? colors.err : colors.amber}
                   opacity={0.15}
                 />
               ) : null,
@@ -133,11 +133,12 @@ export function TopicPath({ nodes, exam, onOpenTopic, onOpenExam }: TopicPathPro
             }}
           >
             <ExamNode
-              title={exam.title}
-              caption={exam.caption}
-              status={exam.status}
-              accessibilityLabel={exam.accessibilityLabel}
-              onPress={onOpenExam}
+              title={goal.title}
+              caption={goal.caption}
+              status={goal.status}
+              icon={goal.target.kind === 'exam' ? 'medal' : 'flag-checkered'}
+              accessibilityLabel={goal.accessibilityLabel}
+              onPress={onOpenGoal}
             />
           </View>
         </>

@@ -23,19 +23,20 @@ export default function TabsLayout() {
     >
       <Tabs.Screen
         name="index"
-        options={{ title: 'Aprender', tabBarIcon: tabIcon('map-marker-path') }}
-      />
-      <Tabs.Screen
-        name="niveles"
         options={{ title: 'Niveles', tabBarIcon: tabIcon('layers-outline') }}
       />
       <Tabs.Screen
-        name="ranking"
-        options={{ title: 'Ranking', tabBarIcon: tabIcon('chart-bar') }}
+        name="aprender"
+        options={{ title: 'Aprender', tabBarIcon: tabIcon('map-marker-path') }}
       />
       <Tabs.Screen
-        name="ajustes"
-        options={{ title: 'Ajustes', tabBarIcon: tabIcon('cog-outline') }}
+        name="glosario"
+        options={{ title: 'Glosario', tabBarIcon: tabIcon('book-open-page-variant-outline') }}
+      />
+      <Tabs.Screen name="ranking" options={{ title: 'Ranking', tabBarIcon: tabIcon('podium') }} />
+      <Tabs.Screen
+        name="perfil"
+        options={{ title: 'Perfil', tabBarIcon: tabIcon('account-outline') }}
       />
     </Tabs>
   );

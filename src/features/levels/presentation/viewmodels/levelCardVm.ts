@@ -71,7 +71,7 @@ export function toLevelCardVm(level: LevelOverviewItem, previous?: LevelOverview
     statusLabel: statusLabel[level.status],
     topicsLabel: `${level.completedTopics}/${level.totalTopics} temas`,
     progress: level.progress,
-    progressLabel: `${percent}% aprobado`,
+    progressLabel: `${level.completedTopics} de ${level.totalTopics}`,
     actionLabel: actionLabel(level),
     unlockHint: unlockHint(level, previous),
     accessibilityLabel: `${name}, ${level.title}. ${statusLabel[level.status]}, ${percent}% aprobado`,

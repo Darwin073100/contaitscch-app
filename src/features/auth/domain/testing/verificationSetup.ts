@@ -48,6 +48,7 @@ export async function setupVerification(options: {
   const users = {
     save: async () => undefined,
     markEmailVerified: async (id: string) => void verifiedUsers.push(id),
+    find: async () => null,
   };
 
   return {

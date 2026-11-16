@@ -33,6 +33,8 @@ const iconSize = { sm: 'md', md: 'lg', lg: 'lg' } as const satisfies Record<stri
 type IconButtonProps = Omit<PressableProps, 'children'> &
   VariantProps<typeof iconButton> & {
     icon: IconName;
+    /** Color del icono; por omisión el de la variante. */
+    iconColor?: ColorToken;
     /** Obligatorio: el botón no tiene texto visible. */
     accessibilityLabel: string;
   };
@@ -40,6 +42,7 @@ type IconButtonProps = Omit<PressableProps, 'children'> &
 /** Botón solo con icono: atrás, cerrar, otra frase. Mínimo 36 px; usa `md` (44 px) cuando se pueda. */
 export function IconButton({
   icon,
+  iconColor: color,
   variant = 'surface',
   size = 'md',
   shape,
@@ -52,7 +55,7 @@ export function IconButton({
       hitSlop={size === 'sm' ? 6 : undefined}
       {...props}
     >
-      <Icon name={icon} color={iconColor[variant]} size={iconSize[size]} />
+      <Icon name={icon} color={color ?? iconColor[variant]} size={iconSize[size]} />
     </Pressable>
   );
 }

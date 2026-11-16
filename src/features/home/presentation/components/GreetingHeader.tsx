@@ -1,21 +1,16 @@
-import { AppText, Column, Logo, Row } from '@/shared/ui';
+import { AppText, Column } from '@/shared/ui';
 
 type GreetingHeaderProps = { overline: string; title: string; subtitle: string };
 
-/** Saludo con logotipo verificado: "PORTAL ACADÉMICO ITSSCH · ¡Hola, Contador!". */
+/** "Portal académico ITSCH · Hola, Ana · Sigue con tu ruta de contabilidad." */
 export function GreetingHeader({ overline, title, subtitle }: GreetingHeaderProps) {
   return (
-    <Row gap="lg">
-      <Logo />
-      <Column grow gap="xs">
-        <AppText variant="overline" tone="accent">
-          {overline}
-        </AppText>
-        <AppText variant="heading" accessibilityRole="header">
-          {title}
-        </AppText>
-        <AppText tone="muted">{subtitle}</AppText>
-      </Column>
-    </Row>
+    <Column gap="xs">
+      <AppText variant="overline">{overline}</AppText>
+      <AppText variant="title" accessibilityRole="header">
+        {title}
+      </AppText>
+      <AppText tone="muted">{subtitle}</AppText>
+    </Column>
   );
 }

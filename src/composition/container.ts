@@ -11,6 +11,7 @@ import type { SessionManager } from '@/core/session/SessionStore';
 import { Pbkdf2PasswordHasher } from '@/features/auth/data/crypto/Pbkdf2PasswordHasher';
 import { SupabaseAuthRemoteDataSource } from '@/features/auth/data/datasources/SupabaseAuthRemoteDataSource';
 import { SqliteLocalUserRepository } from '@/features/auth/data/repositories/SqliteLocalUserRepository';
+import { GetCurrentUserUseCase } from '@/features/auth/domain/usecases/GetCurrentUserUseCase';
 import { LoginUseCase } from '@/features/auth/domain/usecases/LoginUseCase';
 import { LogoutUseCase } from '@/features/auth/domain/usecases/LogoutUseCase';
 import { RegisterUserUseCase } from '@/features/auth/domain/usecases/RegisterUserUseCase';
@@ -20,11 +21,10 @@ import { SqliteGlossaryRepository } from '@/features/glossary/data/repositories/
 import { GetGlossaryUseCase } from '@/features/glossary/domain/usecases/GetGlossaryUseCase';
 import { SqliteCourseProgressRepository } from '@/features/learning/data/repositories/SqliteCourseProgressRepository';
 import { SqliteSyllabusRepository } from '@/features/learning/data/repositories/SqliteSyllabusRepository';
-import { SqliteTopicRepository } from '@/features/learning/data/repositories/SqliteTopicRepository';
-import { CompleteTopicUseCase } from '@/features/learning/domain/usecases/CompleteTopicUseCase';
+import { SqliteLessonRepository } from '@/features/learning/data/repositories/SqliteLessonRepository';
 import { GetCourseProgressUseCase } from '@/features/learning/domain/usecases/GetCourseProgressUseCase';
+import { GetLessonUseCase } from '@/features/learning/domain/usecases/GetLessonUseCase';
 import { GetSyllabusUseCase } from '@/features/learning/domain/usecases/GetSyllabusUseCase';
-import { GetTopicSessionUseCase } from '@/features/learning/domain/usecases/GetTopicSessionUseCase';
 import { SqliteLevelRepository } from '@/features/levels/data/repositories/SqliteLevelRepository';
 import { SupabaseRankingRemoteDataSource } from '@/features/leaderboard/data/datasources/SupabaseRankingRemoteDataSource';
 import { SqliteRankingCache } from '@/features/leaderboard/data/repositories/SqliteRankingCache';
@@ -55,13 +55,12 @@ export type Container = {
     verifyEmailCode: VerifyEmailCodeUseCase;
     requestVerificationCode: RequestVerificationCodeUseCase;
     logout: LogoutUseCase;
+    getCurrentUser: GetCurrentUserUseCase;
   };
   learning: {
     getCourseProgress: GetCourseProgressUseCase;
     getSyllabus: GetSyllabusUseCase;
-    getTopicSession: GetTopicSessionUseCase;
-    /** Temporal hasta la pantalla del ejercicio (F8): aprueba el tema al terminar de leerlo. */
-    completeTopic: CompleteTopicUseCase;
+    getLesson: GetLessonUseCase;
   };
   levels: {
     getLevelsOverview: GetLevelsOverviewUseCase;
@@ -109,7 +108,6 @@ export function createContainer({
   const localUsers = new SqliteLocalUserRepository(db, clock);
   const syllabi = new SqliteSyllabusRepository(db);
   const courseProgress = new SqliteCourseProgressRepository(db, session);
-  const topics = new SqliteTopicRepository(db, session, clock);
   const levels = new SqliteLevelRepository(db);
   const quizzes = new SqliteQuizRepository(db);
   const quizProgress = new SqliteQuizProgressRepository(db, session);
@@ -138,12 +136,12 @@ export function createContainer({
       verifyEmailCode: new VerifyEmailCodeUseCase(authRemote, localUsers, session),
       requestVerificationCode: new RequestVerificationCodeUseCase(authRemote, localUsers, session),
       logout: new LogoutUseCase(session),
+      getCurrentUser: new GetCurrentUserUseCase(localUsers, session),
     },
     learning: {
       getCourseProgress,
       getSyllabus: new GetSyllabusUseCase(syllabi, courseProgress),
-      getTopicSession: new GetTopicSessionUseCase(topics),
-      completeTopic: new CompleteTopicUseCase(topics),
+      getLesson: new GetLessonUseCase(new SqliteLessonRepository(db), courseProgress),
     },
     levels: {
       getLevelsOverview: new GetLevelsOverviewUseCase(levels, getCourseProgress),

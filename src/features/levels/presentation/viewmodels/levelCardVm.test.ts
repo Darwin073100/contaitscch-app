@@ -26,7 +26,7 @@ describe('toLevelCardVm', () => {
       icon: 'feather',
       statusLabel: 'En curso',
       topicsLabel: '2/4 temas',
-      progressLabel: '50% aprobado',
+      progressLabel: '2 de 4',
       actionLabel: 'Continuar nivel',
     });
     expect(vm.unlockHint).toBeUndefined();
@@ -39,7 +39,7 @@ describe('toLevelCardVm', () => {
   it('nivel aprobado se puede repasar', () => {
     expect(toLevelCardVm(level(1, 'completed', 4))).toMatchObject({
       statusLabel: 'Aprobado',
-      progressLabel: '100% aprobado',
+      progressLabel: '4 de 4',
       actionLabel: 'Repasar nivel',
     });
   });

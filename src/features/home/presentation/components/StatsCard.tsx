@@ -1,15 +1,14 @@
-import { Card, Row, StatTile } from '@/shared/ui';
+import { Row, StatTile, type IconName } from '@/shared/ui';
 
-type StatsCardProps = { topicsLabel: string; levelName: string };
+type StatsCardProps = { stats: { icon: IconName; value: string; label: string }[] };
 
-/** Fila de estadísticas: temas completados y nivel actual. */
-export function StatsCard({ topicsLabel, levelName }: StatsCardProps) {
+/** Fila de 3 estadísticas: temas aprobados, nivel actual y examen final. */
+export function StatsCard({ stats }: StatsCardProps) {
   return (
-    <Card padding="sm">
-      <Row gap="sm">
-        <StatTile value={topicsLabel} label="Temas" icon="check-circle-outline" />
-        <StatTile value={levelName} label="Nivel" icon="school-outline" />
-      </Row>
-    </Card>
+    <Row gap="sm" align="stretch" accessibilityLabel="Tu avance">
+      {stats.map((s) => (
+        <StatTile key={s.label} value={s.value} label={s.label} icon={s.icon} />
+      ))}
+    </Row>
   );
 }

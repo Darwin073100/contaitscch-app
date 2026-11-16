@@ -42,7 +42,7 @@ describe('AboutScreen', () => {
 
     await fireEvent.press(screen.getByRole('button', { name: '¡Comenzar a Aprender!' }));
 
-    expect(router.navigate).toHaveBeenCalledWith('/');
+    expect(router.navigate).toHaveBeenCalledWith('/aprender');
   });
 
   it('regresar sin historial abre Niveles', async () => {
@@ -51,6 +51,6 @@ describe('AboutScreen', () => {
 
     await fireEvent.press(screen.getByRole('button', { name: 'Regresar' }));
 
-    expect(router.replace).toHaveBeenCalledWith('/niveles');
+    expect(router.replace).toHaveBeenCalledWith('/');
   });
 });

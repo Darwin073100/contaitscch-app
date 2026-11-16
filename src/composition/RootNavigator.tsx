@@ -22,6 +22,7 @@ export function RootNavigator() {
       <Stack.Protected guard={verified} redirectTo={pending ? '/verificar-correo' : '/registro'}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="tema/[topicId]" />
+        <Stack.Screen name="ejercicio/[quizId]" />
       </Stack.Protected>
       <Stack.Protected guard={pending} redirectTo={verified ? '/' : '/registro'}>
         <Stack.Screen name="(auth)/verificar-correo" />

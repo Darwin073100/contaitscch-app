@@ -5,4 +5,6 @@ export interface LocalUserRepository {
   /** Inserta o actualiza el usuario por id. */
   save(user: UserProfile & { id: string; emailVerified: boolean }): Promise<void>;
   markEmailVerified(id: string): Promise<void>;
+  /** Perfil guardado en el dispositivo; null si no existe. */
+  find(id: string): Promise<UserProfile | null>;
 }

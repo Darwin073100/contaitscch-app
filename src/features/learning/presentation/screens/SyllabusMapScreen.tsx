@@ -1,21 +1,35 @@
-import { AppHeader, AppText, Callout, Screen } from '@/shared/ui';
+import type { ReactNode } from 'react';
 
+import { AppText, Callout, ChipTabs, Screen, type IconName } from '@/shared/ui';
+
+import type { LevelState } from '../../domain/entities/CourseProgress';
 import { ContinueTopicBar } from '../components/ContinueTopicBar';
 import { ModuleHeaderCard } from '../components/ModuleHeaderCard';
 import { TopicPath } from '../components/TopicPath';
 import { useSyllabusMapViewModel } from '../viewmodels/useSyllabusMapViewModel';
 
-// Temporal: el nivel actual lo dará la feature levels (nivel más alto desbloqueado).
-const CURRENT_LEVEL_ID = 1;
+const tabIcon: Record<LevelState, IconName | undefined> = {
+  done: 'check-circle',
+  current: undefined,
+  locked: 'lock',
+};
 
-/** Pestaña Aprender: mapa del temario del nivel actual. */
-export function SyllabusMapScreen() {
-  const { state, openTopic, openExam } = useSyllabusMapViewModel(CURRENT_LEVEL_ID);
-  const action = state.status === 'ready' ? state.map.continueAction : null;
+type SyllabusMapScreenProps = {
+  /** Nivel a mostrar; sin él, el nivel actual del alumno. */
+  levelId?: number;
+  /** Barra superior (la arma la ruta con la sesión del usuario). */
+  header: ReactNode;
+};
+
+/** Pestaña Aprender: chips de nivel, tarjeta del nivel y su ruta de temas. */
+export function SyllabusMapScreen({ levelId, header }: SyllabusMapScreenProps) {
+  const { state, openTopic, openExam, openLevel } = useSyllabusMapViewModel(levelId);
+  const map = state.status === 'ready' ? state.map : null;
+  const action = map?.continueAction ?? null;
 
   return (
     <Screen
-      header={<AppHeader />}
+      header={header}
       scroll
       footer={
         action && (
@@ -23,6 +37,7 @@ export function SyllabusMapScreen() {
             caption={action.caption}
             title={action.title}
             actionLabel={action.actionLabel}
+            retry={action.retry}
             onPress={() =>
               action.target.kind === 'topic' ? openTopic(action.target.topicId) : openExam()
             }
@@ -30,16 +45,29 @@ export function SyllabusMapScreen() {
         )
       }
     >
-      {state.status === 'loading' && <AppText variant="caption">Cargando temario…</AppText>}
+      {state.status === 'loading' && <AppText variant="caption">Cargando ruta…</AppText>}
       {state.status === 'error' && <Callout tone="danger" text={state.message} />}
-      {state.status === 'ready' && (
+      {map && (
         <>
-          <ModuleHeaderCard {...state.map.header} />
+          <ChipTabs
+            tabs={map.levelTabs.map((t) => ({
+              id: t.id,
+              label: t.label,
+              selected: t.selected,
+              icon: tabIcon[t.state],
+              iconColor: t.state === 'done' ? 'accent' : 'faint',
+              accessibilityLabel: t.accessibilityLabel,
+            }))}
+            onSelect={openLevel}
+          />
+          <ModuleHeaderCard {...map.header} />
           <TopicPath
-            nodes={state.map.nodes}
-            exam={state.map.exam}
+            nodes={map.nodes}
+            goal={map.goal}
             onOpenTopic={openTopic}
-            onOpenExam={openExam}
+            onOpenGoal={() =>
+              map.goal.target.kind === 'exam' ? openExam() : openLevel(map.goal.target.levelId)
+            }
           />
         </>
       )}

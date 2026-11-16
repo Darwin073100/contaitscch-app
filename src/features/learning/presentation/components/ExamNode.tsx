@@ -1,4 +1,12 @@
-import { AppText, Column, IconBox, Row, Tappable, type IconBoxProps } from '@/shared/ui';
+import {
+  AppText,
+  Column,
+  IconBox,
+  Row,
+  Tappable,
+  type IconBoxProps,
+  type IconName,
+} from '@/shared/ui';
 
 import type { ExamStatus } from '../../domain/entities/Syllabus';
 
@@ -9,19 +17,28 @@ export const EXAM_NODE_WIDTH = 200;
 const examIcon: Record<ExamStatus, Pick<IconBoxProps, 'tone' | 'cornerIcon'>> = {
   locked: { tone: 'locked', cornerIcon: 'lock' },
   available: { tone: 'navy' },
-  passed: { tone: 'navy', cornerIcon: 'check' },
+  passed: { tone: 'navy' },
 };
 
 type ExamNodeProps = {
   title: string;
   caption: string;
   status: ExamStatus;
+  /** Bandera (fin de nivel) o medalla (examen integrador). */
+  icon: IconName;
   accessibilityLabel: string;
   onPress?: () => void;
 };
 
-/** Final del camino del temario: examen del nivel. */
-export function ExamNode({ title, caption, status, accessibilityLabel, onPress }: ExamNodeProps) {
+/** Meta al final de la ruta: abre el siguiente nivel o el examen integrador. */
+export function ExamNode({
+  title,
+  caption,
+  status,
+  icon,
+  accessibilityLabel,
+  onPress,
+}: ExamNodeProps) {
   return (
     <Tappable
       onPress={onPress}
@@ -30,10 +47,10 @@ export function ExamNode({ title, caption, status, accessibilityLabel, onPress }
     >
       <Column gap="sm">
         <Row justify="center">
-          <IconBox icon="certificate-outline" size="xl" {...examIcon[status]} />
+          <IconBox icon={icon} size="xl" {...examIcon[status]} />
         </Row>
         <Column align="center">
-          <AppText tone="amber" weight="bold" align="center">
+          <AppText weight="extrabold" align="center">
             {title}
           </AppText>
           <AppText variant="caption" align="center">

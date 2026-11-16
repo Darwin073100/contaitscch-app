@@ -1,5 +1,7 @@
-import { SyllabusMapScreen } from '@/features/learning';
+import { HomeScreen } from '@/features/home';
+import { AppTopBar } from '@/features/profile';
 
-export default function LearnTab() {
-  return <SyllabusMapScreen />;
+// Pestaña Niveles (inicio).
+export default function LevelsTab() {
+  return <HomeScreen header={<AppTopBar />} />;
 }

@@ -37,7 +37,11 @@ function setup(response: Awaited<ReturnType<AuthRemote['register']>>) {
   const useCase = new RegisterUserUseCase(
     remote,
     hasher,
-    { save: async (u) => void savedUsers.push(u), markEmailVerified: async () => undefined },
+    {
+      save: async (u) => void savedUsers.push(u),
+      markEmailVerified: async () => undefined,
+      find: async () => null,
+    },
     { save: async (s) => void sessions.push(s) },
   );
   return { useCase, requests, savedUsers, sessions };

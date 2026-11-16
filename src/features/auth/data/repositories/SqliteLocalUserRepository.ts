@@ -4,6 +4,7 @@ import type { Clock } from '@/core/clock/Clock';
 import type { AppDatabase } from '@/core/database/database';
 import { users } from '@/core/database/schema';
 
+import type { UserProfile } from '../../domain/entities/AuthUser';
 import type { LocalUserRepository } from '../../domain/repositories/LocalUserRepository';
 
 export class SqliteLocalUserRepository implements LocalUserRepository {
@@ -22,6 +23,22 @@ export class SqliteLocalUserRepository implements LocalUserRepository {
         set: { ...data, updatedAt: this.clock.nowIso() },
       })
       .run();
+  }
+
+  async find(id: string): Promise<UserProfile | null> {
+    const row = this.db
+      .select({
+        email: users.email,
+        firstName: users.firstName,
+        lastName: users.lastName,
+        country: users.country,
+        state: users.state,
+        city: users.city,
+      })
+      .from(users)
+      .where(eq(users.id, id))
+      .get();
+    return row ?? null;
   }
 
   async markEmailVerified(id: string): Promise<void> {

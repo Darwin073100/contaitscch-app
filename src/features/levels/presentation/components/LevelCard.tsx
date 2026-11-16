@@ -26,7 +26,7 @@ const statusStyle = {
   },
   completed: {
     iconBox: 'accent',
-    badge: { tone: 'accent', appearance: 'soft' },
+    badge: { tone: 'accent', appearance: 'soft', icon: 'check-circle' },
     statusIcon: { name: 'check-decagram', color: 'accent' },
     button: { variant: 'ghost', leftIcon: 'replay' },
   },
@@ -39,8 +39,8 @@ const statusStyle = {
 } as const satisfies Record<LevelStatus, unknown>;
 
 const hintStyle = {
-  next: { variant: 'plain', tone: 'accent', icon: 'information-outline' },
-  later: { variant: 'boxed', tone: 'muted', icon: 'lock-clock' },
+  next: { variant: 'plain', tone: 'amber', icon: 'information-outline' },
+  later: { variant: 'plain', tone: 'muted', icon: 'lock-clock' },
 } as const satisfies Record<UnlockHintVm['emphasis'], Omit<ComponentProps<typeof Callout>, 'text'>>;
 
 type LevelCardProps = { level: LevelCardVm; onPress: () => void };
@@ -51,7 +51,7 @@ export function LevelCard({ level, onPress }: LevelCardProps) {
   const locked = level.status === 'locked';
 
   return (
-    <Card padding="lg" locked={locked}>
+    <Card tone={locked ? 'alt' : 'default'}>
       <Column gap="lg">
         <Row align="start" gap="md">
           <IconBox icon={level.icon} tone={style.iconBox} size="lg" />
@@ -60,27 +60,28 @@ export function LevelCard({ level, onPress }: LevelCardProps) {
               <Badge label={level.statusLabel} uppercase {...style.badge} />
               {!locked && <AppText variant="caption">• {level.topicsLabel}</AppText>}
             </Row>
-            <AppText variant="heading" accessibilityRole="header">
+            <AppText variant="heading" tone={locked ? 'faint' : 'title'} accessibilityRole="header">
               {level.name}
             </AppText>
-            <AppText tone="muted">{level.subtitle}</AppText>
+            <AppText tone={locked ? 'faint' : 'muted'}>{level.subtitle}</AppText>
           </Column>
           <Icon name={style.statusIcon.name} color={style.statusIcon.color} size="lg" />
         </Row>
 
         {!locked && (
           <>
-            <AppText>{level.description}</AppText>
+            <AppText variant="caption">{level.description}</AppText>
             <Column gap="sm">
               <Row justify="between">
-                <AppText variant="caption">Progreso del Nivel</AppText>
-                <AppText variant="caption" tone="accent" weight="bold">
+                <AppText variant="caption">Temas aprobados</AppText>
+                <AppText variant="caption" tone="default" weight="bold">
                   {level.progressLabel}
                 </AppText>
               </Row>
               <ProgressBar
                 value={level.progress}
-                accessibilityLabel={`Progreso del ${level.name}`}
+                size="sm"
+                accessibilityLabel={`Temas aprobados del ${level.name}: ${level.progressLabel}`}
               />
             </Column>
           </>
@@ -90,12 +91,14 @@ export function LevelCard({ level, onPress }: LevelCardProps) {
           <Callout text={level.unlockHint.text} {...hintStyle[level.unlockHint.emphasis]} />
         )}
 
-        <Button
-          label={level.actionLabel}
-          onPress={onPress}
-          accessibilityHint={level.accessibilityLabel}
-          {...style.button}
-        />
+        {!locked && (
+          <Button
+            label={level.actionLabel}
+            onPress={onPress}
+            accessibilityHint={level.accessibilityLabel}
+            {...style.button}
+          />
+        )}
       </Column>
     </Card>
   );

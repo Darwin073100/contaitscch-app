@@ -26,6 +26,8 @@ const text = tv({
       success: 'text-ok',
       danger: 'text-err',
       bronze: 'text-bronze',
+      // Sobre fondo accent (botones, números resaltados)
+      onAccent: 'text-accent-ink',
       // Sobre tarjetas y barras navy
       onNavy: 'text-navy-ink',
       onNavyMuted: 'text-navy-dim',

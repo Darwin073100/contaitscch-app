@@ -15,7 +15,8 @@ export { IconBox, type IconBoxProps } from './IconBox';
 export { Logo } from './Logo';
 
 // Acciones
-export { Button } from './Button';
+export { Button, type ButtonProps } from './Button';
+export { ChipTabs, type ChipTab } from './ChipTabs';
 export { ChoiceCard, type ChoiceState } from './ChoiceCard';
 export { IconButton } from './IconButton';
 export { Tappable } from './Tappable';
@@ -23,13 +24,18 @@ export { Tappable } from './Tappable';
 // Contenedores y composición
 export { AppHeader } from './AppHeader';
 export { Callout } from './Callout';
-export { Card } from './Card';
+export { Card, type CardTone } from './Card';
+export { FeedbackBanner } from './FeedbackBanner';
+export { Figure } from './Figure';
 export { ListItem } from './ListItem';
+export { NumberedList } from './NumberedList';
 export { SectionHeader } from './SectionHeader';
 
 // Indicadores
 export { Badge } from './Badge';
 export { ProgressBar } from './ProgressBar';
+export { ScoreTile } from './ScoreTile';
+export { Seal } from './Seal';
 export { StatTile } from './StatTile';
 export { Stepper } from './Stepper';
 

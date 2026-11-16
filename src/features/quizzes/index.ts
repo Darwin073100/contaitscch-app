@@ -20,3 +20,4 @@ export { ResetProgressUseCase } from './domain/usecases/ResetProgressUseCase';
 export { StartQuizUseCase } from './domain/usecases/StartQuizUseCase';
 export { SubmitQuizUseCase } from './domain/usecases/SubmitQuizUseCase';
 export { SyncProgressUseCase } from './domain/usecases/SyncProgressUseCase';
+export { QuizScreen } from './presentation/screens/QuizScreen';

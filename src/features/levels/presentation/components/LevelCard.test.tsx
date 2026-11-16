@@ -5,7 +5,7 @@ import { LevelCard } from './LevelCard';
 
 const base: LevelCardVm = {
   id: 1,
-  name: 'Nivel Básico',
+  name: 'Nivel 1',
   subtitle: 'Fundamentos y Cuentas',
   description: 'Domina la estructura del Activo.',
   icon: 'bank-outline',
@@ -13,8 +13,8 @@ const base: LevelCardVm = {
   statusLabel: 'En curso',
   topicsLabel: '3/6 Temas',
   progress: 0.5,
-  progressLabel: '50% Completado',
-  actionLabel: 'Continuar Nivel',
+  progressLabel: '2 de 4',
+  actionLabel: 'Continuar nivel',
   accessibilityLabel: 'Nivel Básico',
 };
 
@@ -23,40 +23,33 @@ describe('LevelCard', () => {
     const onPress = jest.fn();
     await render(<LevelCard level={base} onPress={onPress} />);
 
-    await fireEvent.press(screen.getByRole('button', { name: 'Continuar Nivel' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Continuar nivel' }));
 
-    expect(screen.getByText('50% Completado')).toBeTruthy();
+    expect(screen.getByText('2 de 4')).toBeTruthy();
     expect(screen.getByRole('progressbar')).toHaveAccessibilityValue({ now: 50 });
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 
-  it('nivel bloqueado: sin progreso, con aviso y botón deshabilitado', async () => {
-    const onPress = jest.fn();
+  it('nivel bloqueado: sin progreso ni botón, solo el aviso de desbloqueo', async () => {
     await render(
       <LevelCard
         level={{
           ...base,
-          name: 'Nivel Intermedio',
+          name: 'Nivel 2',
           status: 'locked',
           statusLabel: 'Bloqueado',
           actionLabel: 'Bloqueado',
           unlockHint: {
-            text: 'Requiere aprobar el Test de Nivel Básico para desbloquear.',
+            text: 'Se desbloquea al aprobar los 4 temas del Nivel 1.',
             emphasis: 'next',
           },
         }}
-        onPress={onPress}
+        onPress={jest.fn()}
       />,
     );
 
-    const button = screen.getByRole('button', { name: 'Bloqueado' });
-    await fireEvent.press(button);
-
     expect(screen.queryByRole('progressbar')).toBeNull();
-    expect(
-      screen.getByText('Requiere aprobar el Test de Nivel Básico para desbloquear.'),
-    ).toBeTruthy();
-    expect(button).toBeDisabled();
-    expect(onPress).not.toHaveBeenCalled();
+    expect(screen.queryByRole('button')).toBeNull();
+    expect(screen.getByText('Se desbloquea al aprobar los 4 temas del Nivel 1.')).toBeTruthy();
   });
 });

@@ -1,44 +1,40 @@
 import { AppText, Card, Column, IconBox, ProgressBar, Row } from '@/shared/ui';
 
 type CareerProgressCardProps = {
-  title: string;
-  subtitle: string;
   progress: number;
   percentLabel: string;
-  completedLabel: string;
+  doneLabel: string;
   remainingLabel: string;
 };
 
-/** "Progreso de la Carrera": avance de todos los niveles y temas que faltan. */
+/** "Progreso del curso": temas aprobados con su ejercicio de los 24. */
 export function CareerProgressCard({
-  title,
-  subtitle,
   progress,
   percentLabel,
-  completedLabel,
+  doneLabel,
   remainingLabel,
 }: CareerProgressCardProps) {
   return (
-    <Card padding="lg">
+    <Card>
       <Column gap="md">
         <Row gap="md">
-          <IconBox icon="chart-timeline-variant-shimmer" tone="accent" />
+          <IconBox icon="chart-line" tone="accent" />
           <Column grow>
-            <AppText variant="subtitle" weight="bold">
-              {title}
+            <AppText variant="subtitle" weight="extrabold">
+              Progreso del curso
             </AppText>
-            <AppText variant="caption">{subtitle}</AppText>
+            <AppText variant="caption">Temas aprobados con su ejercicio</AppText>
           </Column>
           <AppText variant="stat" tone="accent">
             {percentLabel}
           </AppText>
         </Row>
-        <ProgressBar value={progress} size="md" accessibilityLabel={title} />
+        <ProgressBar value={progress} accessibilityLabel={`Progreso del curso: ${doneLabel}`} />
         <Row justify="between">
-          <AppText variant="caption" weight="semibold">
-            {completedLabel}
+          <AppText variant="caption" tone="default" weight="bold">
+            {doneLabel}
           </AppText>
-          <AppText variant="caption" tone="accent" weight="bold">
+          <AppText variant="caption" weight="bold">
             {remainingLabel}
           </AppText>
         </Row>

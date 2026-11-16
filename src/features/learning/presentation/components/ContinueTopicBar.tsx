@@ -4,25 +4,34 @@ type ContinueTopicBarProps = {
   caption: string;
   title: string;
   actionLabel: string;
+  /** Tema reprobado: icono rojo de volver a tomar. */
+  retry: boolean;
   onPress: () => void;
 };
 
-/** Barra fija inferior del temario (`Screen footer`): lleva al tema activo o al examen. */
-export function ContinueTopicBar({ caption, title, actionLabel, onPress }: ContinueTopicBarProps) {
+/** Barra fija inferior de la ruta (`Screen footer`): lleva al tema actual o al examen. */
+export function ContinueTopicBar({
+  caption,
+  title,
+  actionLabel,
+  retry,
+  onPress,
+}: ContinueTopicBarProps) {
   return (
-    <Card padding="sm">
+    <Card tone="navy" padding="sm">
       <Row gap="md">
-        <IconBox icon="play-circle-outline" tone="accent" />
+        <IconBox icon={retry ? 'replay' : 'play-circle'} tone={retry ? 'danger' : 'amberSolid'} />
         <Column grow>
-          <AppText variant="caption" tone="default" weight="semibold" numberOfLines={1}>
+          <AppText variant="caption" tone="onNavyAmber" weight="bold" numberOfLines={1}>
             {caption}
           </AppText>
-          <AppText variant="subtitle" weight="bold" numberOfLines={1}>
+          <AppText tone="onNavy" weight="extrabold" numberOfLines={1}>
             {title}
           </AppText>
         </Column>
         <Button
           label={actionLabel}
+          variant="amber"
           size="sm"
           rightIcon="arrow-right"
           onPress={onPress}
