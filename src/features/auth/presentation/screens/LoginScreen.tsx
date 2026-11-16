@@ -17,7 +17,7 @@ export function LoginScreen() {
             name="email"
             label="Correo electrónico"
             leftIcon="email-outline"
-            placeholder="tu.correo@itsch.edu.mx"
+            placeholder="ejemplo@correo.com"
             keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}

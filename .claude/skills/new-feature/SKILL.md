@@ -10,6 +10,7 @@ Features existentes:
 !`ls src/features 2>/dev/null`
 
 ## Pasos
+
 1. Si el nombre ya existe en la lista de arriba, detente y pregunta.
 2. Crea esta estructura en `src/features/<nombre>/`:
    ```

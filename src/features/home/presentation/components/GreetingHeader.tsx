@@ -2,7 +2,7 @@ import { AppText, Column } from '@/shared/ui';
 
 type GreetingHeaderProps = { overline: string; title: string; subtitle: string };
 
-/** "Portal académico ITSCH · Hola, Ana · Sigue con tu ruta de contabilidad." */
+/** "Portal académico ITSCCH · Hola, Ana · Sigue con tu ruta de contabilidad." */
 export function GreetingHeader({ overline, title, subtitle }: GreetingHeaderProps) {
   return (
     <Column gap="xs">

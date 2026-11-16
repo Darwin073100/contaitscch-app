@@ -122,8 +122,7 @@ export const aboutContent = {
   ] satisfies Objective[],
   institution: {
     overline: 'Institución de respaldo',
-    // Nombre tomado del prototipo del cliente; confirmar el nombre oficial completo.
-    name: 'Instituto Tecnológico Superior · ITSCH',
+    name: 'ITSCCH · Instituto Tecnológico Superior de la Costa Chica',
     detail: 'División de Contaduría Pública',
   },
   team,

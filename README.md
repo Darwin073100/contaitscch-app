@@ -1,10 +1,12 @@
 # CONTAITSCCH
 
-App móvil para aprender contabilidad básica con niveles, temas, exámenes, XP, rachas y ranking.
-Expo SDK 58 + TypeScript + NativeWind + SQLite (offline-first) + Supabase (solo ranking).
+App móvil del ITSCCH (Instituto Tecnológico Superior de la Costa Chica) para aprender contabilidad desde
+cero: 6 niveles × 4 temas, cada tema en 4 pasos con su ejercicio, un examen integrador, glosario y ranking.
+Expo SDK 58 + TypeScript + NativeWind + SQLite (offline-first) + Supabase (cuenta, avance sincronizado y ranking).
 
 - Arquitectura: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - Historias de usuario: [docs/USER_STORIES.md](docs/USER_STORIES.md)
+- Plan de la versión 2: [spec/contaitscch-refactor/PLAN.md](spec/contaitscch-refactor/PLAN.md)
 - Trabajo con Claude Code: [GUIA-CLAUDE-CODE.md](GUIA-CLAUDE-CODE.md)
 
 ## Requisitos
@@ -41,6 +43,7 @@ npm run start   # escanea el QR con Expo Go
 | `npm run format`             | Formatea con Prettier                                     |
 | `npm run content:validate`   | Valida los JSON del curso                                 |
 | `npm run db:generate`        | Genera la migración de Drizzle tras cambiar el esquema    |
+| `npx supabase test db`       | Pruebas pgTAP de las RPC (con Supabase local encendido)   |
 | `npx expo install <paquete>` | Instala dependencias con versiones compatibles con el SDK |
 
 Antes de subir cambios: `npm run typecheck && npm run lint && npm test`.

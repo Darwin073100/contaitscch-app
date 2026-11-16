@@ -4,7 +4,7 @@ Guía para correr Supabase en tu computadora (Windows + Docker Desktop) durante 
 
 Supabase local es una copia completa del servidor (Postgres, API y Edge Functions) dentro de contenedores de Docker. Sirve para probar las funciones RPC y la Edge Function de correo **sin tocar el proyecto en la nube**.
 
-> La app sigue funcionando sin Supabase: niveles, temas, XP y racha viven en SQLite. Supabase solo hace falta para registro, verificación de correo, login y ranking.
+> La app sigue funcionando sin Supabase: el curso y el avance viven en SQLite. Supabase hace falta para registro, verificación de correo, login, sincronizar el avance entre teléfonos y el ranking.
 
 ---
 
@@ -81,9 +81,11 @@ Las tablas y funciones de Postgres se definen con archivos SQL en `supabase/migr
 
 Reglas:
 
-- `db reset` **borra todos los datos locales** (usuarios de prueba, XP…) y vuelve a crear la base con las migraciones. En local está bien; nunca lo uses con `--linked` (eso sería la nube).
+- `db reset` **borra todos los datos locales** (usuarios de prueba, avance…) y vuelve a crear la base con las migraciones. En local está bien; nunca lo uses con `--linked` (eso sería la nube).
 - **Nunca edites una migración que ya está en git.** Para corregir algo, crea una migración nueva.
 - Cada tabla nueva lleva `enable row level security` y ninguna política: solo se accede por funciones RPC (ver `CLAUDE.md`, sección Seguridad).
+
+Funciones RPC que llama la app: `register`, `get_login_params`, `login`, `verify_email`, `sync_progress` (sube y fusiona el avance), `get_ranking` y `reset_progress`. `create_verification_code` solo la ejecuta la Edge Function (`service_role`).
 
 ---
 
@@ -151,7 +153,7 @@ Mientras no exista `send-verification`, el correo con el código no sale. En la 
 
 Si ejecutas el SQL dos veces seguidas, la segunda responde `cooldown`: espera 45 segundos. Este truco solo funciona en local: en la nube, la función solo la puede ejecutar la Edge Function.
 
-Para volver a probar el registro desde cero, usa **Ajustes → Cerrar sesión (temporal)** en la app.
+Para volver a probar el registro desde cero, usa **Perfil → Cerrar sesión** en la app.
 
 ---
 
@@ -178,7 +180,7 @@ Configurado en `supabase/config.toml`:
 
 | Servicio                                 | Estado    | Motivo                                                                                                        |
 | ---------------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------- |
-| Postgres (`db`)                          | Encendido | Tablas `profile`, `xp_event`, `daily_activity` y funciones RPC                                                |
+| Postgres (`db`)                          | Encendido | Tablas `profile`, `email_verification`, `quiz_progress`, vista `private.ranking` y funciones RPC              |
 | API (`api`, PostgREST + Kong)            | Encendido | `supabase.rpc()` desde la app                                                                                 |
 | Edge Functions (`edge_runtime`)          | Encendido | `send-verification` (correo con la API de Gmail)                                                              |
 | Studio                                   | Encendido | Ver los datos en el navegador                                                                                 |

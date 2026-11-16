@@ -55,7 +55,7 @@ export function toHomeVm({ user, course, levels, exam, tip }: HomeData): HomeVm 
 
   return {
     greeting: {
-      overline: 'Portal académico ITSCH',
+      overline: 'Portal académico ITSCCH',
       title: user ? `Hola, ${user.firstName}` : 'Hola',
       subtitle: 'Sigue con tu ruta de contabilidad.',
     },

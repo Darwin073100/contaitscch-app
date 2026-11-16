@@ -16,23 +16,22 @@ CLAUDE.md                         Memoria del proyecto: stack, comandos, arquite
 │   └── validate-content.sh       Valida los JSON del curso cada vez que cambian.
 ├── agents/                       Subagentes especialistas (cada uno con su propio contexto).
 │   ├── architecture-reviewer.md  Revisa capas, fronteras entre features y SOLID. Solo lectura.
-│   ├── sqlite-expert.md          Esquema Drizzle, migraciones, consultas de XP/racha.
-│   ├── supabase-expert.md        RPC, pgcrypto, Edge Functions, envío con Gmail.
-│   ├── rn-ui-builder.md          Pantallas con NativeWind según el diseño.
-│   ├── test-writer.md            Pruebas Jest y casos borde de racha/XP/sync.
-│   └── content-author.md         Temas y preguntas en JSON con ids correctos.
+│   ├── sqlite-expert.md          Esquema Drizzle, migraciones, consultas del avance.
+│   ├── supabase-expert.md        RPC (avance, ranking), pgcrypto, Edge Functions, Gmail.
+│   ├── rn-ui-builder.md          Pantallas con NativeWind según el prototipo del cliente.
+│   ├── test-writer.md            Pruebas Jest y casos borde de avance, fusión y sync.
+│   └── content-author.md         Temas (4 pasos) y ejercicios en JSON con ids correctos.
 └── skills/                       Comandos reutilizables que invocas con "/".
     ├── new-feature/              /new-feature <nombre>
     ├── new-usecase/              /new-usecase <feature> <Nombre>
-    ├── add-question-type/        /add-question-type <tipo>
     ├── new-rpc/                  /new-rpc <nombre_funcion>
     └── pre-commit-check/         /pre-commit-check (solo cuando tú lo llamas)
 docs/
-├── ARCHITECTURE.md               Arquitectura completa (exportada del documento).
+├── ARCHITECTURE.md               Arquitectura completa (v2).
 ├── USER_STORIES.md               Historias de usuario.
 ├── database/sqlite.dbml          Modelo local.
 ├── database/postgres.dbml        Modelo de Supabase.
-└── design/*.png                  Capturas del diseño, para que el agente de UI las vea.
+└── design/*.png                  Capturas del diseño v1 (la referencia vigente es spec/contaitscch-refactor/index.html).
 ```
 
 ## 2. Instalación paso a paso
@@ -94,7 +93,8 @@ frontera entre capas, recibe el error al instante y lo corrige solo:
 // eslint.config.js (fragmento, ESLint 9 flat config)
 const otherFeatureInternals = {
   group: ['@/features/*/*'],
-  message: 'Importa otra feature solo por su index.ts (@/features/<nombre>). Dentro de la misma feature usa rutas relativas.',
+  message:
+    'Importa otra feature solo por su index.ts (@/features/<nombre>). Dentro de la misma feature usa rutas relativas.',
 };
 
 export default [
@@ -102,32 +102,70 @@ export default [
   {
     files: ['src/features/*/domain/**/*.{ts,tsx}'],
     rules: {
-      'no-restricted-imports': ['error', { patterns: [
-        { group: ['react', 'react-native', 'expo-*', '@supabase/*', 'drizzle-orm', 'drizzle-orm/*'],
-          message: 'domain debe ser TypeScript puro.' },
-        { group: ['../data/*', '../../data/*', '../presentation/*', '../../presentation/*'],
-          message: 'domain no depende de data ni de presentation.' },
-        otherFeatureInternals,
-      ] }],
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: [
+                'react',
+                'react-native',
+                'expo-*',
+                '@supabase/*',
+                'drizzle-orm',
+                'drizzle-orm/*',
+              ],
+              message: 'domain debe ser TypeScript puro.',
+            },
+            {
+              group: ['../data/*', '../../data/*', '../presentation/*', '../../presentation/*'],
+              message: 'domain no depende de data ni de presentation.',
+            },
+            otherFeatureInternals,
+          ],
+        },
+      ],
     },
   },
   {
     files: ['src/features/*/presentation/**/*.{ts,tsx}'],
     rules: {
-      'no-restricted-imports': ['error', { patterns: [
-        { group: ['@supabase/*', 'expo-sqlite', 'drizzle-orm', 'drizzle-orm/*', '../data/*', '../../data/*'],
-          message: 'presentation usa use cases inyectados, no datos directos.' },
-        otherFeatureInternals,
-      ] }],
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: [
+                '@supabase/*',
+                'expo-sqlite',
+                'drizzle-orm',
+                'drizzle-orm/*',
+                '../data/*',
+                '../../data/*',
+              ],
+              message: 'presentation usa use cases inyectados, no datos directos.',
+            },
+            otherFeatureInternals,
+          ],
+        },
+      ],
     },
   },
   {
     files: ['src/features/*/data/**/*.{ts,tsx}'],
     rules: {
-      'no-restricted-imports': ['error', { patterns: [
-        { group: ['../presentation/*', '../../presentation/*'], message: 'data no conoce la UI.' },
-        otherFeatureInternals,
-      ] }],
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['../presentation/*', '../../presentation/*'],
+              message: 'data no conoce la UI.',
+            },
+            otherFeatureInternals,
+          ],
+        },
+      ],
     },
   },
 ];
@@ -138,28 +176,29 @@ export default [
 **Flujo recomendado para cada historia de usuario:**
 
 1. **Plan primero.** Presiona `Shift+Tab` hasta "plan mode" y pide:
-   > Lee docs/USER_STORIES.md (historia "Temario del nivel") y docs/ARCHITECTURE.md. Propón un plan para implementarla en la feature learning.
+
+   > Lee docs/USER_STORIES.md (historia "Glosario") y docs/ARCHITECTURE.md. Propón un plan para implementarla en la feature glossary.
 
    Revisa el plan, corrígelo y solo entonces deja que escriba código.
+
 2. **Implementa por capas**, de adentro hacia afuera: dominio + tests → datos → UI.
    > Implementa el plan. Empieza por domain y sus pruebas con el subagente test-writer.
 3. **Delega a especialistas** cuando el tema lo pida:
-   > Usa el subagente sqlite-expert para la consulta de progreso por nivel.
-   > Usa el subagente rn-ui-builder para la pantalla SyllabusMap; el diseño está en docs/design/menu-inicio-niveles.png.
+   > Usa el subagente sqlite-expert para la consulta de temas aprobados por nivel.
+   > Usa el subagente rn-ui-builder para la pantalla SyllabusMap; el diseño está en spec/contaitscch-refactor/index.html.
 4. **Revisa y cierra** con `/pre-commit-check`.
 5. **Limpia el contexto** con `/clear` al cambiar de historia. Así cada tarea empieza sin ruido de la anterior.
 
 **Ejemplos de prompts útiles:**
 
-| Quiero… | Escribe |
-| --- | --- |
-| Crear la feature de ranking | `/new-feature leaderboard Ranking online con podio y "Tu posición"` |
-| Agregar una acción de negocio | `/new-usecase exams SubmitExam califica, guarda intento y otorga 100 XP si aprueba` |
-| Nuevo formato de pregunta | `/add-question-type t_account_drag arrastrar montos al DEBE o HABER` |
-| Función en Supabase | `/new-rpc get_leaderboard top 50 con XP, racha y nivel, más la posición del usuario` |
-| Contenido del curso | `Usa content-author para escribir el tema 5 "Balanza de comprobación" del nivel Básico con 4 subtemas` |
-| Revisar seguridad del backend | `Usa supabase-expert para revisar permisos de todas las funciones en supabase/migrations` |
-| Construir desde una captura | `Construye ExamSessionScreen igual a docs/design/examen-pregunta.png` |
+| Quiero…                       | Escribe                                                                                            |
+| ----------------------------- | -------------------------------------------------------------------------------------------------- |
+| Crear una feature nueva       | `/new-feature certificates Constancia al aprobar el examen integrador`                             |
+| Agregar una acción de negocio | `/new-usecase quizzes GetQuizHistory lista los ejercicios con su mejor puntaje e intentos`         |
+| Función en Supabase           | `/new-rpc get_level_stats cuántos alumnos completaron cada nivel (sin exponer correos)`            |
+| Contenido del curso           | `Usa content-author para revisar el tema 203 y su ejercicio (ids, 2 preguntas, retroalimentación)` |
+| Revisar seguridad del backend | `Usa supabase-expert para revisar permisos de todas las funciones en supabase/migrations`          |
+| Construir desde una captura   | `Ajusta QuizScreen para que coincida con el ejercicio de spec/contaitscch-refactor/index.html`     |
 
 **Buenas prácticas:**
 
