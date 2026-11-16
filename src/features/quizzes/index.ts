@@ -16,7 +16,10 @@ export { mergeProgress } from './domain/policies/ProgressRules';
 export { CheckAnswerUseCase } from './domain/usecases/CheckAnswerUseCase';
 export { GetFinalExamStatusUseCase } from './domain/usecases/GetFinalExamStatusUseCase';
 export { GetSyncStatusUseCase } from './domain/usecases/GetSyncStatusUseCase';
-export { ResetProgressUseCase } from './domain/usecases/ResetProgressUseCase';
+export {
+  ResetProgressUseCase,
+  type ResetProgressError,
+} from './domain/usecases/ResetProgressUseCase';
 export { StartQuizUseCase } from './domain/usecases/StartQuizUseCase';
 export { SubmitQuizUseCase } from './domain/usecases/SubmitQuizUseCase';
 export { SyncProgressUseCase } from './domain/usecases/SyncProgressUseCase';

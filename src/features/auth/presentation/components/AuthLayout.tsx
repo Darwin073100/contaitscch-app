@@ -6,23 +6,26 @@ import { AuthBenefits } from './AuthBenefits';
 import { LoginPrompt } from './LoginPrompt';
 import { RegisterHero } from './RegisterHero';
 
-const steps = ['Tus Datos', 'Verificación'];
+const steps = ['Tus datos', 'Verificación'];
 
 type AuthLayoutProps = {
-  /** 0 = Tus Datos, 1 = Verificación. */
-  step: 0 | 1;
-  onLoginPress: () => void;
+  /** Registro (con sus 2 pasos) o acceso. */
+  mode?: 'register' | 'login';
+  /** Registro: 0 = Tus datos, 1 = Verificación. */
+  step?: 0 | 1;
+  /** Abre el acceso desde el registro, o el registro desde el acceso. */
+  onSwitch: () => void;
   children: ReactNode;
 };
 
-/** Estructura compartida de los dos pasos: hero, stepper, contenido, enlace a login y beneficios. */
-export function AuthLayout({ step, onLoginPress, children }: AuthLayoutProps) {
+/** Estructura del registro y del acceso: hero, pasos, contenido, enlace contrario y beneficios. */
+export function AuthLayout({ mode = 'register', step = 0, onSwitch, children }: AuthLayoutProps) {
   return (
     <Screen scroll safeBottom keyboardAvoiding>
-      <RegisterHero />
-      <Stepper steps={steps} current={step} />
+      <RegisterHero mode={mode} />
+      {mode === 'register' && <Stepper steps={steps} current={step} />}
       {children}
-      <LoginPrompt onPress={onLoginPress} />
+      <LoginPrompt mode={mode} onPress={onSwitch} />
       <AuthBenefits />
     </Screen>
   );

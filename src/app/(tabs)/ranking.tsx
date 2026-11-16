@@ -1,11 +1,7 @@
-import { AppText, Screen } from '@/shared/ui';
+import { RankingScreen } from '@/features/leaderboard';
+import { AppTopBar } from '@/features/profile';
 
-// Temporal: se reemplaza por la pantalla que exporte la feature leaderboard.
+// Al entrar se sube el avance pendiente y se pide el ranking.
 export default function RankingTab() {
-  return (
-    <Screen align="center">
-      <AppText variant="title">Ranking</AppText>
-      <AppText variant="caption">Próximamente</AppText>
-    </Screen>
-  );
+  return <RankingScreen header={<AppTopBar />} />;
 }

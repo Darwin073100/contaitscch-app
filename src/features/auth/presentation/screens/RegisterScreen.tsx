@@ -11,7 +11,7 @@ export function RegisterScreen() {
     useRegisterViewModel();
 
   return (
-    <AuthLayout step={0} onLoginPress={openLogin}>
+    <AuthLayout step={0} onSwitch={openLogin}>
       <Card padding="lg">
         <Column gap="lg">
           <FormTextField

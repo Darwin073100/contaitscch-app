@@ -22,12 +22,25 @@ export function AboutScreen() {
   const { content, goBack, startLearning } = useAboutViewModel();
 
   return (
-    <Screen header={<AppHeader title="Acerca de" onBack={goBack} />} scroll safeBottom>
+    <Screen header={<AppHeader title="Conoce CONTAITSCCH" onBack={goBack} />} scroll safeBottom>
       <AboutHero hero={content.hero} highlights={content.highlights} />
       <AboutIntroCard intro={content.intro} />
 
       <Column gap="md">
-        <SectionHeader title="Objetivos del Proyecto" icon="flag-outline" />
+        <SectionHeader title="Cómo funciona" icon="map-marker-path" />
+        {content.howItWorks.map((s) => (
+          <ListItem
+            key={s.title}
+            variant="boxed"
+            title={s.title}
+            subtitle={s.description}
+            leading={<IconBox icon={s.icon} tone="accent" />}
+          />
+        ))}
+      </Column>
+
+      <Column gap="md">
+        <SectionHeader title="Objetivos del proyecto" icon="flag-outline" />
         {content.objectives.map((o) => (
           <ListItem
             key={o.title}
@@ -40,7 +53,7 @@ export function AboutScreen() {
       </Column>
 
       <Column gap="md">
-        <SectionHeader title="Equipo y Colaboradores" icon="account-group-outline" />
+        <SectionHeader title="Equipo y colaboradores" icon="account-group-outline" />
         <TeamCard institution={content.institution} team={content.team} />
       </Column>
 
@@ -55,7 +68,7 @@ export function AboutScreen() {
         </Row>
       </Card>
 
-      <Button label={content.cta} rightIcon="rocket-launch-outline" onPress={startLearning} />
+      <Button label={content.cta} rightIcon="arrow-right" onPress={startLearning} />
     </Screen>
   );
 }

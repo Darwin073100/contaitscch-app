@@ -28,7 +28,10 @@ export { Card, type CardTone } from './Card';
 export { FeedbackBanner } from './FeedbackBanner';
 export { Figure } from './Figure';
 export { ListItem } from './ListItem';
+export { MenuList, type MenuItem } from './MenuList';
 export { NumberedList } from './NumberedList';
+export { PodiumCard, type PodiumPlace } from './PodiumCard';
+export { RankRow } from './RankRow';
 export { SectionHeader } from './SectionHeader';
 
 // Indicadores
@@ -41,4 +44,5 @@ export { Stepper } from './Stepper';
 
 // Formularios
 export { OtpInput } from './OtpInput';
+export { SearchField } from './SearchField';
 export { TextField } from './TextField';

@@ -37,10 +37,10 @@ describe('AboutScreen', () => {
     }
   });
 
-  it('"¡Comenzar a Aprender!" lleva a la pestaña Aprender', async () => {
+  it('"Comenzar a estudiar" lleva a la pestaña Aprender', async () => {
     await renderScreen();
 
-    await fireEvent.press(screen.getByRole('button', { name: '¡Comenzar a Aprender!' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Comenzar a estudiar' }));
 
     expect(router.navigate).toHaveBeenCalledWith('/aprender');
   });

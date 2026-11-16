@@ -1,19 +1,22 @@
 import { AppText, Button, Column } from '@/shared/ui';
 
 type LoginPromptProps = {
+  /** En el registro invita a iniciar sesión; en el acceso, a crear una cuenta. */
+  mode: 'register' | 'login';
   onPress: () => void;
 };
 
-/** "¿Ya tienes cuenta activa?" + enlace a Iniciar sesión. */
-export function LoginPrompt({ onPress }: LoginPromptProps) {
+/** "¿Ya tienes cuenta? Iniciar sesión" / "¿Primera vez aquí? Crear mi cuenta". */
+export function LoginPrompt({ mode, onPress }: LoginPromptProps) {
+  const register = mode === 'register';
   return (
     <Column align="center">
-      <AppText variant="caption">¿Ya tienes cuenta activa?</AppText>
+      <AppText variant="caption">{register ? '¿Ya tienes cuenta?' : '¿Primera vez aquí?'}</AppText>
       <Button
-        label="Iniciar Sesión en CONTAITSCCH"
-        variant="ghost"
+        label={register ? 'Iniciar sesión' : 'Crear mi cuenta'}
+        variant="link"
         size="sm"
-        rightIcon="login"
+        rightIcon={register ? 'login' : 'arrow-right'}
         onPress={onPress}
       />
     </Column>

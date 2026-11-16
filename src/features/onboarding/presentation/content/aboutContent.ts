@@ -14,6 +14,7 @@ type Objective = {
   title: string;
   description: string;
 };
+type Step = { icon: IconName; title: string; description: string };
 export type TeamMember = { name: string; detail?: string };
 export type TeamGroup = { role: string; members: TeamMember[] };
 
@@ -65,16 +66,37 @@ export const aboutContent = {
   intro: {
     title: '¿Qué es CONTAITSCCH?',
     text:
-      'Es un entorno educativo interactivo diseñado especialmente para que la comunidad estudiantil ' +
-      'domine los pilares contables de manera intuitiva y sin frustración. Mediante micro-retos ' +
-      'basados en el modelo de repetición espaciada, transformamos la complejidad de la disciplina ' +
-      'contable en una experiencia motivante, visual y tangible.',
+      'Es una aplicación para que la comunidad estudiantil aprenda contabilidad desde cero, de forma ' +
+      'clara y gradual. El contenido avanza por 6 niveles; cada nivel tiene 4 temas y cada tema ' +
+      'termina con un ejercicio. Todos los ejemplos usan negocios pequeños mexicanos: una papelería, ' +
+      'una tienda, un taller, una cafetería.',
     topics: [
-      { icon: 'scale-balance', label: 'Partida Doble' },
+      { icon: 'scale-balance', label: 'Partida doble' },
       { icon: 'table-large', label: 'Cuentas T' },
-      { icon: 'chart-bar', label: 'Estados Financieros' },
+      { icon: 'chart-line', label: 'Estados financieros' },
+      { icon: 'receipt-text-outline', label: 'IVA e ISR' },
     ] satisfies Topic[],
   },
+  howItWorks: [
+    {
+      icon: 'book-open-variant',
+      title: 'Estudia el tema',
+      description:
+        'Objetivo, explicación, ejemplo resuelto y repaso con la idea clave y el error común.',
+    },
+    {
+      icon: 'pencil-outline',
+      title: 'Resuelve el ejercicio',
+      description:
+        'Preguntas sobre lo que acabas de ver. La app te dice si acertaste, sin revelar la respuesta.',
+    },
+    {
+      icon: 'check-decagram',
+      title: 'Aprueba para avanzar',
+      description:
+        'El siguiente tema se desbloquea al aprobar el ejercicio. Si no apruebas, vuelves a tomar la lección.',
+    },
+  ] satisfies Step[],
   objectives: [
     {
       icon: 'head-lightbulb-outline',
@@ -100,11 +122,11 @@ export const aboutContent = {
   ] satisfies Objective[],
   institution: {
     overline: 'Institución de respaldo',
-    // Pendiente: nombre oficial completo del ITSSCH (spec 04, sección 8).
-    name: 'ITSSCH',
+    // Nombre tomado del prototipo del cliente; confirmar el nombre oficial completo.
+    name: 'Instituto Tecnológico Superior · ITSCH',
     detail: 'División de Contaduría Pública',
   },
   team,
   closing: 'Desarrollado con orgullo para la comunidad estudiantil de Contaduría',
-  cta: '¡Comenzar a Aprender!',
+  cta: 'Comenzar a estudiar',
 };

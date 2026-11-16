@@ -64,8 +64,7 @@ export function useRegisterViewModel() {
     void handleSubmit(onValid)();
   };
 
-  // Pendiente (3c): pantalla de Login.
-  const openLogin = () => {};
+  const openLogin = () => router.replace('/login');
 
   return {
     control,

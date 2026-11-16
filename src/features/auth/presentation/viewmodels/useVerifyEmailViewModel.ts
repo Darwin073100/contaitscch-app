@@ -97,7 +97,8 @@ export function useVerifyEmailViewModel() {
   const editData = () => (router.canGoBack() ? router.back() : router.replace('/registro'));
 
   // Pendiente (3c): pantalla de Login.
-  const openLogin = () => {};
+  // Otra cuenta o el mismo correo con su contraseña: el acceso reemplaza la sesión pendiente
+  const openLogin = () => router.replace('/login');
 
   return {
     email: session?.email,

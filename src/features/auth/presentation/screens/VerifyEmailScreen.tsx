@@ -20,7 +20,7 @@ export function VerifyEmailScreen() {
   const destination = vm.email ? `**${vm.email}**` : 'tu bandeja';
 
   return (
-    <AuthLayout step={1} onLoginPress={vm.openLogin}>
+    <AuthLayout step={1} onSwitch={vm.openLogin}>
       <Card padding="lg">
         <Column gap="lg">
           <Row justify="center">
