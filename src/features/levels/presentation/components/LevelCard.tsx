@@ -19,22 +19,22 @@ import type { LevelCardVm, UnlockHintVm } from '../viewmodels/levelCardVm';
 // Estado → props del kit (reemplaza condicionales de estilo).
 const statusStyle = {
   inProgress: {
-    iconBox: 'primary',
-    badge: { tone: 'primary', appearance: 'soft' },
-    statusIcon: { name: 'check-decagram-outline', color: 'primary' },
-    button: { variant: 'primary', rightIcon: 'play-outline' },
+    iconBox: 'solid',
+    badge: { tone: 'navy', appearance: 'solid' },
+    statusIcon: { name: 'progress-clock', color: 'faint' },
+    button: { variant: 'primary', rightIcon: 'arrow-right' },
   },
   completed: {
-    iconBox: 'primarySoft',
-    badge: { tone: 'primary', appearance: 'solid' },
-    statusIcon: { name: 'check-decagram', color: 'primary' },
-    button: { variant: 'secondary', rightIcon: 'refresh' },
+    iconBox: 'accent',
+    badge: { tone: 'accent', appearance: 'soft' },
+    statusIcon: { name: 'check-decagram', color: 'accent' },
+    button: { variant: 'ghost', leftIcon: 'replay' },
   },
   locked: {
-    iconBox: 'neutral',
+    iconBox: 'locked',
     badge: { tone: 'neutral', appearance: 'soft' },
-    statusIcon: { name: 'lock-outline', color: 'muted' },
-    button: { variant: 'locked', leftIcon: 'lock-outline' },
+    statusIcon: { name: 'lock', color: 'faint' },
+    button: { variant: 'ghost', leftIcon: 'lock', disabled: true },
   },
 } as const satisfies Record<LevelStatus, unknown>;
 
@@ -74,7 +74,7 @@ export function LevelCard({ level, onPress }: LevelCardProps) {
             <Column gap="sm">
               <Row justify="between">
                 <AppText variant="caption">Progreso del Nivel</AppText>
-                <AppText variant="caption" tone="primary" weight="bold">
+                <AppText variant="caption" tone="accent" weight="bold">
                   {level.progressLabel}
                 </AppText>
               </Row>

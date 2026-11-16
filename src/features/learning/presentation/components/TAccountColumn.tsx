@@ -6,11 +6,11 @@ import { parseTAccountItem } from './tAccountItem';
 
 // DEBE en verde, HABER en cian; los aumentos del DEBE en verde y los del HABER en blanco (captura).
 const sides = {
-  debit: { title: 'DEBE', color: 'primary', plusTone: 'primary', plusIcon: 'primary' },
-  credit: { title: 'HABER', color: 'accent', plusTone: 'default', plusIcon: 'white' },
+  debit: { title: 'DEBE', color: 'accent', plusTone: 'accent', plusIcon: 'accent' },
+  credit: { title: 'HABER', color: 'amber', plusTone: 'default', plusIcon: 'text' },
 } as const satisfies Record<
   string,
-  { title: string; color: ColorToken; plusTone: TextTone; plusIcon: ColorToken }
+  { title: string; color: ColorToken & TextTone; plusTone: TextTone; plusIcon: ColorToken }
 >;
 
 type TAccountColumnProps = {
@@ -44,7 +44,7 @@ export function TAccountColumn({ kind, side }: TAccountColumnProps) {
                 {item.sign && (
                   <Icon
                     name={isPlus ? 'plus-circle-outline' : 'minus-circle-outline'}
-                    color={isPlus ? style.plusIcon : 'muted'}
+                    color={isPlus ? style.plusIcon : 'dim'}
                   />
                 )}
                 <Column grow>

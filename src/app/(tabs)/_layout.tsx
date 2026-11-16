@@ -1,23 +1,24 @@
 import { Tabs } from 'expo-router';
 
-import { colors } from '@/shared/theme';
+import { useThemeColors } from '@/shared/theme';
 import { Icon, type IconName } from '@/shared/ui';
 
 function tabIcon(name: IconName) {
   return function TabIcon({ focused }: { focused: boolean }) {
-    return <Icon name={name} color={focused ? 'primary' : 'muted'} size="lg" />;
+    return <Icon name={name} color={focused ? 'accent' : 'dim'} size="lg" />;
   };
 }
 
 export default function TabsLayout() {
+  const colors = useThemeColors();
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.muted,
-        tabBarStyle: { backgroundColor: colors.card, borderTopColor: colors.card },
-        tabBarLabelStyle: { fontFamily: 'PlusJakartaSans_600SemiBold' },
+        tabBarActiveTintColor: colors.accent,
+        tabBarInactiveTintColor: colors.dim,
+        tabBarStyle: { backgroundColor: colors.surface, borderTopColor: colors.line },
+        tabBarLabelStyle: { fontFamily: 'PlusJakartaSans_700Bold' },
       }}
     >
       <Tabs.Screen

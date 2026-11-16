@@ -41,18 +41,13 @@ export function TopicSessionScreen({ topicId }: TopicSessionScreenProps) {
       {state.status === 'error' && (
         <Column gap="lg">
           <Callout tone="danger" icon="alert-outline" text={state.message} />
-          <Button
-            label="Volver al temario"
-            variant="secondary"
-            leftIcon="arrow-left"
-            onPress={exit}
-          />
+          <Button label="Volver al temario" variant="ghost" leftIcon="arrow-left" onPress={exit} />
         </Column>
       )}
       {step && (
         <Column gap="lg">
           <Column gap="md">
-            <Badge label={step.badge} tone="info" icon="school-outline" uppercase />
+            <Badge label={step.badge} tone="neutral" icon="school-outline" uppercase />
             <AppText variant="title" accessibilityRole="header">
               {step.title}
             </AppText>

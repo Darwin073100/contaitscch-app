@@ -1,18 +1,65 @@
-// Tokens de color del diseño (fuente única).
-// Los usa tailwind.config.js (clases como bg-card) y react-native-svg vía theme/index.ts.
-module.exports = {
-  bg: '#0A1628', // fondo azul noche
-  card: '#14213A', // tarjetas
-  surface: '#1E2D4A', // elementos dentro de tarjetas: pills, casillas OTP, chips, stat tiles
-  border: '#26385A', // bordes y separadores
-  primary: '#00E676', // verde de botones y progreso
-  'primary-soft': '#69F0AE', // verde claro: avatar del usuario, botón "Subir"
-  accent: '#4DD0E1', // cian de "HABER" y tema activo
-  info: '#1D4ED8', // azul de paso activo y aviso de correo
-  streak: '#FBBF24', // fuego de racha y oro del podio
-  silver: '#CBD5E1', // plata del podio
-  bronze: '#C2410C', // bronce del podio
-  muted: '#8A9BB5', // textos secundarios
-  danger: '#F87171', // errores, respuestas incorrectas y vidas
-  white: '#FFFFFF',
+// Tokens de color del diseño (fuente única), en modo claro y oscuro. La app sigue al sistema.
+// - tailwind.config.js los convierte en variables CSS (--color-<token>) y clases como bg-surface;
+//   NativeWind cambia de paleta solo con el modo del teléfono.
+// - Lo que no usa className (iconos, SVG, barra de pestañas) los lee con useThemeColors().
+// Los "tint" del prototipo se escriben con opacidad de Tailwind: bg-accent/10, bg-amber/15…
+
+const light = {
+  bg: '#F6F7F9', // fondo
+  surface: '#FFFFFF', // tarjetas
+  'surface-alt': '#EEF2F5', // pills, barras vacías, candados
+  'surface-sunk': '#FFFFFF', // campos de texto y casillas OTP
+  line: '#DDE3E9', // bordes y separadores
+  text: '#1A1A1A', // texto
+  title: '#0F2A44', // títulos
+  dim: '#5B6B7A', // texto secundario
+  faint: '#8D9AA6', // placeholder y bloqueado
+  accent: '#0E7C7B', // verde azulado: avanzar, aprobado, progreso
+  'accent-ink': '#FFFFFF', // texto sobre accent
+  'accent-rim': '#095756', // borde inferior de los botones accent
+  'accent-soft': '#7FD1D0',
+  navy: '#0F2A44', // marca: topbar, tarjetas destacadas
+  'navy-ink': '#FFFFFF', // texto sobre navy
+  'navy-dim': '#BCC3CB', // texto secundario sobre navy
+  'navy-rim': '#071A2C',
+  amber: '#F2A900', // tema actual, examen, podio, pendiente de sincronizar
+  'amber-ink': '#0F2A44', // texto sobre amber
+  'amber-rim': '#B97F00',
+  'amber-text': '#8A5D00', // amber legible sobre fondos claros
+  ok: '#2E7D32', // respuesta correcta
+  'ok-ink': '#FFFFFF',
+  err: '#C62828', // incorrecta, por aprobar, error de sincronización
+  'err-ink': '#FFFFFF',
+  bronze: '#A8581C', // 3.er lugar
 };
+
+const dark = {
+  bg: '#0B1520',
+  surface: '#122334',
+  'surface-alt': '#1A2F45',
+  'surface-sunk': '#0E1B2A',
+  line: '#24405A',
+  text: '#EEF3F7',
+  title: '#EEF3F7',
+  dim: '#9DB0C0',
+  faint: '#6F879C',
+  accent: '#2BA8A7',
+  'accent-ink': '#062423',
+  'accent-rim': '#1B7372',
+  'accent-soft': '#7FD1D0',
+  navy: '#0A1E33',
+  'navy-ink': '#EEF3F7',
+  'navy-dim': '#AAB3BC',
+  'navy-rim': '#06121F',
+  amber: '#F2A900',
+  'amber-ink': '#0B1520',
+  'amber-rim': '#A87400',
+  'amber-text': '#F2C14E',
+  ok: '#66BB6A',
+  'ok-ink': '#0B1520',
+  err: '#EF5350',
+  'err-ink': '#0B1520',
+  bronze: '#E39A62',
+};
+
+module.exports = { light, dark };

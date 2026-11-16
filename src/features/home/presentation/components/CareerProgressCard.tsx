@@ -22,18 +22,18 @@ export function CareerProgressCard({
     <Card padding="lg">
       <Column gap="md">
         <Row gap="md">
-          <IconBox icon="chart-timeline-variant-shimmer" tone="primarySoft" />
+          <IconBox icon="chart-timeline-variant-shimmer" tone="accent" />
           <Column grow>
             <AppText variant="subtitle" weight="bold">
               {title}
             </AppText>
             <AppText variant="caption">{subtitle}</AppText>
           </Column>
-          <AppText variant="stat" tone="primary">
+          <AppText variant="stat" tone="accent">
             {percentLabel}
           </AppText>
         </Row>
-        <ProgressBar value={progress} size="lg" accessibilityLabel={title} />
+        <ProgressBar value={progress} size="md" accessibilityLabel={title} />
         <Row justify="between">
           <AppText variant="caption" weight="semibold">
             {completedLabel}

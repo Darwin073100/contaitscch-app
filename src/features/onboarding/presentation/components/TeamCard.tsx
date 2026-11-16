@@ -13,12 +13,12 @@ export function TeamCard({ institution, team }: TeamCardProps) {
   return (
     <Card padding="md">
       <Column gap="md">
-        <Card tone="raised" padding="sm">
+        <Card tone="default" padding="sm">
           <ListItem
             overline={institution.overline}
             title={institution.name}
             subtitle={institution.detail}
-            leading={<IconBox icon="domain" tone="primary" shape="circle" />}
+            leading={<IconBox icon="domain" tone="solid" shape="circle" />}
           />
         </Card>
         {team.map((group, i) => (

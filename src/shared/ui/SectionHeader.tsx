@@ -15,8 +15,8 @@ export function SectionHeader({ title, icon, actionLabel, onActionPress }: Secti
   return (
     <View className="flex-row items-center justify-between gap-3">
       <View className="flex-1 flex-row items-center gap-2">
-        {icon && <Icon name={icon} color="primary" size="lg" />}
-        <Text className="font-display text-xl text-white" accessibilityRole="header">
+        {icon && <Icon name={icon} color="accent" size="lg" />}
+        <Text className="font-extrabold text-[21px] text-title" accessibilityRole="header">
           {title}
         </Text>
       </View>
@@ -28,10 +28,10 @@ export function SectionHeader({ title, icon, actionLabel, onActionPress }: Secti
             hitSlop={12}
             className="active:opacity-70"
           >
-            <Text className="font-display text-sm text-accent">{actionLabel}</Text>
+            <Text className="font-extrabold text-sm text-accent">{actionLabel}</Text>
           </Pressable>
         ) : (
-          <Text className="max-w-[45%] text-right font-semibold text-xs text-muted">
+          <Text className="max-w-[45%] text-right font-display text-[13px] text-dim">
             {actionLabel}
           </Text>
         ))}

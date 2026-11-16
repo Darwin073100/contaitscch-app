@@ -5,18 +5,18 @@ import { tv, type VariantProps } from 'tailwind-variants';
 const listItem = tv({
   slots: {
     container: 'flex-row items-center gap-3',
-    overline: 'font-display text-xs uppercase tracking-wide text-primary',
-    title: 'font-display text-base text-white',
-    subtitle: 'text-sm text-muted',
+    overline: 'font-extrabold text-xs uppercase tracking-wide text-dim',
+    title: 'font-extrabold text-base text-text',
+    subtitle: 'text-sm text-dim',
   },
   variants: {
     variant: {
       // Dentro de otra tarjeta (equipo y colaboradores)
       plain: { container: 'py-2' },
       // Tarjeta propia (objetivos, "Introducción a la app", fila del ranking)
-      boxed: { container: 'rounded-3xl bg-card p-4' },
+      boxed: { container: 'rounded-[20px] border border-line bg-surface p-4' },
       // Fila resaltada ("Tú" en el ranking)
-      highlight: { container: 'rounded-3xl border-l-4 border-primary bg-surface p-4' },
+      highlight: { container: 'rounded-[14px] border border-accent bg-accent/10 p-3.5' },
     },
     pressable: { true: { container: 'active:opacity-80' } },
   },

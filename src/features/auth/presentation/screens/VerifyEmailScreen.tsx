@@ -24,7 +24,7 @@ export function VerifyEmailScreen() {
       <Card padding="lg">
         <Column gap="lg">
           <Row justify="center">
-            <IconBox icon="email-check-outline" tone="info" size="lg" shape="circle" />
+            <IconBox icon="email-check-outline" tone="accent" size="lg" shape="circle" />
           </Row>
           <Column gap="xs">
             <AppText variant="subtitle" weight="bold" align="center" accessibilityRole="header">

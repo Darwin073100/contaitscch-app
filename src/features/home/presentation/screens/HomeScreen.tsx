@@ -48,8 +48,8 @@ export function HomeScreen() {
               title="Introducción a la app"
               subtitle="Conoce el proyecto, objetivos de aprendizaje y colaboradores."
               subtitleLines={2}
-              leading={<IconBox icon="book-open-page-variant-outline" tone="accentSoft" />}
-              meta={<Badge label="ITSSCH" tone="primary" />}
+              leading={<IconBox icon="book-open-page-variant-outline" tone="navy" />}
+              meta={<Badge label="ITSSCH" tone="accent" />}
               trailing={
                 <IconButton
                   icon="chevron-right"

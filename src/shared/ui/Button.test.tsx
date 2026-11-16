@@ -23,10 +23,10 @@ describe('Button', () => {
     expect(onPress).not.toHaveBeenCalled();
   });
 
-  it('la variante locked siempre está deshabilitada', async () => {
+  it('deshabilitado no responde (nivel bloqueado)', async () => {
     const onPress = jest.fn();
     await render(
-      <Button variant="locked" label="Bloqueado" leftIcon="lock-outline" onPress={onPress} />,
+      <Button variant="ghost" disabled label="Bloqueado" leftIcon="lock" onPress={onPress} />,
     );
 
     await fireEvent.press(screen.getByRole('button'));

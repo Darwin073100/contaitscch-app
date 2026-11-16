@@ -3,24 +3,24 @@ import { tv, type VariantProps } from 'tailwind-variants';
 
 const progress = tv({
   slots: {
-    track: 'w-full overflow-hidden rounded-full bg-surface',
+    track: 'w-full overflow-hidden rounded-full bg-surface-alt',
     fill: 'h-full rounded-full',
   },
   variants: {
     tone: {
-      primary: { fill: 'bg-primary' },
       accent: { fill: 'bg-accent' },
-      streak: { fill: 'bg-streak' },
+      amber: { fill: 'bg-amber' },
       // Contraseña débil en el medidor de seguridad del registro
-      danger: { fill: 'bg-danger' },
+      danger: { fill: 'bg-err' },
     },
     size: {
-      sm: { track: 'h-1.5' },
-      md: { track: 'h-2.5' },
-      lg: { track: 'h-3.5' },
+      sm: { track: 'h-2' },
+      md: { track: 'h-3' },
     },
+    // Sobre una tarjeta o barra navy
+    onNavy: { true: { track: 'bg-navy-ink/15' } },
   },
-  defaultVariants: { tone: 'primary', size: 'md' },
+  defaultVariants: { tone: 'accent', size: 'md' },
 });
 
 type ProgressBarProps = VariantProps<typeof progress> & {
@@ -29,9 +29,9 @@ type ProgressBarProps = VariantProps<typeof progress> & {
   accessibilityLabel?: string;
 };
 
-export function ProgressBar({ value, tone, size, accessibilityLabel }: ProgressBarProps) {
+export function ProgressBar({ value, tone, size, onNavy, accessibilityLabel }: ProgressBarProps) {
   const percent = Math.round(Math.min(1, Math.max(0, Number.isFinite(value) ? value : 0)) * 100);
-  const { track, fill } = progress({ tone, size });
+  const { track, fill } = progress({ tone, size, onNavy });
   return (
     <View
       className={track()}

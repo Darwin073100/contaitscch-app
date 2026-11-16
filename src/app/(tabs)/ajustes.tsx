@@ -12,7 +12,7 @@ export default function SettingsTab() {
       <AppText variant="caption">Próximamente</AppText>
       <Button
         label="Cerrar sesión (temporal)"
-        variant="secondary"
+        variant="ghost"
         size="md"
         leftIcon="logout"
         onPress={() => void auth.logout.execute()}

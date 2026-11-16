@@ -2,22 +2,22 @@ import { useState, type ComponentRef, type Ref } from 'react';
 import { Text, TextInput, View, type TextInputProps } from 'react-native';
 import { tv } from 'tailwind-variants';
 
-import { colors } from '../theme';
+import { useThemeColors } from '../theme';
 import { Icon, type IconName } from './Icon';
 import { IconButton } from './IconButton';
 
 const field = tv({
   slots: {
-    label: 'font-semibold text-sm text-white',
-    box: 'h-14 flex-row items-center gap-2 rounded-2xl border-2 bg-surface px-4',
-    input: 'flex-1 font-sans text-base text-white',
+    label: 'font-display text-[13px] text-dim',
+    box: 'min-h-[54px] flex-row items-center gap-2.5 rounded-xl border-2 bg-surface-sunk px-3.5',
+    input: 'flex-1 font-sans text-base text-text',
     helper: 'text-xs',
   },
   variants: {
     state: {
-      idle: { box: 'border-transparent', helper: 'text-muted' },
-      focused: { box: 'border-primary', helper: 'text-muted' },
-      error: { box: 'border-danger', helper: 'text-danger' },
+      idle: { box: 'border-line', helper: 'text-dim' },
+      focused: { box: 'border-accent', helper: 'text-dim' },
+      error: { box: 'border-err', helper: 'font-semibold text-err' },
     },
   },
   defaultVariants: { state: 'idle' },
@@ -44,6 +44,7 @@ export function TextField({
   ref,
   ...props
 }: TextFieldProps) {
+  const colors = useThemeColors();
   const [focused, setFocused] = useState(false);
   const [hidden, setHidden] = useState(true);
   const s = field({ state: error ? 'error' : focused ? 'focused' : 'idle' });
@@ -53,11 +54,11 @@ export function TextField({
     <View className="gap-1.5">
       <Text className={s.label()}>{label}</Text>
       <View className={s.box()}>
-        {leftIcon && <Icon name={leftIcon} color={error ? 'danger' : 'muted'} />}
+        {leftIcon && <Icon name={leftIcon} color={error ? 'err' : 'faint'} />}
         <TextInput
           ref={ref}
           className={s.input()}
-          placeholderTextColor={colors.muted}
+          placeholderTextColor={colors.faint}
           secureTextEntry={secureTextEntry && hidden}
           accessibilityLabel={label}
           accessibilityHint={helper}

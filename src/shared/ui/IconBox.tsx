@@ -4,24 +4,26 @@ import { tv, type VariantProps } from 'tailwind-variants';
 import type { ColorToken } from '../theme';
 import { Icon, type IconName, type IconSize } from './Icon';
 
-// Icono dentro de un fondo: tarjetas de nivel, objetivos, regla de oro, nodos del temario.
+// Icono dentro de un fondo: tarjetas de nivel, objetivos, callouts, nodos de la ruta.
 const iconBox = tv({
   slots: {
     box: 'items-center justify-center',
-    // Insignia de esquina: candado del examen final
+    // Insignia de esquina: candado de la meta del nivel
     corner:
-      'absolute -right-1.5 -top-1.5 h-7 w-7 items-center justify-center rounded-full border-2 border-bg bg-surface',
+      'absolute -right-2 -top-2 h-7 w-7 items-center justify-center rounded-full border border-line bg-surface',
   },
   variants: {
     tone: {
-      primary: { box: 'bg-primary' },
-      primarySoft: { box: 'bg-primary/15' },
-      accent: { box: 'bg-accent' },
-      accentSoft: { box: 'bg-accent/15' },
-      info: { box: 'bg-info' },
-      infoSoft: { box: 'bg-info/25' },
-      streakSoft: { box: 'bg-streak/15' },
-      neutral: { box: 'bg-surface' },
+      // Tinte suave
+      accent: { box: 'bg-accent/10' },
+      amber: { box: 'bg-amber/15' },
+      danger: { box: 'bg-err/10' },
+      // Sólidos
+      solid: { box: 'bg-accent' },
+      amberSolid: { box: 'bg-amber' },
+      navy: { box: 'bg-navy' },
+      // Bloqueado / neutro
+      locked: { box: 'bg-surface-alt' },
     },
     size: {
       sm: { box: 'h-8 w-8' },
@@ -29,43 +31,42 @@ const iconBox = tv({
       lg: { box: 'h-14 w-14' },
       xl: { box: 'h-20 w-20' },
     },
-    shape: { rounded: { box: 'rounded-2xl' }, circle: { box: 'rounded-full' } },
+    shape: { rounded: { box: 'rounded-xl' }, circle: { box: 'rounded-full' } },
   },
-  compoundVariants: [{ size: 'sm', shape: 'rounded', class: { box: 'rounded-xl' } }],
-  defaultVariants: { tone: 'neutral', size: 'md', shape: 'rounded' },
+  compoundVariants: [{ size: 'lg', shape: 'rounded', class: { box: 'rounded-2xl' } }],
+  defaultVariants: { tone: 'accent', size: 'md', shape: 'rounded' },
 });
 
-type IconBoxTone = NonNullable<VariantProps<typeof iconBox>['tone']>;
+export type IconBoxTone = NonNullable<VariantProps<typeof iconBox>['tone']>;
 
 const iconColor: Record<IconBoxTone, ColorToken> = {
-  primary: 'bg',
-  primarySoft: 'primary',
-  accent: 'bg',
-  accentSoft: 'accent',
-  info: 'white',
-  infoSoft: 'accent',
-  streakSoft: 'streak',
-  neutral: 'muted',
+  accent: 'accent',
+  amber: 'amber-text',
+  danger: 'err',
+  solid: 'accent-ink',
+  amberSolid: 'amber-ink',
+  navy: 'navy-ink',
+  locked: 'faint',
 };
-const iconSize = { sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' } as const satisfies Record<
+const iconSize = { sm: 'sm', md: 'lg', lg: 'xl', xl: '2xl' } as const satisfies Record<
   string,
   IconSize
 >;
 
 export type IconBoxProps = VariantProps<typeof iconBox> & {
   icon: IconName;
-  /** Icono pequeño en la esquina superior derecha (p. ej. `lock` en el examen bloqueado). */
+  /** Icono pequeño en la esquina superior derecha (p. ej. `lock` en la meta bloqueada). */
   cornerIcon?: IconName;
 };
 
-export function IconBox({ icon, cornerIcon, tone = 'neutral', size = 'md', shape }: IconBoxProps) {
+export function IconBox({ icon, cornerIcon, tone = 'accent', size = 'md', shape }: IconBoxProps) {
   const s = iconBox({ tone, size, shape });
   return (
     <View className={s.box()}>
       <Icon name={icon} color={iconColor[tone]} size={iconSize[size]} />
       {cornerIcon && (
         <View className={s.corner()}>
-          <Icon name={cornerIcon} color="muted" size="xs" />
+          <Icon name={cornerIcon} color="dim" size="xs" />
         </View>
       )}
     </View>

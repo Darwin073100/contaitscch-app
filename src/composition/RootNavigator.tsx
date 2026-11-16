@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router';
 
-import { colors } from '@/shared/theme';
+import { useThemeColors } from '@/shared/theme';
 
 import { useSession } from './providers/useSession';
 
@@ -12,6 +12,7 @@ import { useSession } from './providers/useSession';
  * Al cambiar la sesión (useSession) las rutas que dejan de estar permitidas redirigen solas.
  */
 export function RootNavigator() {
+  const colors = useThemeColors();
   const session = useSession();
   const verified = session?.emailVerified === true;
   const pending = session !== null && !verified;

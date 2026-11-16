@@ -7,9 +7,9 @@ export const EXAM_NODE_ANCHOR = 40;
 export const EXAM_NODE_WIDTH = 200;
 
 const examIcon: Record<ExamStatus, Pick<IconBoxProps, 'tone' | 'cornerIcon'>> = {
-  locked: { tone: 'streakSoft', cornerIcon: 'lock' },
-  available: { tone: 'streakSoft' },
-  passed: { tone: 'primarySoft', cornerIcon: 'check' },
+  locked: { tone: 'locked', cornerIcon: 'lock' },
+  available: { tone: 'navy' },
+  passed: { tone: 'navy', cornerIcon: 'check' },
 };
 
 type ExamNodeProps = {
@@ -33,7 +33,7 @@ export function ExamNode({ title, caption, status, accessibilityLabel, onPress }
           <IconBox icon="certificate-outline" size="xl" {...examIcon[status]} />
         </Row>
         <Column align="center">
-          <AppText tone="streak" weight="bold" align="center">
+          <AppText tone="amber" weight="bold" align="center">
             {title}
           </AppText>
           <AppText variant="caption" align="center">

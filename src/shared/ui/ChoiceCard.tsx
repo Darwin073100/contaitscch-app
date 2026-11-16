@@ -3,35 +3,42 @@ import { tv, type VariantProps } from 'tailwind-variants';
 
 import { Icon } from './Icon';
 
-// Opción de una pregunta de opción múltiple. Sin captura en docs/design: sigue los mismos tokens.
+// Opción de una pregunta de opción múltiple (letras A–D). Al comprobar, solo la elegida se marca
+// correcta o incorrecta y las demás se atenúan: nunca se revela cuál era la correcta.
 const choice = tv({
   slots: {
-    container: 'min-h-14 flex-row items-center gap-3 rounded-2xl border-2 px-4 py-3',
-    marker: 'h-8 w-8 items-center justify-center rounded-full',
-    markerText: 'font-display text-sm',
-    label: 'flex-1 font-medium text-base text-white',
+    container:
+      'min-h-[68px] flex-row items-center gap-3.5 rounded-2xl border-2 border-b-4 px-4 py-3.5',
+    marker: 'h-10 w-10 items-center justify-center rounded-xl',
+    markerText: 'font-extrabold text-base',
+    label: 'flex-1 font-semibold text-base text-text',
   },
   variants: {
     state: {
       idle: {
-        container: 'border-transparent bg-card active:opacity-80',
-        marker: 'bg-surface',
-        markerText: 'text-muted',
+        container: 'border-line bg-surface active:border-accent-soft',
+        marker: 'bg-surface-alt',
+        markerText: 'text-dim',
       },
       selected: {
         container: 'border-accent bg-accent/10',
         marker: 'bg-accent',
-        markerText: 'text-bg',
+        markerText: 'text-accent-ink',
       },
       correct: {
-        container: 'border-primary bg-primary/10',
-        marker: 'bg-primary',
-        markerText: 'text-bg',
+        container: 'border-ok bg-ok/10',
+        marker: 'bg-ok',
+        markerText: 'text-ok-ink',
       },
       incorrect: {
-        container: 'border-danger bg-danger/10',
-        marker: 'bg-danger',
-        markerText: 'text-bg',
+        container: 'border-err bg-err/10',
+        marker: 'bg-err',
+        markerText: 'text-err-ink',
+      },
+      faded: {
+        container: 'border-line bg-surface opacity-50',
+        marker: 'bg-surface-alt',
+        markerText: 'text-dim',
       },
     },
   },
@@ -42,7 +49,7 @@ export type ChoiceState = NonNullable<VariantProps<typeof choice>['state']>;
 
 type ChoiceCardProps = {
   label: string;
-  /** Letra o número que se muestra en el marcador: "A", "B"… */
+  /** Letra que se muestra en el marcador: "A", "B"… */
   marker: string;
   state?: ChoiceState;
   onPress?: () => void;
@@ -51,23 +58,27 @@ type ChoiceCardProps = {
 
 export function ChoiceCard({ label, marker, state = 'idle', onPress, disabled }: ChoiceCardProps) {
   const s = choice({ state });
+  const checked = state === 'correct' || state === 'incorrect';
   return (
     <Pressable
       className={s.container()}
       onPress={onPress}
       disabled={disabled}
       accessibilityRole="radio"
-      accessibilityState={{ selected: state !== 'idle', disabled }}
-      accessibilityLabel={label}
+      accessibilityState={{ selected: state === 'selected' || checked, disabled }}
+      accessibilityLabel={`${marker}. ${label}`}
     >
       <View className={s.marker()}>
-        {state === 'correct' || state === 'incorrect' ? (
-          <Icon name={state === 'correct' ? 'check' : 'close'} color="bg" size="sm" />
-        ) : (
-          <Text className={s.markerText()}>{marker}</Text>
-        )}
+        <Text className={s.markerText()}>{marker}</Text>
       </View>
       <Text className={s.label()}>{label}</Text>
+      {checked && (
+        <Icon
+          name={state === 'correct' ? 'check-circle' : 'close-circle'}
+          color={state === 'correct' ? 'ok' : 'err'}
+          size="lg"
+        />
+      )}
     </Pressable>
   );
 }

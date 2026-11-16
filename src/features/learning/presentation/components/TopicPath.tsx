@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View, type LayoutChangeEvent } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 
-import { colors } from '@/shared/theme';
+import { useThemeColors } from '@/shared/theme';
 
 import type { ExamNodeVm, TopicNodeVm } from '../viewmodels/syllabusMapVm';
 import { EXAM_NODE_ANCHOR, EXAM_NODE_WIDTH, ExamNode } from './ExamNode';
@@ -42,6 +42,7 @@ type TopicPathProps = {
 
 /** Mapa del temario: camino curvo con los temas alternando a izquierda y derecha, y el examen al final. */
 export function TopicPath({ nodes, exam, onOpenTopic, onOpenExam }: TopicPathProps) {
+  const colors = useThemeColors();
   const [width, setWidth] = useState(0);
   const onLayout = (e: LayoutChangeEvent) => setWidth(e.nativeEvent.layout.width);
 
@@ -73,7 +74,7 @@ export function TopicPath({ nodes, exam, onOpenTopic, onOpenExam }: TopicPathPro
                   cx={topicPoints[i].x}
                   cy={topicPoints[i].y}
                   r={HALO_RADIUS}
-                  fill={colors.accent}
+                  fill={colors.amber}
                   opacity={0.15}
                 />
               ) : null,
@@ -84,7 +85,7 @@ export function TopicPath({ nodes, exam, onOpenTopic, onOpenExam }: TopicPathPro
                 <Path
                   key={s.d}
                   d={s.d}
-                  stroke={colors.border}
+                  stroke={colors.line}
                   strokeWidth={STROKE}
                   strokeLinecap="round"
                   strokeDasharray="10 18"
@@ -97,7 +98,7 @@ export function TopicPath({ nodes, exam, onOpenTopic, onOpenExam }: TopicPathPro
                 <Path
                   key={s.d}
                   d={s.d}
-                  stroke={colors.primary}
+                  stroke={colors.accent}
                   strokeWidth={STROKE}
                   strokeLinecap="round"
                   fill="none"

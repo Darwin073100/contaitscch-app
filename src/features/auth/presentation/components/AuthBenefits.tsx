@@ -4,8 +4,8 @@ import type { ColorToken } from '@/shared/theme';
 import { AppText, Card, Column, Divider, Icon, Row, type IconName } from '@/shared/ui';
 
 const benefits: { label: string; icon: IconName; color: ColorToken }[] = [
-  { label: 'Certificado', icon: 'certificate-outline', color: 'primary' },
-  { label: 'Ligas y Rangos', icon: 'medal-outline', color: 'silver' },
+  { label: 'Certificado', icon: 'certificate-outline', color: 'accent' },
+  { label: 'Ligas y Rangos', icon: 'medal-outline', color: 'amber-text' },
   { label: '100% Seguro', icon: 'shield-lock-outline', color: 'accent' },
 ];
 

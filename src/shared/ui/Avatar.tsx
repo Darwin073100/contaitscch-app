@@ -7,26 +7,27 @@ import { Icon, type IconName } from './Icon';
 const avatar = tv({
   slots: {
     container: 'items-center justify-center rounded-full',
-    label: 'font-display',
+    label: 'font-extrabold',
   },
   variants: {
     tone: {
-      primary: { container: 'bg-primary', label: 'text-bg' },
-      soft: { container: 'bg-primary-soft', label: 'text-bg' },
-      neutral: { container: 'bg-surface', label: 'text-silver' },
-      // Medallas del podio
-      gold: { container: 'bg-streak', label: 'text-bg' },
-      silver: { container: 'bg-silver', label: 'text-bg' },
-      bronze: { container: 'bg-bronze', label: 'text-white' },
+      // El usuario (topbar, perfil) y el 1.er lugar del podio
+      amber: { container: 'bg-amber', label: 'text-amber-ink' },
+      // "TÚ" en la lista del ranking
+      accent: { container: 'bg-accent', label: 'text-accent-ink' },
+      neutral: { container: 'bg-surface-alt', label: 'text-dim' },
+      // Sobre el podio navy
+      onNavy: { container: 'bg-navy-ink/15', label: 'text-navy-ink' },
     },
     size: {
       xs: { container: 'h-6 w-6', label: 'text-xs' },
-      sm: { container: 'h-9 w-9', label: 'text-sm' },
-      md: { container: 'h-12 w-12', label: 'text-base' },
-      lg: { container: 'h-16 w-16', label: 'text-xl' },
-      xl: { container: 'h-20 w-20', label: 'text-2xl' },
+      sm: { container: 'h-10 w-10', label: 'text-[13px]' },
+      md: { container: 'h-11 w-11', label: 'text-sm' },
+      lg: { container: 'h-16 w-16', label: 'text-[22px]' },
+      xl: { container: 'h-20 w-20', label: 'text-[25px]' },
     },
-    ring: { true: { container: 'border-4 border-card' } },
+    // Aro de "eres tú" en el podio
+    ring: { true: { container: 'border-[3px] border-accent-soft' } },
   },
   defaultVariants: { tone: 'neutral', size: 'md' },
 });
@@ -34,16 +35,14 @@ const avatar = tv({
 type AvatarTone = NonNullable<VariantProps<typeof avatar>['tone']>;
 
 const iconColor: Record<AvatarTone, ColorToken> = {
-  primary: 'bg',
-  soft: 'bg',
-  neutral: 'silver',
-  gold: 'bg',
-  silver: 'bg',
-  bronze: 'white',
+  amber: 'amber-ink',
+  accent: 'accent-ink',
+  neutral: 'dim',
+  onNavy: 'navy-ink',
 };
 
 type AvatarProps = VariantProps<typeof avatar> & {
-  /** Texto corto: iniciales ("CM", "TÚ") o la posición del podio ("1"). Usa getInitials(). */
+  /** Texto corto: iniciales ("CM", "TÚ"). Usa getInitials(). */
   label?: string;
   icon?: IconName;
   accessibilityLabel?: string;

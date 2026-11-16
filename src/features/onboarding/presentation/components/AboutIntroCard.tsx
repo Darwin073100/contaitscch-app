@@ -10,7 +10,7 @@ export function AboutIntroCard({ intro }: AboutIntroCardProps) {
     <Card padding="lg">
       <Column gap="lg">
         <Row gap="md">
-          <IconBox icon="school-outline" tone="infoSoft" />
+          <IconBox icon="school-outline" tone="accent" />
           <AppText variant="heading" accessibilityRole="header">
             {intro.title}
           </AppText>

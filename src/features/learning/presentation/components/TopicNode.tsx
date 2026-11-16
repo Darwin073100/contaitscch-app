@@ -16,9 +16,9 @@ export function topicNodeAnchor(status: TopicStatus, hasHint: boolean): number {
 }
 
 const nodeIcon: Record<TopicStatus, Pick<IconBoxProps, 'icon' | 'tone' | 'size'>> = {
-  completed: { icon: 'check', tone: 'primary', size: 'lg' },
-  active: { icon: 'book-open-variant', tone: 'accent', size: 'xl' },
-  locked: { icon: 'lock-outline', tone: 'neutral', size: 'lg' },
+  completed: { icon: 'check', tone: 'solid', size: 'lg' },
+  active: { icon: 'book-open-variant', tone: 'amberSolid', size: 'xl' },
+  locked: { icon: 'lock', tone: 'locked', size: 'lg' },
 };
 
 type TopicNodeProps = {
@@ -37,7 +37,7 @@ export function TopicNode({ label, status, hint, accessibilityLabel, onPress }: 
       <Column gap="sm">
         {hint && (
           <Row justify="center">
-            <Badge label={hint} tone="accent" appearance="solid" size="md" icon="play" />
+            <Badge label={hint} tone="navy" appearance="solid" size="md" icon="play" />
           </Row>
         )}
         <Row justify="center">

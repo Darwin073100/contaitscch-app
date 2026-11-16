@@ -3,28 +3,33 @@ import { tv, type VariantProps } from 'tailwind-variants';
 
 // El orden importa: tone y weight van después de variant para poder sobrescribirlo.
 const text = tv({
-  base: 'font-sans text-white',
+  base: 'font-sans text-text',
   variants: {
     variant: {
-      display: 'font-extrabold text-4xl',
-      title: 'font-display text-3xl',
-      heading: 'font-display text-xl',
-      subtitle: 'font-semibold text-lg',
+      display: 'font-extrabold text-3xl text-title',
+      title: 'font-extrabold text-2xl text-title',
+      heading: 'font-extrabold text-xl text-title',
+      subtitle: 'font-display text-lg',
       body: 'text-base',
-      caption: 'text-sm text-muted',
-      overline: 'font-display text-xs uppercase tracking-wider',
+      caption: 'text-sm text-dim',
+      overline: 'font-extrabold text-xs uppercase tracking-wider text-dim',
       stat: 'font-extrabold text-2xl',
     },
     tone: {
-      default: 'text-white',
-      muted: 'text-muted',
-      primary: 'text-primary',
+      default: 'text-text',
+      title: 'text-title',
+      muted: 'text-dim',
+      faint: 'text-faint',
       accent: 'text-accent',
-      streak: 'text-streak',
-      danger: 'text-danger',
-      silver: 'text-silver',
+      // amber-text: el ámbar legible sobre fondos claros
+      amber: 'text-amber-text',
+      success: 'text-ok',
+      danger: 'text-err',
       bronze: 'text-bronze',
-      inverse: 'text-bg',
+      // Sobre tarjetas y barras navy
+      onNavy: 'text-navy-ink',
+      onNavyMuted: 'text-navy-dim',
+      onNavyAmber: 'text-amber',
     },
     weight: {
       regular: 'font-sans',

@@ -5,11 +5,11 @@ import type { PasswordStrength } from '../forms/passwordStrength';
 const levels = {
   empty: { value: 0, label: '', tone: 'danger' },
   weak: { value: 1 / 3, label: 'Débil', tone: 'danger' },
-  medium: { value: 2 / 3, label: 'Media', tone: 'streak' },
-  strong: { value: 1, label: 'Fuerte', tone: 'primary' },
+  medium: { value: 2 / 3, label: 'Media', tone: 'amber' },
+  strong: { value: 1, label: 'Fuerte', tone: 'accent' },
 } as const satisfies Record<
   PasswordStrength,
-  { value: number; label: string; tone: 'danger' | 'streak' | 'primary' }
+  { value: number; label: string; tone: 'danger' | 'amber' | 'accent' }
 >;
 
 type PasswordStrengthMeterProps = {

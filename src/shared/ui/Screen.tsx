@@ -6,9 +6,10 @@ import { tv, type VariantProps } from 'tailwind-variants';
 const screen = tv({
   slots: {
     root: 'flex-1 bg-bg',
-    header: 'px-4',
+    // Barra navy de borde a borde; también pinta la zona de la barra de estado
+    header: 'bg-navy px-4',
     body: 'flex-1 px-4',
-    content: 'gap-6 px-4 pb-8 pt-2',
+    content: 'gap-[22px] px-4 pb-8 pt-5',
     footer: 'px-4 pb-3 pt-2',
   },
   variants: {
@@ -22,7 +23,7 @@ const screen = tv({
 
 type ScreenProps = VariantProps<typeof screen> & {
   children: ReactNode;
-  /** Barra fija arriba (AppHeader); no se desplaza con el contenido. */
+  /** Barra fija arriba (AppHeader, navy); no se desplaza con el contenido. */
   header?: ReactNode;
   /** Barra fija abajo: CTA del tema activo, "Tu posición", botones de paso. */
   footer?: ReactNode;
@@ -81,8 +82,12 @@ export function Screen({
   );
 
   return (
-    <View className={s.root()} style={{ paddingTop: insets.top }}>
-      {header && <View className={s.header()}>{header}</View>}
+    <View className={s.root()} style={header ? undefined : { paddingTop: insets.top }}>
+      {header && (
+        <View className={s.header()} style={{ paddingTop: insets.top }}>
+          {header}
+        </View>
+      )}
       {keyboardAvoiding ? (
         // Guía de Expo: "padding" en iOS; en Android el sistema ya ajusta la ventana.
         <KeyboardAvoidingView

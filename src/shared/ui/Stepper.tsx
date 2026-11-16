@@ -3,21 +3,21 @@ import { tv } from 'tailwind-variants';
 
 const step = tv({
   slots: {
-    container: 'h-12 flex-1 flex-row items-center justify-center gap-2 rounded-xl',
-    dot: 'h-6 w-6 items-center justify-center rounded-full',
-    number: 'font-display text-xs',
+    container: 'min-h-[46px] flex-1 flex-row items-center justify-center gap-2 rounded-[10px]',
+    dot: 'h-[26px] w-[26px] items-center justify-center rounded-full',
+    number: 'font-extrabold text-[13px]',
     label: 'font-display text-sm',
   },
   variants: {
     state: {
-      done: { dot: 'bg-primary', number: 'text-bg', label: 'text-white' },
+      done: { dot: 'bg-accent', number: 'text-accent-ink', label: 'text-dim' },
       active: {
-        container: 'bg-info',
-        dot: 'bg-white/20',
-        number: 'text-white',
-        label: 'text-white',
+        container: 'bg-navy',
+        dot: 'bg-amber',
+        number: 'text-amber-ink',
+        label: 'text-navy-ink',
       },
-      upcoming: { dot: 'bg-surface', number: 'text-muted', label: 'text-muted' },
+      upcoming: { dot: 'bg-surface', number: 'text-dim', label: 'text-dim' },
     },
   },
 });
@@ -32,7 +32,7 @@ type StepperProps = {
 export function Stepper({ steps, current }: StepperProps) {
   return (
     <View
-      className="flex-row gap-1 rounded-2xl bg-card p-1"
+      className="flex-row gap-1.5 rounded-[14px] bg-surface-alt p-1.5"
       accessible
       accessibilityLabel={`Paso ${current + 1} de ${steps.length}: ${steps[current] ?? ''}`}
     >

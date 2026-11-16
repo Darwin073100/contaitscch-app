@@ -3,14 +3,22 @@ import { Pressable, View, type PressableProps } from 'react-native';
 import { tv, type VariantProps } from 'tailwind-variants';
 
 const card = tv({
-  base: 'overflow-hidden rounded-3xl',
+  base: 'overflow-hidden rounded-[20px]',
   variants: {
     tone: {
-      default: 'bg-card',
-      raised: 'bg-surface',
-      outline: 'border border-border bg-card',
-      // Fila resaltada ("Tú" en el ranking, tema activo)
-      highlight: 'border-l-4 border-primary bg-surface',
+      default: 'border border-line bg-surface',
+      // Sin borde (tips, avisos dentro de otra sección)
+      flat: 'bg-surface',
+      // Bloqueado o secundario
+      alt: 'bg-surface-alt',
+      // Marca: siguiente tema, nivel, podio, perfil
+      navy: 'bg-navy',
+      // Fila propia ("Tú" en el ranking), tema activo
+      highlight: 'border border-accent bg-accent/10',
+      // Idea clave, error común y actividad del repaso
+      key: 'bg-amber/15',
+      warn: 'bg-err/10',
+      task: 'border-2 border-dashed border-line',
     },
     padding: { none: 'p-0', sm: 'p-3', md: 'p-4', lg: 'p-5' },
     locked: { true: 'opacity-60' },
@@ -18,8 +26,10 @@ const card = tv({
     grow: { true: 'flex-1' },
     pressable: { true: 'active:opacity-80' },
   },
-  defaultVariants: { tone: 'default', padding: 'md' },
+  defaultVariants: { tone: 'default', padding: 'lg' },
 });
+
+export type CardTone = NonNullable<VariantProps<typeof card>['tone']>;
 
 type CardProps = Omit<VariantProps<typeof card>, 'pressable'> &
   Pick<PressableProps, 'onPress' | 'accessibilityLabel' | 'accessibilityHint' | 'testID'> & {

@@ -4,9 +4,9 @@ import { AppText, Badge, Column, Logo } from '@/shared/ui';
 export function RegisterHero() {
   return (
     <Column gap="lg">
-      <Badge label="Registro oficial" tone="primary" size="md" uppercase />
+      <Badge label="Registro oficial" tone="accent" size="md" uppercase />
       <Column align="center" gap="sm">
-        <Logo size="lg" ring verified />
+        <Logo size="lg" badge />
         <AppText variant="title" align="center" accessibilityRole="header">
           ¡Únete a CONTAITSCCH!
         </AppText>

@@ -58,9 +58,9 @@ export const aboutContent = {
     tagline: 'Aprendizaje claro, práctico y gradual',
   },
   highlights: [
-    { icon: 'layers-outline', color: 'primary', label: '6 niveles' },
+    { icon: 'layers-outline', color: 'amber', label: '6 niveles' },
     { icon: 'book-open-page-variant-outline', color: 'accent', label: '24 temas' },
-    { icon: 'check-circle-outline', color: 'streak', label: 'Ejercicio por tema' },
+    { icon: 'check-circle-outline', color: 'amber', label: 'Ejercicio por tema' },
   ] satisfies Highlight[],
   intro: {
     title: '¿Qué es CONTAITSCCH?',
@@ -78,21 +78,21 @@ export const aboutContent = {
   objectives: [
     {
       icon: 'head-lightbulb-outline',
-      tone: 'primarySoft',
+      tone: 'accent',
       title: 'Aprendizaje Práctico',
       description:
         'Facilitar la comprensión de los fundamentos contables mediante ejercicios breves, escenarios aplicados y mecánicas dinámicas.',
     },
     {
       icon: 'lock-open-variant-outline',
-      tone: 'accentSoft',
+      tone: 'amber',
       title: 'Aprueba para avanzar',
       description:
         'El siguiente tema se desbloquea al aprobar el ejercicio. Si no apruebas, vuelves a tomar la lección sin penalizaciones.',
     },
     {
       icon: 'trending-up',
-      tone: 'infoSoft',
+      tone: 'navy',
       title: 'Avance Medible',
       description:
         'Sigue tu progreso por nivel, compara tus temas aprobados en el ranking y termina con el examen integrador.',

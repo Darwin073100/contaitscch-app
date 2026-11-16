@@ -22,33 +22,36 @@ export function ModuleHeaderCard({
   percentLabel,
 }: ModuleHeaderCardProps) {
   return (
-    <Card padding="lg">
+    <Card tone="navy">
       <Column gap="md">
         <Row justify="between">
           <Row gap="sm">
-            <Icon name="school-outline" color="primary" size="sm" />
-            <AppText variant="overline" tone="primary">
+            <Icon name="school-outline" color="amber" size="sm" />
+            <AppText variant="overline" tone="onNavyAmber">
               {overline}
             </AppText>
           </Row>
-          <Badge label={levelName} appearance="solid" />
+          <Badge label={levelName} tone="onNavy" />
         </Row>
         <Column gap="xs">
-          <AppText variant="heading" accessibilityRole="header">
+          <AppText variant="heading" tone="onNavy" accessibilityRole="header">
             {title}
           </AppText>
-          <AppText variant="caption">{description}</AppText>
+          <AppText variant="caption" tone="onNavyMuted">
+            {description}
+          </AppText>
         </Column>
         <ProgressBar
           value={progress}
-          size="lg"
+          tone="amber"
+          onNavy
           accessibilityLabel={`Progreso del módulo: ${progressLabel}`}
         />
         <Row justify="between">
-          <AppText variant="caption" tone="primary" weight="bold">
+          <AppText variant="caption" tone="onNavy" weight="bold">
             {progressLabel}
           </AppText>
-          <AppText variant="caption" tone="accent" weight="bold">
+          <AppText variant="caption" tone="onNavyAmber" weight="bold">
             {percentLabel}
           </AppText>
         </Row>

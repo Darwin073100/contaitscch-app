@@ -10,17 +10,17 @@ type AboutHeroProps = {
 /** Logotipo, versión, nombre y los 3 pilares de la gamificación. */
 export function AboutHero({ hero, highlights }: AboutHeroProps) {
   return (
-    <Card tone="outline" padding="lg">
+    <Card tone="navy" padding="lg">
       <Column align="center" gap="lg">
         <Column align="center" gap="sm">
           <Logo size="lg" />
-          <Badge label={hero.version} tone="primary" icon="check-decagram-outline" />
+          <Badge label={hero.version} tone="onNavy" icon="check-decagram-outline" />
         </Column>
         <Column align="center" gap="xs">
           <AppText variant="display" align="center" accessibilityRole="header">
             {hero.title}
           </AppText>
-          <AppText variant="overline" tone="primary" align="center">
+          <AppText variant="overline" tone="onNavy" align="center">
             {hero.tagline}
           </AppText>
         </Column>

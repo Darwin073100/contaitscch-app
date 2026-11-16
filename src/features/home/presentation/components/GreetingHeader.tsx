@@ -6,9 +6,9 @@ type GreetingHeaderProps = { overline: string; title: string; subtitle: string }
 export function GreetingHeader({ overline, title, subtitle }: GreetingHeaderProps) {
   return (
     <Row gap="lg">
-      <Logo verified />
+      <Logo />
       <Column grow gap="xs">
-        <AppText variant="overline" tone="primary">
+        <AppText variant="overline" tone="accent">
           {overline}
         </AppText>
         <AppText variant="heading" accessibilityRole="header">

@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { tv, type VariantProps } from 'tailwind-variants';
 
 const divider = tv({
-  base: 'bg-border',
+  base: 'bg-line',
   variants: {
     orientation: { horizontal: 'h-px w-full', vertical: 'w-px self-stretch' },
   },

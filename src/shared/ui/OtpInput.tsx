@@ -4,14 +4,14 @@ import { tv } from 'tailwind-variants';
 
 const cell = tv({
   slots: {
-    box: 'h-16 flex-1 items-center justify-center rounded-xl border-2 bg-surface',
-    digit: 'font-display text-2xl text-primary',
+    box: 'aspect-[4/5] flex-1 items-center justify-center rounded-xl border-2 bg-surface-sunk',
+    digit: 'font-extrabold text-2xl text-text',
   },
   variants: {
     state: {
-      idle: { box: 'border-transparent' },
-      active: { box: 'border-primary' },
-      error: { box: 'border-danger', digit: 'text-danger' },
+      idle: { box: 'border-line' },
+      active: { box: 'border-accent' },
+      error: { box: 'border-err', digit: 'text-err' },
     },
   },
   defaultVariants: { state: 'idle' },

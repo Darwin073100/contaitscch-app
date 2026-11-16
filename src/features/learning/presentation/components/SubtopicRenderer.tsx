@@ -26,7 +26,7 @@ const renderers: { [T in BlockType]: BlockRenderer<T> } = {
   example: (b) => (
     <Callout
       variant="boxed"
-      tone="primary"
+      tone="amber"
       icon="lightbulb-on-outline"
       title={b.title ?? 'Ejemplo'}
       text={b.text}

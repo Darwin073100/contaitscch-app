@@ -46,7 +46,7 @@ export function AboutScreen() {
 
       <Card padding="lg">
         <Row gap="md">
-          <Icon name="heart-outline" color="primary" />
+          <Icon name="heart-outline" color="err" />
           <Column grow>
             <AppText variant="caption" tone="default" weight="semibold">
               {content.closing}
