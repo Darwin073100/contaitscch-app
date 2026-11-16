@@ -13,7 +13,7 @@ select ok(has_function_privilege('anon', 'public.register(text, text, text, text
   'anon puede llamar register');
 select ok(not has_table_privilege('anon', 'public.profile', 'select'), 'anon no puede leer profile');
 select ok(not has_table_privilege('anon', 'public.profile', 'insert'), 'anon no puede insertar en profile');
-select ok(not has_table_privilege('anon', 'public.xp_event', 'select'), 'anon no puede leer xp_event');
+select ok(not has_table_privilege('anon', 'public.quiz_progress', 'select'), 'anon no puede leer quiz_progress');
 select ok(not has_function_privilege('anon', 'public.set_updated_at()', 'execute'), 'anon no puede llamar set_updated_at');
 select ok((select relrowsecurity from pg_class where oid = 'public.profile'::regclass), 'RLS activo en profile');
 

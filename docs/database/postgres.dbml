@@ -1,13 +1,14 @@
-// CONTAITSCCH - PostgreSQL / Supabase (solo participantes y ranking) - SIN Supabase Auth
-// Esta BD NO guarda el contenido del curso (temas, exámenes, preguntas): eso vive solo en SQLite.
-// Aquí solo se guarda: el participante, su verificación de correo y su actividad (XP y días activos).
-// El SQL real está en supabase/migrations/ (tablas, funciones RPC y permisos).
+// CONTAITSCCH - PostgreSQL / Supabase (participantes, avance y ranking) - SIN Supabase Auth
+// Esta BD NO guarda el contenido del curso (temas, ejercicios, preguntas): eso vive solo en SQLite.
+// Aquí solo se guarda: el participante, su verificación de correo y su avance por ejercicio.
+// El SQL real está en supabase/migrations/ (tablas, vista de ranking, funciones RPC y permisos).
 //
-// Convenciones: fechas en timestamptz (UTC), racha en date (día local), nombres en singular.
+// Convenciones: fechas en timestamptz (UTC), nombres en singular.
 // Se llama "profile" porque "user" es palabra reservada en PostgreSQL.
 // Las tablas se acceden SOLO por funciones RPC (security definer): RLS activado, sin políticas,
 // y sin permisos de tabla para anon/authenticated.
-// Datos solo-se-agregan: xp_event y daily_activity nunca se sobrescriben (varios dispositivos).
+// El avance se fusiona entre teléfonos con sync_progress: aprobar nunca se deshace, best_score y
+// attempts toman el mayor y passed_at el más antiguo (misma regla que mergeProgress en la app).
 //
 // Contraseña: la app calcula PBKDF2-SHA256(contraseña, sal, iteraciones) y manda ese hash en hex.
 // El servidor guarda digest(hash_de_la_app, 'sha256') (doble hash): quien lea la tabla no puede
@@ -30,11 +31,11 @@ Table profile {
   state               text [not null, note: 'Estado (requerido).']
   city                text [null, note: 'Ciudad (opcional).']
   email_verified      boolean [not null, default: false, note: 'true cuando verify_email acepta el código. Sin verificar no se puede iniciar sesión ni aparecer en el ranking.']
-  timezone            text [not null, default: 'America/Mexico_City', note: 'Zona horaria del usuario, para calcular "hoy" en la racha del leaderboard.']
+  progress_generation integer [not null, default: 0, note: 'Sube en cada "Reiniciar mi avance". Un teléfono con una generación vieja no puede subir el avance borrado (sync_progress responde replace).']
   created_at          timestamptz [not null, default: `now()`, note: 'Fecha de registro.']
   updated_at          timestamptz [not null, default: `now()`, note: 'Última modificación (trigger automático).']
 
-  Note: 'Un participante. XP, racha y nivel NO se guardan aquí: se calculan en la vista leaderboard.'
+  Note: 'Un participante. Temas aprobados, niveles completados y posición NO se guardan aquí: los calcula la vista private.ranking.'
 }
 
 Table email_verification {
@@ -47,37 +48,28 @@ Table email_verification {
   Note: 'Código de verificación pendiente. Se borra al verificar el correo.'
 }
 
-Table xp_event {
-  id          bigint [pk, increment, note: 'Identificador del movimiento de XP (lo genera el servidor; el id local de SQLite no viaja).']
-  user_id     uuid [not null, note: 'Participante que ganó los puntos.']
-  topic_id    integer [null, note: 'Si el XP vino de un tema (+5): id del tema en el catálogo LOCAL de SQLite (sin llave foránea).']
-  exam_id     integer [null, note: 'Si el XP vino de un examen (+100): id del examen en SQLite (sin llave foránea).']
-  points      integer [not null, note: 'CHECK: 5 si es tema, 100 si es examen.']
-  earned_at   timestamptz [not null, note: 'Cuándo los ganó en su dispositivo.']
+Table quiz_progress {
+  user_id     uuid [not null, note: 'Participante.']
+  quiz_id     smallint [not null, note: 'Ejercicio de un tema (id del tema: nivel×100 + orden, 101..604) o 900 (examen integrador). Ids del catálogo LOCAL de SQLite, sin llave foránea; CHECK limita al catálogo.']
+  passed      boolean [not null, default: false, note: 'Aprobó al menos una vez. Nunca vuelve a false (salvo reset_progress).']
+  best_score  smallint [not null, default: 0, note: 'Mejor número de aciertos.']
+  attempts    integer [not null, default: 0, note: 'El mayor número de intentos visto en un teléfono (no la suma).']
+  passed_at   timestamptz [null, note: 'Primera vez que aprobó. CHECK: requerido si passed.']
+  updated_at  timestamptz [not null, note: 'Último cambio según el teléfono, recortado a now().']
   created_at  timestamptz [not null, default: `now()`, note: 'Cuándo llegó al servidor.']
-  updated_at  timestamptz [not null, default: `now()`, note: 'Última modificación (trigger).']
 
   indexes {
-    (user_id, topic_id) [unique, note: 'Un tema da XP una sola vez por usuario, desde cualquier dispositivo.']
-    (user_id, exam_id) [unique, note: 'Un examen da XP una sola vez por usuario.']
+    (user_id, quiz_id) [pk, note: 'Una fila por participante y ejercicio.']
   }
 
-  Note: 'Libro de movimientos. CHECK: exactamente uno de topic_id / exam_id. Da el XP total, los temas completados y los exámenes aprobados (nivel).'
+  Note: 'Avance por ejercicio (equivale al lesson_progress del esquema del cliente, más el examen final). Solo se escribe con sync_progress.'
 }
 
-Table daily_activity {
-  user_id        uuid [not null, note: 'Participante activo ese día.']
-  activity_date  date [not null, note: 'Día con actividad (día local del usuario).']
-  created_at     timestamptz [not null, default: `now()`, note: 'Cuándo llegó al servidor.']
-  updated_at     timestamptz [not null, default: `now()`, note: 'Última modificación (trigger).']
-
-  indexes {
-    (user_id, activity_date) [pk, note: 'Un registro por usuario por día.']
-  }
-
-  Note: 'Base de la racha: días consecutivos que terminan hoy o ayer.'
-}
+// Vista private.ranking (no expuesta por la API; la lee get_ranking):
+//   position          dense_rank() por levels_completed desc, topics_passed desc
+//   levels_completed  niveles con sus 4 temas aprobados
+//   topics_passed     temas aprobados (el examen 900 no cuenta)
+//   solo perfiles con email_verified; nunca expone correos
 
 Ref: email_verification.profile_id - profile.id [delete: cascade]
-Ref: xp_event.user_id > profile.id [delete: cascade]
-Ref: daily_activity.user_id > profile.id [delete: cascade]
+Ref: quiz_progress.user_id > profile.id [delete: cascade]
