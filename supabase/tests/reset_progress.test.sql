@@ -3,6 +3,9 @@ begin;
 create extension if not exists pgtap with schema extensions;
 select plan(9);
 
+-- Base aislada: se vacía dentro de la transacción y el rollback final restaura los datos locales
+truncate public.profile cascade;
+
 \set hash '''aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'''
 \set salt '''0123456789abcdef0123456789abcdef'''
 

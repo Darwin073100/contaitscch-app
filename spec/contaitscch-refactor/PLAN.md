@@ -772,18 +772,20 @@ F5 puede ir en paralelo a F3/F4. F7 puede empezar al terminar F1.
 
 ## 12. Criterios de aceptación
 
-- [ ] No queda referencia a XP, racha, vidas, `xp_event`, `daily_activity` ni preguntas complementarias.
+Marcados = verificados con pruebas automáticas (F10, 16 nov 2026). Los demás requieren la prueba manual en dos teléfonos.
+
+- [x] No queda referencia a XP, racha, vidas, `xp_event`, `daily_activity` ni preguntas complementarias.
 - [ ] 6 niveles y 24 temas sembrados; las 24 infografías se ven y se amplían.
-- [ ] Aprobar N1-L4 abre N2-L1 y marca el Nivel 1 como aprobado; reprobar deja el tema "Vuelve a tomarla".
-- [ ] El ejercicio nunca muestra cuál era la opción correcta.
-- [ ] El examen final solo aparece con 24/24 y se aprueba con 8/10.
+- [x] Aprobar N1-L4 abre N2-L1 y marca el Nivel 1 como aprobado; reprobar deja el tema "Vuelve a tomarla".
+- [x] El ejercicio nunca muestra cuál era la opción correcta.
+- [x] El examen final solo aparece con 24/24 y se aprueba con 8/10.
 - [ ] Sin red: todo el estudio funciona, el indicador muestra "Sin conexión" y luego "N cambios por sincronizar".
 - [ ] Con red: al terminar un ejercicio el indicador pasa a "Sincronizado" sin bloquear la pantalla.
 - [ ] Teléfono B inicia sesión y continúa exactamente donde quedó el avance sincronizado del teléfono A.
 - [ ] Avanzar en A y en B sin red y luego sincronizar ambos: ningún tema aprobado se pierde.
 - [ ] "Reiniciar mi avance" sin red muestra aviso; con red borra local y remoto, y B no resucita el avance viejo.
 - [ ] Claro y oscuro siguen al sistema con contraste legible.
-- [ ] `npm run typecheck && npm run lint && npm test`, `npm run content:validate`, `npx supabase test db` y
+- [x] `npm run typecheck && npm run lint && npm test`, `npm run content:validate`, `npx supabase test db` y
       `npx expo export --platform android` pasan.
 
 ---

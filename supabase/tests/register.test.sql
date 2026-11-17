@@ -3,6 +3,9 @@ begin;
 create extension if not exists pgtap with schema extensions;
 select plan(20);
 
+-- Base aislada: se vacía dentro de la transacción y el rollback final restaura los datos locales
+truncate public.profile cascade;
+
 -- Hash PBKDF2 y sal de ejemplo (hex), como los manda la app
 \set hash '''aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'''
 \set hash2 '''bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'''
