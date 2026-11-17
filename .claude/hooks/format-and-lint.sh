@@ -13,7 +13,7 @@ cd "$CLAUDE_PROJECT_DIR" || exit 0
 case "$file" in
   *.ts|*.tsx|*.js|*.jsx)
     npx --no-install prettier --write "$file" >/dev/null 2>&1
-    if ! out="$(npx --no-install eslint --max-warnings=0 "$file" 2>&1)"; then
+    if ! out="$(npx --no-install eslint --max-warnings=0 --no-warn-ignored "$file" 2>&1)"; then
       echo "ESLint encontró problemas en $file:" >&2
       echo "$out" >&2
       exit 2

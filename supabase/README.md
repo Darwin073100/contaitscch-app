@@ -46,7 +46,7 @@ npx supabase --version
    | Project URL (API) | http://127.0.0.1:54321                                    | La que usa la app (`supabase.rpc`, `functions.invoke`) |
    | Studio            | http://127.0.0.1:54323                                    | Ver tablas, datos y correr SQL desde el navegador      |
    | Base de datos     | `postgresql://postgres:postgres@127.0.0.1:54322/postgres` | Conectarte con un cliente SQL (DBeaver, pgAdmin…)      |
-   | Edge Functions    | http://127.0.0.1:54321/functions/v1                       | `send-verification` (cuando exista)                    |
+   | Edge Functions    | http://127.0.0.1:54321/functions/v1                       | `send-verification` (correo de verificación)           |
 
    También muestra las llaves: **Publishable key** (`sb_publishable_…`) y **Secret key** (`sb_secret_…`). Las de local son iguales en todas las computadoras y no sirven para la nube, pero aun así no las subas al repositorio.
 
@@ -136,41 +136,58 @@ En local, la API acepta peticiones aunque la llave falte o sea incorrecta. En la
 
 ---
 
-### Probar el registro sin la Edge Function de correo
+### Ver el correo de verificación en local (Mailpit)
 
-Mientras no exista `send-verification`, el correo con el código no sale. En la app verás "No pudimos enviar el código", pero la cuenta sí se crea. Para obtener el código a mano:
+En local, `send-verification` no usa Gmail: entrega el correo a **Mailpit**, un buzón de prueba que viene con Supabase local. Ningún correo sale a internet.
 
-1. Abre Studio (http://127.0.0.1:54323) → **SQL Editor**.
-2. Ejecuta, con el correo que registraste:
+1. Regístrate en la app con cualquier correo (no tiene que existir).
+2. Abre Mailpit en el navegador: http://127.0.0.1:54324. Ahí aparece "Tu código de verificación de CONTAITSCCH".
+3. Escribe el código en la app y toca **Validar y Entrar al Curso**.
 
-   ```sql
-   select public.create_verification_code(id, api_token)
-   from public.profile
-   where email = 'tu@correo.com';
-   ```
+"Reenviar" solo funciona cada 45 segundos (`cooldown`). Para volver a probar el registro desde cero, usa **Perfil → Cerrar sesión** en la app.
 
-3. La respuesta trae `"code": "123456"`: escríbelo en la app y toca **Validar y Entrar al Curso**.
+Si Mailpit no está disponible, todavía puedes sacar el código a mano en Studio (http://127.0.0.1:54323) → **SQL Editor**. Esto solo funciona en local; en la nube, la función solo la puede ejecutar la Edge Function:
 
-Si ejecutas el SQL dos veces seguidas, la segunda responde `cooldown`: espera 45 segundos. Este truco solo funciona en local: en la nube, la función solo la puede ejecutar la Edge Function.
-
-Para volver a probar el registro desde cero, usa **Perfil → Cerrar sesión** en la app.
+```sql
+select public.create_verification_code(id, api_token)
+from public.profile
+where email = 'tu@correo.com';
+```
 
 ---
 
-## 6. Edge Functions y secretos (cuando exista `send-verification`)
+## 6. Edge Function `send-verification` y secretos
 
-- El código va en `supabase/functions/<nombre>/index.ts` (Deno).
-- Para probarlas en local: `npx supabase functions serve`.
-- Los secretos de Gmail para local van en `supabase/functions/.env`, que está ignorado por git:
+- Código en `supabase/functions/send-verification/` (Deno, sin dependencias externas):
+  - `index.ts`: servidor.
+  - `handler.ts`: lógica.
+  - `mailer.ts`: Gmail o Mailpit.
+  - `email.ts`: contenido del correo.
+- Pruebas con Jest: `npx jest supabase/functions`.
+- **Local:** `npx supabase start` ya la sirve en http://127.0.0.1:54321/functions/v1/send-verification. Detecta que corre en local y manda el correo a Mailpit sin configurar nada.
+- **Al editar la función:** en Windows la recarga en caliente no siempre detecta los cambios. Reinicia con `npx supabase stop` y `npx supabase start`; tus datos se conservan. No uses `docker restart`: pierde la configuración que inyecta la CLI.
+- **Llave de la app:** `config.toml` tiene `verify_jwt = false` para esta función, porque la app llama con la llave publishable, que no es un JWT. La función valida `id + api_token` con la RPC `create_verification_code`.
+- **Respuesta:** siempre HTTP 200 con `status`, que puede ser:
+  - `ok`
+  - `cooldown`
+  - `already_verified`
+  - `invalid_token`
+  - `send_failed`
 
-  ```bash
-  GMAIL_CLIENT_ID=...
-  GMAIL_CLIENT_SECRET=...
-  GMAIL_REFRESH_TOKEN=...
-  GMAIL_SENDER=...
-  ```
+  Nunca devuelve el código a la app.
 
-- En la nube se configuran con `npx supabase secrets set …` (ver `docs/ARCHITECTURE.md`, sección "Envío con Gmail"). **Nunca** escribas secretos en el código ni en archivos que se suban a git.
+### Subir a la nube (lo decide el usuario)
+
+1. Configura Google una sola vez (ver `docs/ARCHITECTURE.md`, sección "Envío con Gmail").
+2. Guarda los secretos. **Nunca** los escribas en el código ni en archivos que se suban a git:
+
+   ```bash
+   npx supabase secrets set GMAIL_CLIENT_ID=... GMAIL_CLIENT_SECRET=... GMAIL_REFRESH_TOKEN=... GMAIL_SENDER=...
+   ```
+
+3. Despliega: `npx supabase functions deploy send-verification`. Toma `verify_jwt = false` de `config.toml`.
+
+Si faltan los secretos de Gmail en la nube, la función responde `send_failed` y la app muestra "Necesitas conexión para verificar tu correo".
 
 ---
 
@@ -178,14 +195,15 @@ Para volver a probar el registro desde cero, usa **Perfil → Cerrar sesión** e
 
 Configurado en `supabase/config.toml`:
 
-| Servicio                                 | Estado    | Motivo                                                                                                        |
-| ---------------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------- |
-| Postgres (`db`)                          | Encendido | Tablas `profile`, `email_verification`, `quiz_progress`, vista `private.ranking` y funciones RPC              |
-| API (`api`, PostgREST + Kong)            | Encendido | `supabase.rpc()` desde la app                                                                                 |
-| Edge Functions (`edge_runtime`)          | Encendido | `send-verification` (correo con la API de Gmail)                                                              |
-| Studio                                   | Encendido | Ver los datos en el navegador                                                                                 |
-| Auth                                     | Encendido | **Solo** para que la CLI genere las llaves de API. La app no usa Supabase Auth: su sesión es `id + api_token` |
-| Storage, Realtime, Analytics, SMTP local | Apagados  | El proyecto no los usa; así arranca más rápido y gasta menos memoria                                          |
+| Servicio                        | Estado    | Motivo                                                                                                        |
+| ------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------- |
+| Postgres (`db`)                 | Encendido | Tablas `profile`, `email_verification`, `quiz_progress`, vista `private.ranking` y funciones RPC              |
+| API (`api`, PostgREST + Kong)   | Encendido | `supabase.rpc()` desde la app                                                                                 |
+| Edge Functions (`edge_runtime`) | Encendido | `send-verification` (Gmail en la nube, Mailpit en local)                                                      |
+| Studio                          | Encendido | Ver los datos en el navegador                                                                                 |
+| Auth                            | Encendido | **Solo** para que la CLI genere las llaves de API. La app no usa Supabase Auth: su sesión es `id + api_token` |
+| Mailpit (`local_smtp`)          | Encendido | Buzón de prueba para el correo de verificación: http://127.0.0.1:54324                                        |
+| Storage, Realtime, Analytics    | Apagados  | El proyecto no los usa; así arranca más rápido y gasta menos memoria                                          |
 
 ---
 

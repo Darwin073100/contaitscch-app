@@ -15,7 +15,7 @@ Proyecto escolar: priorizar soluciones gratuitas y simples.
 - Formularios: React Hook Form + Zod. Conectividad: `@react-native-community/netinfo`
 - Hash de contraseña en la app: PBKDF2-SHA256 con `@noble/hashes` + sal de `expo-crypto`
 - Contenido del curso: JSON en `src/core/database/seed/content/*.json`, validado con Zod (`courseSchema.ts`)
-- Correo de verificación: Edge Function `send-verification` + API de Gmail (HTTPS) — pendiente de implementar
+- Correo de verificación: Edge Function `send-verification` (Gmail en la nube; Mailpit en local, http://127.0.0.1:54324). Tras editarla: `npx supabase stop && npx supabase start`
 - Diseño de referencia: prototipo del cliente `spec/contaitscch-refactor/index.html` (las capturas de `docs/design/` son de la v1)
 
 ## Comandos

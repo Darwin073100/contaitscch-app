@@ -271,7 +271,7 @@ Nota de rendimiento: 60 000 iteraciones en JavaScript puro tardan alrededor de u
 
 Postgres genera el código, una Edge Function lo envía con la **API de Gmail** y Postgres lo valida. La app nunca recibe el código: solo lo conoce quien abre el correo.
 
-> **Versión real:** el SQL de esta sección es el diseño original. La implementación vigente está en `supabase/migrations/` y sus pruebas en `supabase/tests/`. Diferencias: todas las RPC responden con un `status` en vez de lanzar excepciones (`create_verification_code` devuelve `cooldown` con `retry_in_seconds`, `invalid_token` o `already_verified`), validan `id + api_token` con `private.is_owner`, y `verify_email` responde `ok` si el correo ya estaba verificado.
+> **Versión real:** el SQL y el código de esta sección son el diseño original; la Edge Function vigente está en `supabase/functions/send-verification/` (sin dependencias, Gmail o Mailpit en local). La implementación vigente está en `supabase/migrations/` y sus pruebas en `supabase/tests/`. Diferencias: todas las RPC responden con un `status` en vez de lanzar excepciones (`create_verification_code` devuelve `cooldown` con `retry_in_seconds`, `invalid_token` o `already_verified`), validan `id + api_token` con `private.is_owner`, y `verify_email` responde `ok` si el correo ya estaba verificado.
 
 ```mermaid
 sequenceDiagram
@@ -606,14 +606,14 @@ Tras verificar el correo (o iniciar sesión), el guard cambia a las pestañas si
 
 ## Pendientes y riesgos
 
-| Tema                                  | Situación                                                                                                                  |
-| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| Edge Function `send-verification`     | Diseñada arriba, sin implementar. En local el código se obtiene con SQL (ver `supabase/README.md`)                         |
-| Ícono de la app                       | Falta exportar `logo-icon.webp` a PNG 1024×1024 para `app.json`                                                            |
-| Autoridad del cliente sobre el avance | El avance lo sube el teléfono; Postgres limita el catálogo de `quiz_id` y los puntajes. Aceptable para un proyecto escolar |
-| `attempts` entre teléfonos            | Se toma el mayor, no la suma (solo se muestra como "Intento N")                                                            |
-| Contenido fiscal (IVA, ISR)           | Introductorio; nota en Perfil. Conviene la revisión de un contador antes de uso oficial                                    |
-| Capturas de `docs/design/`            | Son del diseño v1; la referencia vigente es el prototipo del cliente                                                       |
+| Tema                                  | Situación                                                                                                                         |
+| ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Edge Function `send-verification`     | Implementada (`supabase/functions/send-verification`); falta configurar Gmail y desplegarla en la nube (ver `supabase/README.md`) |
+| Ícono de la app                       | Falta exportar `logo-icon.webp` a PNG 1024×1024 para `app.json`                                                                   |
+| Autoridad del cliente sobre el avance | El avance lo sube el teléfono; Postgres limita el catálogo de `quiz_id` y los puntajes. Aceptable para un proyecto escolar        |
+| `attempts` entre teléfonos            | Se toma el mayor, no la suma (solo se muestra como "Intento N")                                                                   |
+| Contenido fiscal (IVA, ISR)           | Introductorio; nota en Perfil. Conviene la revisión de un contador antes de uso oficial                                           |
+| Capturas de `docs/design/`            | Son del diseño v1; la referencia vigente es el prototipo del cliente                                                              |
 
 ## Pruebas
 
