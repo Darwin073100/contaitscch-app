@@ -614,14 +614,14 @@ Tras verificar el correo (o iniciar sesión), el guard cambia a las pestañas si
 
 ## Pendientes y riesgos
 
-| Tema                                  | Situación                                                                                                                         |
-| ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| Edge Function `send-verification`     | Implementada (`supabase/functions/send-verification`); falta configurar Gmail y desplegarla en la nube (ver `supabase/README.md`) |
-| Ícono de la app                       | Falta exportar `logo-icon.webp` a PNG 1024×1024 para `app.json`                                                                   |
-| Autoridad del cliente sobre el avance | El avance lo sube el teléfono; Postgres limita el catálogo de `quiz_id` y los puntajes. Aceptable para un proyecto escolar        |
-| `attempts` entre teléfonos            | Se toma el mayor, no la suma (solo se muestra como "Intento N")                                                                   |
-| Contenido fiscal (IVA, ISR)           | Introductorio; nota en Perfil. Conviene la revisión de un contador antes de uso oficial                                           |
-| Capturas de `docs/design/`            | Son del diseño v1; la referencia vigente es el prototipo del cliente                                                              |
+| Tema                                  | Situación                                                                                                                              |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Edge Function `send-verification`     | Implementada (`supabase/functions/send-verification`); falta configurar Gmail y desplegarla en la nube (ver `supabase/README.md`)      |
+| Salida a producción (beta)            | Supabase en la nube con las 10 migraciones; APK con EAS Build y EAS Update. Plan y estado: `spec/08_produccion_supabase_y_apk_spec.md` |
+| Autoridad del cliente sobre el avance | El avance lo sube el teléfono; Postgres limita el catálogo de `quiz_id` y los puntajes. Aceptable para un proyecto escolar             |
+| `attempts` entre teléfonos            | Se toma el mayor, no la suma (solo se muestra como "Intento N")                                                                        |
+| Contenido fiscal (IVA, ISR)           | Introductorio; nota en Perfil. Conviene la revisión de un contador antes de uso oficial                                                |
+| Capturas de `docs/design/`            | Son del diseño v1; la referencia vigente es el prototipo del cliente                                                                   |
 
 ## Pruebas
 

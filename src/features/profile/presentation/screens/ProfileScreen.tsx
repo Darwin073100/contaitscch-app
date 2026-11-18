@@ -75,6 +75,9 @@ export function ProfileScreen({ header }: ProfileScreenProps) {
             conceptual) son introductorios. Antes de usar la app de forma oficial, conviene que un
             contador los revise contra las disposiciones vigentes del SAT.
           </AppText>
+          <AppText variant="caption" tone="faint">
+            {profile.versionLine}
+          </AppText>
         </>
       )}
     </Screen>

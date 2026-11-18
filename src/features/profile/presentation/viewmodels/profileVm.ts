@@ -3,6 +3,7 @@ import type { LevelsOverview } from '@/features/levels';
 import type { FinalExamStatus, SyncStatus } from '@/features/quizzes';
 import { getInitials } from '@/shared/utils';
 
+import type { AppBuild } from './appBuild';
 import { toSyncStatusVm, type SyncStatusVm } from './syncStatusVm';
 
 // Textos ya armados para la pestaña Perfil: la pantalla solo pinta.
@@ -13,6 +14,7 @@ export type ProfileVm = {
   pendingCount: number;
   levels: { id: number; label: string; progress: number; count: string }[];
   examLine: string;
+  versionLine: string;
 };
 
 export type ProfileData = {
@@ -20,7 +22,15 @@ export type ProfileData = {
   levels: LevelsOverview;
   exam: FinalExamStatus;
   sync: SyncStatus;
+  app: AppBuild;
 };
+
+/** "Versión 1.0.0 · instalación 1a2b3c4d" (lo que trajo el APK) o "· actualización …" (EAS Update). */
+export function versionLine({ version, updateId, embedded }: AppBuild): string {
+  const base = `Versión ${version ?? '—'}`;
+  if (!updateId) return `${base} (desarrollo)`;
+  return `${base} · ${embedded ? 'instalación' : 'actualización'} ${updateId.slice(0, 8)}`;
+}
 
 function examLine(exam: FinalExamStatus, totalTopics: number): string {
   if (exam.bestScore === null) {
@@ -32,7 +42,10 @@ function examLine(exam: FinalExamStatus, totalTopics: number): string {
   return `Examen integrador: mejor resultado ${exam.bestScore}/${exam.total}${passed}.`;
 }
 
-export function toProfileVm({ user, levels, exam, sync }: ProfileData, nowIso: string): ProfileVm {
+export function toProfileVm(
+  { user, levels, exam, sync, app }: ProfileData,
+  nowIso: string,
+): ProfileVm {
   const name = user ? `${user.firstName} ${user.lastName}`.trim() : '';
   const { completedTopics, totalTopics } = levels.career;
   return {
@@ -52,5 +65,6 @@ export function toProfileVm({ user, levels, exam, sync }: ProfileData, nowIso: s
       count: `${l.completedTopics}/${l.totalTopics}`,
     })),
     examLine: examLine(exam, totalTopics),
+    versionLine: versionLine(app),
   };
 }

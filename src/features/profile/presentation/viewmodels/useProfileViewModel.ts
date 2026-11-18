@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useContainer } from '@/composition/providers/AppProviders';
 import type { ResetProgressError } from '@/features/quizzes';
 
+import { readAppBuild } from './appBuild';
 import { toProfileVm, type ProfileVm } from './profileVm';
 
 export type ProfileState =
@@ -40,7 +41,7 @@ export function useProfileViewModel() {
         ? {
             status: 'ready',
             profile: toProfileVm(
-              { user, levels: overview.value, exam: exam.value, sync },
+              { user, levels: overview.value, exam: exam.value, sync, app: readAppBuild() },
               clock.nowIso(),
             ),
           }

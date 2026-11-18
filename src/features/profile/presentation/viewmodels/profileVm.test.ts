@@ -43,6 +43,7 @@ const data = (overrides: Partial<ProfileData> = {}): ProfileData => ({
   levels,
   exam: exam(),
   sync: { status: 'pending', pendingCount: 2, lastSyncedAt: null },
+  app: { version: '1.0.0', updateId: null, embedded: true },
   ...overrides,
 });
 
@@ -76,5 +77,20 @@ describe('toProfileVm', () => {
       toProfileVm(data({ exam: exam({ status: 'passed', bestScore: 9, attempts: 2 }) }), NOW)
         .examLine,
     ).toBe('Examen integrador: mejor resultado 9/10 (aprobado).');
+  });
+
+  it('línea de versión: desarrollo, lo que trajo el APK o una actualización de EAS Update', () => {
+    const line = (app: ProfileData['app']) => toProfileVm(data({ app }), NOW).versionLine;
+    const id = '1a2b3c4d-0000-4000-8000-000000000000';
+
+    expect(line({ version: '1.0.0', updateId: null, embedded: true })).toBe(
+      'Versión 1.0.0 (desarrollo)',
+    );
+    expect(line({ version: '1.0.0', updateId: id, embedded: true })).toBe(
+      'Versión 1.0.0 · instalación 1a2b3c4d',
+    );
+    expect(line({ version: '1.0.0', updateId: id, embedded: false })).toBe(
+      'Versión 1.0.0 · actualización 1a2b3c4d',
+    );
   });
 });

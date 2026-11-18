@@ -17,6 +17,7 @@ Proyecto escolar: priorizar soluciones gratuitas y simples.
 - Contenido del curso: JSON en `src/core/database/seed/content/*.json`, validado con Zod (`courseSchema.ts`)
 - Verificación de correo **opcional y apagada** (`private.settings.email_verification_required`; register y login la avisan a la app; guard = `canEnterApp`). Correo: Edge Function `send-verification` (Gmail en la nube; Mailpit en local, http://127.0.0.1:54324). Tras editarla: `npx supabase stop && npx supabase start`
 - Diseño de referencia: prototipo del cliente `spec/contaitscch-refactor/index.html` (las capturas de `docs/design/` son de la v1)
+- Builds: EAS (`eas.json`), proyecto `@contaitscchs-team/contaitscch-app`, paquete `mx.edu.itscch.contaitscch`. Perfil `preview` = APK de prueba con canal `preview` de EAS Update (`runtimeVersion` = `version` de `app.json`: un cambio nativo exige subir `version` y un APK nuevo). Las variables `EXPO_PUBLIC_*` del build viven en EAS (`eas env:list --environment preview`), no en `.env.local`. Plan: `spec/08_produccion_supabase_y_apk_spec.md`
 
 ## Comandos
 
@@ -31,6 +32,8 @@ Proyecto escolar: priorizar soluciones gratuitas y simples.
 - `npx expo export --platform android` — compila el bundle sin dev server (verifica Babel/Metro/NativeWind)
 - `npx supabase start` / `npx supabase db reset` / `npx supabase stop` — Supabase local (Docker). La CLI es devDependency fijada en la 2.x estable (no instalarla global). Guía: `supabase/README.md`
 - `npx supabase test db` — pruebas pgTAP de RPC y permisos (`supabase/tests/*.test.sql`)
+- `npm run build:apk` — APK de prueba en EAS Build (lo lanza el usuario: usa su cuota y su cuenta)
+- `npm run update:preview -- --message "…"` — publica JS y contenido al canal `preview` de EAS Update (lo lanza el usuario)
 
 Antes de decir que algo está terminado: `npm run typecheck && npm run lint && npm test`.
 
@@ -42,6 +45,8 @@ Notas del entorno:
 - Variables públicas en `.env.local` (no la leas): `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
 - Rutas tipadas: `.expo/types/router.d.ts` lo regenera `npm run start`. Si el typecheck marca una ruta nueva como desconocida, hay que arrancar el servidor una vez.
 - drizzle-kit pregunta en modo interactivo cuando detecta renombres de tablas o columnas: en ese caso generar con `--custom` y revisar a mano el SQL y el snapshot.
+- pnpm 12 no instala versiones publicadas hace menos de un día (falla `expo install`). Esperar en lugar de agregar excepciones a `minimumReleaseAgeExclude` de `pnpm-workspace.yaml`.
+- Supabase en la nube: la CLI queda desvinculada (`npx supabase unlink`). Para subir migraciones: `link`, `db push --dry-run`, `db push`, `unlink`. Nunca `db reset --linked` ni `config push` (ver spec 08).
 
 ## Arquitectura (features + Clean Architecture)
 
@@ -95,7 +100,7 @@ Patrones en uso: Repository, Use Case (`execute()`), DI, Unit of Work, Policy pu
 - Nunca leer ni escribir `.env*`. Secretos de Gmail/Supabase solo con `npx supabase secrets set`.
 - La contraseña en texto plano nunca se guarda ni se loguea. Postgres guarda `digest(hash_app,'sha256')`.
 - Funciones RPC: `security definer`, `set search_path = ''`, validan `id + api_token` con `private.is_owner`; RLS activo sin políticas. Las vistas con datos de varios usuarios viven en `private`.
-- El MCP de Supabase apunta al proyecto de DESARROLLO y en solo lectura.
+- El MCP de Supabase apunta al proyecto de la nube (el de la beta, con usuarios de prueba) y en solo lectura. Desarrollo = Supabase local.
 
 ## Estilo de código
 

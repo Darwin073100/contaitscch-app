@@ -28,6 +28,7 @@
     "expo-status-bar": "~58.0.5",
     "expo-symbols": "~58.0.5",
     "expo-system-ui": "~58.0.7",
+    "expo-updates": "~58.0.22",
     "expo-web-browser": "~58.0.8",
     "nativewind": "^4.2.7",
     "react": "19.3.0",
@@ -78,7 +79,9 @@
     "format": "prettier --write .",
     "test": "jest",
     "content:validate": "tsx scripts/validate-content.ts",
-    "db:generate": "drizzle-kit generate"
+    "db:generate": "drizzle-kit generate",
+    "build:apk": "npx eas-cli@latest build --platform android --profile preview",
+    "update:preview": "npx eas-cli@latest update --channel preview --environment preview --platform android"
   },
   "private": true,
   "jest": {

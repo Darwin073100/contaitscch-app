@@ -2,12 +2,17 @@
   "expo": {
     "name": "CONTAITSCCH",
     "slug": "contaitscch-app",
+    "owner": "contaitscchs-team",
     "version": "1.0.0",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "contaitscchapp",
     "userInterfaceStyle": "automatic",
     "android": {
+      "package": "mx.edu.itscch.contaitscch",
       "adaptiveIcon": {
         "backgroundColor": "#0F2A44",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -42,6 +47,14 @@
       "typedRoutes": true,
       "reactCompiler": true
     },
-    "backgroundColor": "#0F2A44"
+    "backgroundColor": "#0F2A44",
+    "extra": {
+      "eas": {
+        "projectId": "3c3fffd0-1dcb-411d-ac6f-47ec78fd0458"
+      }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/3c3fffd0-1dcb-411d-ac6f-47ec78fd0458"
+    }
   }
 }

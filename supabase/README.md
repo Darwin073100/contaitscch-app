@@ -235,7 +235,32 @@ Configurado en `supabase/config.toml`:
 
 ---
 
-## 9. Estructura de esta carpeta
+## 9. Supabase en la nube (beta)
+
+El proyecto de la nube es el que usan los APK de prueba (spec 08). Supabase local sigue siendo el
+entorno de desarrollo: cada migración se prueba aquí antes de subirla.
+
+- **Estado:** las 10 migraciones aplicadas (18 nov 2026), verificación de correo apagada, registro de
+  Supabase Auth desactivado, Security Advisor sin avisos.
+- **La CLI queda desvinculada.** Para subir una migración nueva, ya probada con `db reset` y `test db`:
+
+  ```bash
+  npx supabase link --project-ref <ref>     # Project Settings → General → Project ID
+  npx supabase db push --dry-run
+  npx supabase db push
+  npx supabase migration list --linked      # Local y Remote iguales
+  npx supabase unlink
+  ```
+
+- **Nunca** `npx supabase db reset --linked` (borra la nube) ni `npx supabase config push` (`config.toml` es
+  la configuración local).
+- La app compilada recibe la URL y la Publishable key desde las variables de EAS, no desde `.env.local`.
+- **Borrar los datos de la beta** cuando el cliente apruebe: fase 7 de la spec 08 (`truncate`, no `reset`).
+- El plan gratuito pausa el proyecto tras 7 días sin uso: se reactiva en el panel con _Restore project_.
+
+---
+
+## 10. Estructura de esta carpeta
 
 ```text
 supabase/
