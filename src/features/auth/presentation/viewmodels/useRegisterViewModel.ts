@@ -19,7 +19,10 @@ const formErrors: Record<Exclude<RegisterUserError, 'EMAIL_TAKEN'>, string> = {
   INVALID_INPUT: 'El servidor rechazó tus datos. Revísalos e intenta de nuevo.',
 };
 
-/** Paso 1 del registro: valida el formulario, crea la cuenta y pide el código de verificación. */
+/**
+ * Registro: valida el formulario y crea la cuenta. Si el servidor pide verificar el correo, envía el
+ * código y abre la verificación; si no, la sesión ya permite entrar y el guard lleva al curso.
+ */
 export function useRegisterViewModel() {
   const { auth } = useContainer();
   const [formError, setFormError] = useState<string | null>(null);
@@ -49,6 +52,9 @@ export function useRegisterViewModel() {
       }
       return;
     }
+
+    // Sin verificación requerida no hay nada más que hacer: el guard abre las pestañas
+    if (!created.value.verificationRequired) return;
 
     // La cuenta ya existe aunque el correo no salga: en la verificación se puede reenviar
     const code = await auth.requestVerificationCode.execute();

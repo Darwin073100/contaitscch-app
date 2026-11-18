@@ -7,6 +7,7 @@ const session: Session = {
   apiToken: 'token-1',
   email: 'ana@correo.com',
   emailVerified: false,
+  verificationRequired: true,
 };
 
 describe('SecureSessionStore', () => {
@@ -27,6 +28,16 @@ describe('SecureSessionStore', () => {
 
     expect(reopened.current()).toEqual(session);
     expect(reopened.requireUserId()).toBe('id-1');
+  });
+
+  it('una sesión guardada antes de la verificación opcional se lee exigiendo verificación', async () => {
+    const { verificationRequired: _, ...old } = session;
+    const { storage } = memoryStorage({ 'contaitscch.session': JSON.stringify(old) });
+    const store = new SecureSessionStore(storage);
+
+    await store.load();
+
+    expect(store.current()).toEqual({ ...old, verificationRequired: true });
   });
 
   it('descarta una sesión guardada dañada', async () => {

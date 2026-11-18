@@ -3,7 +3,7 @@ import type { Session } from '@/core/session/SessionStore';
 
 import { SupabaseRankingRemoteDataSource } from './SupabaseRankingRemoteDataSource';
 
-const session: Session = { userId: 'u1', apiToken: 't1', email: 'a@b.c', emailVerified: true };
+const session: Session = { userId: 'u1', apiToken: 't1', email: 'a@b.c', emailVerified: true, verificationRequired: true };
 
 const client = (response: RpcResponse) => {
   const rpc = jest.fn(async () => response);

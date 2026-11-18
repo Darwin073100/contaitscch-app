@@ -1,5 +1,6 @@
 import { Stack } from 'expo-router';
 
+import { canEnterApp } from '@/core/session/SessionStore';
 import { useThemeColors } from '@/shared/theme';
 
 import { useSession } from './providers/useSession';
@@ -7,14 +8,14 @@ import { useSession } from './providers/useSession';
 /**
  * Guard de sesión (ARCHITECTURE.md, Navegación):
  * - sin sesión → registro o inicio de sesión
- * - sesión sin verificar → verificación (puede volver al registro para corregir datos)
- * - sesión verificada → pestañas y sesiones de tema, sin volver a pedir login
+ * - sesión sin verificar, si el servidor pide verificación → verificación
+ * - sesión verificada, o sin verificación requerida → pestañas y temas, sin volver a pedir login
  * Al cambiar la sesión (useSession) las rutas que dejan de estar permitidas redirigen solas.
  */
 export function RootNavigator() {
   const colors = useThemeColors();
   const session = useSession();
-  const verified = session?.emailVerified === true;
+  const verified = canEnterApp(session);
   const pending = session !== null && !verified;
 
   return (

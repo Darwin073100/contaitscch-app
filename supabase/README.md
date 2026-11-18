@@ -136,7 +136,19 @@ En local, la API acepta peticiones aunque la llave falte o sea incorrecta. En la
 
 ---
 
-### Ver el correo de verificación en local (Mailpit)
+### Verificación de correo: apagada por omisión
+
+Mientras no haya proveedor de correo, el registro entra directo al curso sin código. El interruptor está en Postgres:
+
+```sql
+select * from private.settings;                                          -- ver el estado
+update private.settings set email_verification_required = true;          -- pedir el código
+update private.settings set email_verification_required = false;         -- entrar sin código
+```
+
+Ejecútalo en Studio → **SQL Editor**; en la nube, en el SQL Editor del proyecto. La app lo recibe al registrarse o iniciar sesión: no hace falta publicar otra versión. Las sesiones abiertas antes del cambio conservan lo que tenían.
+
+### Ver el correo de verificación en local (Mailpit) — con la verificación encendida
 
 En local, `send-verification` no usa Gmail: entrega el correo a **Mailpit**, un buzón de prueba que viene con Supabase local. Ningún correo sale a internet.
 

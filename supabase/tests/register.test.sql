@@ -1,10 +1,12 @@
 -- Pruebas de la RPC register y de los permisos del esquema. Ejecutar: npx supabase test db
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(20);
+select plan(26);
 
 -- Base aislada: se vacía dentro de la transacción y el rollback final restaura los datos locales
 truncate public.profile cascade;
+-- Estas pruebas cubren el modo CON verificación; el modo sin verificación está al final
+update private.settings set email_verification_required = true;
 
 -- Hash PBKDF2 y sal de ejemplo (hex), como los manda la app
 \set hash '''aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'''
@@ -33,6 +35,7 @@ select is((select city from public.profile), null, 'ciudad vacía se guarda como
 select is((select password_hash from public.profile),
   encode(extensions.digest(:hash, 'sha256'), 'hex'), 'guarda sha256 del hash de la app (doble hash)');
 select is((select email_verified from public.profile), false, 'empieza sin verificar');
+select is((select res->>'verification_required' from r1), 'true', 'avisa a la app que debe pedir el código');
 
 -- ===================== Correo repetido =====================
 create temp table r2 as
@@ -56,6 +59,17 @@ select is(public.register('b@c.com', 'Al', 'López', 'México', 'Chiapas', null,
   'invalid_input', 'nombre de menos de 3 caracteres: invalid_input');
 select is(public.register('b@c.com', 'Ana', 'López', 'México', 'Chiapas', null, 'mi-contraseña', :salt, 60000)->>'status',
   'invalid_input', 'hash que no es hex de 64: invalid_input (la contraseña en claro nunca se acepta)');
+
+-- ===================== Verificación apagada (modo por omisión) =====================
+update private.settings set email_verification_required = false;
+create temp table r3 as
+  select public.register('beto@correo.com', 'Beto', 'Ruiz', 'México', 'Guerrero', null, :hash, :salt, 60000) as res;
+select is((select res->>'status' from r3), 'ok', 'sin verificación: registro ok');
+select is((select res->>'verification_required' from r3), 'false', 'sin verificación: la app entra directo');
+select is(public.register('beto@correo.com', 'Intruso', 'Ajeno', 'México', 'Guerrero', null, :hash2, :salt, 60000)->>'status',
+  'email_taken', 'sin verificación: un correo registrado (aunque no esté verificado) no se puede reemplazar');
+select is((select first_name from public.profile where email = 'beto@correo.com'), 'Beto', 'los datos del dueño no cambian');
+select ok(not has_table_privilege('anon', 'private.settings', 'select'), 'anon no puede leer la configuración');
 
 select * from finish();
 rollback;

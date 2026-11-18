@@ -5,7 +5,13 @@ import type { Session } from '@/core/session/SessionStore';
 import { startAutoSync } from './autoSync';
 import type { Container } from './container';
 
-const verified: Session = { userId: 'u1', apiToken: 't', email: 'a@b.c', emailVerified: true };
+const verified: Session = {
+  userId: 'u1',
+  apiToken: 't',
+  email: 'a@b.c',
+  emailVerified: true,
+  verificationRequired: true,
+};
 
 function setup(session: Session | null = verified) {
   const events = new InMemoryDomainEventBus();
@@ -54,6 +60,18 @@ describe('startAutoSync', () => {
     events.publish({ type: 'ProgressChanged', quizId: 101 });
 
     expect(execute).not.toHaveBeenCalled();
+  });
+
+  it('sin verificación requerida sincroniza aunque el correo no esté verificado', () => {
+    const { events, execute } = setup({
+      ...verified,
+      emailVerified: false,
+      verificationRequired: false,
+    });
+
+    events.publish({ type: 'ProgressChanged', quizId: 101 });
+
+    expect(execute).toHaveBeenCalledTimes(2); // al arrancar y al terminar el ejercicio
   });
 
   it('al detenerla deja de escuchar', () => {

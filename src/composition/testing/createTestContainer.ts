@@ -28,6 +28,7 @@ export const testUserSession: Session = {
   apiToken: 'token-de-prueba',
   email: 'ana@correo.com',
   emailVerified: true,
+  verificationRequired: true,
 };
 
 const offline: Connectivity = { isOnline: async () => false, onReconnect: () => () => {} };

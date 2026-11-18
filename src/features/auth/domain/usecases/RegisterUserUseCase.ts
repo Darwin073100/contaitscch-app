@@ -11,7 +11,8 @@ export type RegisterUserError = 'EMAIL_TAKEN' | 'INVALID_INPUT' | 'NETWORK';
 
 /**
  * Paso 1 del registro: calcula el hash PBKDF2 en el teléfono, crea la cuenta en Supabase y guarda el
- * usuario y la sesión (sin verificar). Requiere conexión: el id lo genera el servidor.
+ * usuario y la sesión (sin verificar). Si el servidor no pide verificación, con esa sesión ya se
+ * entra al curso. Requiere conexión: el id lo genera el servidor.
  */
 export class RegisterUserUseCase {
   constructor(
@@ -37,7 +38,14 @@ export class RegisterUserUseCase {
     });
     if (!created.ok) return err(created.error);
 
-    const session: Session = { ...created.value, email: profile.email, emailVerified: false };
+    const { userId, apiToken, verificationRequired } = created.value;
+    const session: Session = {
+      userId,
+      apiToken,
+      email: profile.email,
+      emailVerified: false,
+      verificationRequired,
+    };
     await this.users.save({ ...profile, id: session.userId, emailVerified: false });
     await this.session.save(session);
     return ok(session);

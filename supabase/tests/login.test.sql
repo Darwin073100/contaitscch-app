@@ -1,7 +1,7 @@
 -- Pruebas de get_login_params y login. Ejecutar: npx supabase test db
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(13);
+select plan(14);
 
 -- Base aislada: se vacía dentro de la transacción y el rollback final restaura los datos locales
 truncate public.profile cascade;
@@ -36,6 +36,8 @@ select is((select res->>'api_token' from l), :'reg'::jsonb->>'api_token',
   'no rota el api_token (no cierra la sesión en otros dispositivos)');
 select is((select res->'profile'->>'first_name' from l) || '|' || (select res->>'email_verified' from l),
   'Ana|false', 'devuelve el perfil y si el correo está verificado');
+select is((select res->>'verification_required' from l), 'false',
+  'avisa si hay que verificar el correo (apagado por omisión)');
 select is(public.login('ana@correo.com', repeat('b', 64)), public.login('nadie@correo.com', :hash),
   'contraseña incorrecta y correo inexistente dan la misma respuesta');
 

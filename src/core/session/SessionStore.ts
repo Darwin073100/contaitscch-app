@@ -6,9 +6,16 @@ export type Session = {
   apiToken: string;
   /** Correo de la cuenta (la pantalla de verificación lo muestra). */
   email: string;
-  /** Sin verificar, el guard manda a la pantalla de verificación en lugar de a las pestañas. */
+  /** El usuario ya validó el código de su correo. */
   emailVerified: boolean;
+  /** El servidor pide verificar el correo (private.settings). Apagado: se entra sin código. */
+  verificationRequired: boolean;
 };
+
+/** Regla del guard: entra al curso si verificó su correo o si el servidor no pide verificación. */
+export function canEnterApp(session: Session | null): boolean {
+  return session !== null && (session.emailVerified || !session.verificationRequired);
+}
 
 /** Usuario con sesión iniciada en el dispositivo. Los repositorios lo leen para filtrar su progreso. */
 export interface SessionStore {

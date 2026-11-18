@@ -1,10 +1,12 @@
 -- Pruebas de la vista private.ranking y de get_ranking. Ejecutar: npx supabase test db
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(14);
+select plan(15);
 
 -- Base aislada: se vacía dentro de la transacción y el rollback final restaura los datos locales
 truncate public.profile cascade;
+-- Modo con verificación (Dani no verificó); el modo sin verificación se prueba al final
+update private.settings set email_verification_required = true;
 
 \set hash '''aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'''
 \set salt '''0123456789abcdef0123456789abcdef'''
@@ -71,6 +73,10 @@ select is(public.get_ranking(:'carla', :'carla_tok', 1)->'me'->>'position', '3',
   '"Tu posición" llega aunque quede fuera del límite');
 select is(public.get_ranking(:'dani', :'dani_tok')->'me', 'null'::jsonb,
   'sin correo verificado: no aparece en el ranking');
+
+-- ===================== Verificación apagada: participan todos =====================
+update private.settings set email_verification_required = false;
+select is((public.get_ranking(:'ana', :'ana_tok')->>'total')::integer, 5, 'sin verificación: Dani también aparece');
 
 select * from finish();
 rollback;

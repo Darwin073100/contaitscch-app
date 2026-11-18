@@ -24,7 +24,10 @@ Especificaciones:
   - Estado (requerido)
   - Ciudad (opcional)
 
-## Verificar correo electrónico
+## Verificar correo electrónico (opcional, apagada por ahora)
+
+> Mientras no haya proveedor de correo, el registro entra directo al curso. Se enciende desde el
+> servidor sin publicar otra versión de la app.
 
 Como usuario de la aplicación móvil, Quiero poder verificar mi correo electrónico, Para poder acceder a la aplicación.
 
@@ -143,7 +146,7 @@ Como usuario de la aplicación móvil, Quiero ver quiénes más están registrad
 
 Especificaciones:
 
-- La aplicación debe mostrar una lista de los participantes con correo verificado.
+- La aplicación debe mostrar una lista de los participantes (solo con correo verificado cuando la verificación esté encendida).
 - Por cada participante debe mostrar:
   - Posición
   - Nombre completo

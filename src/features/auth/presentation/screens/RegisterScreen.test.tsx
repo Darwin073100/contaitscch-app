@@ -28,7 +28,7 @@ const renderScreen = () =>
   );
 
 const submit = () =>
-  fireEvent.press(screen.getByRole('button', { name: 'Crear Cuenta y Recibir Código' }));
+  fireEvent.press(screen.getByRole('button', { name: 'Crear Cuenta' }));
 
 async function fillValidForm() {
   await fireEvent.changeText(screen.getByLabelText('Nombre(s) *'), 'Carlos');
@@ -44,6 +44,7 @@ const session = {
   apiToken: 'token-1',
   email: 'carlos@correo.com',
   emailVerified: false,
+  verificationRequired: true,
 };
 
 describe('RegisterScreen', () => {
@@ -92,6 +93,18 @@ describe('RegisterScreen', () => {
       city: null,
     });
     expect(requestCode).toHaveBeenCalledTimes(1);
+  });
+
+  it('sin verificación requerida: no pide código ni abre la verificación (el guard abre el curso)', async () => {
+    registerUser.mockResolvedValue(ok({ ...session, verificationRequired: false }));
+    await renderScreen();
+    await fillValidForm();
+
+    await submit();
+
+    await waitFor(() => expect(registerUser).toHaveBeenCalledTimes(1));
+    expect(requestCode).not.toHaveBeenCalled();
+    expect(router.push).not.toHaveBeenCalled();
   });
 
   it('si el correo no sale, avanza igual y la verificación permitirá reenviar', async () => {

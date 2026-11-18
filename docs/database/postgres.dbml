@@ -48,6 +48,13 @@ Table email_verification {
   Note: 'Código de verificación pendiente. Se borra al verificar el correo.'
 }
 
+Table private.settings {
+  id                          boolean [pk, default: true, note: 'CHECK (id): una sola fila.']
+  email_verification_required boolean [not null, default: false, note: 'Pedir el código del correo al registrarse. Apagado: se entra directo y el ranking incluye a todos.']
+
+  Note: 'Configuración del servidor. Solo la leen las RPC (security definer).'
+}
+
 Table quiz_progress {
   user_id     uuid [not null, note: 'Participante.']
   quiz_id     smallint [not null, note: 'Ejercicio de un tema (id del tema: nivel×100 + orden, 101..604) o 900 (examen integrador). Ids del catálogo LOCAL de SQLite, sin llave foránea; CHECK limita al catálogo.']

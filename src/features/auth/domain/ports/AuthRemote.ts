@@ -15,7 +15,14 @@ export type RegisterRequest = UserProfile & {
 
 export type LoginParams = { salt: string; iterations: number };
 
-export type LoginResponse = RemoteCredentials & { emailVerified: boolean; profile: UserProfile };
+/** `verificationRequired`: el servidor pide verificar el correo antes de entrar (private.settings). */
+export type RegisterResponse = RemoteCredentials & { verificationRequired: boolean };
+
+export type LoginResponse = RemoteCredentials & {
+  emailVerified: boolean;
+  verificationRequired: boolean;
+  profile: UserProfile;
+};
 
 /** Respuestas de verify_email (supabase/migrations/…_email_verification.sql). */
 export type VerifyEmailError =
@@ -34,7 +41,7 @@ export type RequestCodeError = 'ALREADY_VERIFIED' | 'INVALID_TOKEN' | 'SEND_FAIL
 export interface AuthRemote {
   register(
     request: RegisterRequest,
-  ): Promise<Result<RemoteCredentials, 'EMAIL_TAKEN' | 'INVALID_INPUT' | NetworkError>>;
+  ): Promise<Result<RegisterResponse, 'EMAIL_TAKEN' | 'INVALID_INPUT' | NetworkError>>;
   getLoginParams(email: string): Promise<Result<LoginParams, NetworkError>>;
   login(
     email: string,

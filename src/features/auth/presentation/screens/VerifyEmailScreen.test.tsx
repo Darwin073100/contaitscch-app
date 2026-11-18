@@ -43,7 +43,7 @@ describe('VerifyEmailScreen', () => {
     jest.clearAllMocks();
     mockParams = { resendIn: '45' };
     mockContainer = await createTestContainer({
-      session: { userId: 'id-1', apiToken: 't', email: 'carlos@correo.com', emailVerified: false },
+      session: { userId: 'id-1', apiToken: 't', email: 'carlos@correo.com', emailVerified: false, verificationRequired: true },
     });
     verifyCode = jest.fn().mockResolvedValue(ok(undefined));
     requestCode = jest.fn().mockResolvedValue(ok({ sent: true, resendInSeconds: 45 }));

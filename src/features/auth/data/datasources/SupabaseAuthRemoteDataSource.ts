@@ -10,6 +10,7 @@ import type {
   LoginResponse,
   NetworkError,
   RegisterRequest,
+  RegisterResponse,
   RemoteCredentials,
   RequestCodeError,
   VerifyEmailError,
@@ -18,7 +19,13 @@ import type {
 // DTOs de las RPC (snake_case, ver supabase/migrations). Una respuesta con otra forma se trata como
 // error de red: la app no adivina.
 const RegisterDto = z.discriminatedUnion('status', [
-  z.object({ status: z.literal('ok'), user_id: z.uuid(), api_token: z.uuid() }),
+  z.object({
+    status: z.literal('ok'),
+    user_id: z.uuid(),
+    api_token: z.uuid(),
+    // Un servidor sin la migración de verificación opcional no lo manda: se exige verificar
+    verification_required: z.boolean().default(true),
+  }),
   z.object({ status: z.literal('email_taken') }),
   z.object({ status: z.literal('invalid_input') }),
 ]);
@@ -34,6 +41,7 @@ const LoginDto = z.discriminatedUnion('status', [
     user_id: z.uuid(),
     api_token: z.uuid(),
     email_verified: z.boolean(),
+    verification_required: z.boolean().default(true),
     profile: z.object({
       email: z.string(),
       first_name: z.string(),
@@ -119,7 +127,7 @@ export class SupabaseAuthRemoteDataSource implements AuthRemote {
 
   async register(
     request: RegisterRequest,
-  ): Promise<Result<RemoteCredentials, 'EMAIL_TAKEN' | 'INVALID_INPUT' | NetworkError>> {
+  ): Promise<Result<RegisterResponse, 'EMAIL_TAKEN' | 'INVALID_INPUT' | NetworkError>> {
     const response = await this.call(
       'register',
       {
@@ -140,7 +148,11 @@ export class SupabaseAuthRemoteDataSource implements AuthRemote {
     const dto = response.value;
     if (dto.status === 'email_taken') return err('EMAIL_TAKEN');
     if (dto.status === 'invalid_input') return err('INVALID_INPUT');
-    return ok({ userId: dto.user_id, apiToken: dto.api_token });
+    return ok({
+      userId: dto.user_id,
+      apiToken: dto.api_token,
+      verificationRequired: dto.verification_required,
+    });
   }
 
   async getLoginParams(email: string): Promise<Result<LoginParams, NetworkError>> {
@@ -165,6 +177,7 @@ export class SupabaseAuthRemoteDataSource implements AuthRemote {
       userId: dto.user_id,
       apiToken: dto.api_token,
       emailVerified: dto.email_verified,
+      verificationRequired: dto.verification_required,
       profile: {
         email: profile.email,
         firstName: profile.first_name,

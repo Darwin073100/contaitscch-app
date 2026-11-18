@@ -1,4 +1,5 @@
 import { err, ok } from '@/core/result/Result';
+import { canEnterApp } from '@/core/session/SessionStore';
 import type { Session } from '@/core/session/SessionStore';
 
 import type { RegisterInput } from '../entities/AuthUser';
@@ -48,15 +49,32 @@ function setup(response: Awaited<ReturnType<AuthRemote['register']>>) {
 }
 
 describe('RegisterUserUseCase', () => {
+  it('sin verificación requerida, la sesión ya permite entrar al curso', async () => {
+    const { useCase, sessions } = setup(
+      ok({ userId: 'id-1', apiToken: 'token-1', verificationRequired: false }),
+    );
+
+    await useCase.execute(input);
+
+    expect(sessions).toEqual([expect.objectContaining({ verificationRequired: false })]);
+    expect(canEnterApp(sessions[0] ?? null)).toBe(true);
+  });
+
   it('manda el hash (nunca la contraseña) y guarda usuario y sesión sin verificar', async () => {
     const { useCase, requests, savedUsers, sessions } = setup(
-      ok({ userId: 'id-1', apiToken: 'token-1' }),
+      ok({ userId: 'id-1', apiToken: 'token-1', verificationRequired: true }),
     );
 
     const result = await useCase.execute(input);
 
     expect(result).toEqual(
-      ok({ userId: 'id-1', apiToken: 'token-1', email: 'ana@correo.com', emailVerified: false }),
+      ok({
+        userId: 'id-1',
+        apiToken: 'token-1',
+        email: 'ana@correo.com',
+        emailVerified: false,
+        verificationRequired: true,
+      }),
     );
     expect(requests).toEqual([
       expect.objectContaining({
@@ -72,7 +90,13 @@ describe('RegisterUserUseCase', () => {
     ]);
     expect(JSON.stringify(savedUsers)).not.toContain('secreta123');
     expect(sessions).toEqual([
-      { userId: 'id-1', apiToken: 'token-1', email: 'ana@correo.com', emailVerified: false },
+      {
+        userId: 'id-1',
+        apiToken: 'token-1',
+        email: 'ana@correo.com',
+        emailVerified: false,
+        verificationRequired: true,
+      },
     ]);
   });
 

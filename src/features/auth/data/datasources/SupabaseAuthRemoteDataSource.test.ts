@@ -45,7 +45,10 @@ describe('SupabaseAuthRemoteDataSource', () => {
         error: null,
       });
 
-      expect(await remote.register(request)).toEqual(ok({ userId: USER_ID, apiToken: TOKEN }));
+      // Sin verification_required (servidor sin la migración): se exige verificar, como antes
+      expect(await remote.register(request)).toEqual(
+        ok({ userId: USER_ID, apiToken: TOKEN, verificationRequired: true }),
+      );
       expect(calls).toEqual([
         {
           fn: 'register',
@@ -62,6 +65,17 @@ describe('SupabaseAuthRemoteDataSource', () => {
           },
         },
       ]);
+    });
+
+    it('verification_required: false → la app entra sin verificar el correo', async () => {
+      const { remote } = fakeClient({
+        data: { status: 'ok', user_id: USER_ID, api_token: TOKEN, verification_required: false },
+        error: null,
+      });
+
+      expect(await remote.register(request)).toEqual(
+        ok({ userId: USER_ID, apiToken: TOKEN, verificationRequired: false }),
+      );
     });
 
     it.each([
@@ -107,6 +121,7 @@ describe('SupabaseAuthRemoteDataSource', () => {
           user_id: USER_ID,
           api_token: TOKEN,
           email_verified: true,
+          verification_required: false,
           profile: {
             email: 'ana@correo.com',
             first_name: 'Ana',
@@ -124,6 +139,7 @@ describe('SupabaseAuthRemoteDataSource', () => {
           userId: USER_ID,
           apiToken: TOKEN,
           emailVerified: true,
+          verificationRequired: false,
           profile: {
             email: 'ana@correo.com',
             firstName: 'Ana',

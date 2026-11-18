@@ -15,7 +15,7 @@ Proyecto escolar: priorizar soluciones gratuitas y simples.
 - Formularios: React Hook Form + Zod. Conectividad: `@react-native-community/netinfo`
 - Hash de contraseña en la app: PBKDF2-SHA256 con `@noble/hashes` + sal de `expo-crypto`
 - Contenido del curso: JSON en `src/core/database/seed/content/*.json`, validado con Zod (`courseSchema.ts`)
-- Correo de verificación: Edge Function `send-verification` (Gmail en la nube; Mailpit en local, http://127.0.0.1:54324). Tras editarla: `npx supabase stop && npx supabase start`
+- Verificación de correo **opcional y apagada** (`private.settings.email_verification_required`; register y login la avisan a la app; guard = `canEnterApp`). Correo: Edge Function `send-verification` (Gmail en la nube; Mailpit en local, http://127.0.0.1:54324). Tras editarla: `npx supabase stop && npx supabase start`
 - Diseño de referencia: prototipo del cliente `spec/contaitscch-refactor/index.html` (las capturas de `docs/design/` son de la v1)
 
 ## Comandos
@@ -78,7 +78,7 @@ Patrones en uso: Repository, Use Case (`execute()`), DI, Unit of Work, Policy pu
 - **Nunca se revela la opción correcta**: al comprobar solo se marca la elegida; la retroalimentación solo aparece al acertar; el examen no tiene retroalimentación.
 - Avance guardado en `quiz_progress` (aprobado, mejor puntaje, intentos, `passed_at`). **Aprobar nunca se deshace**, salvo "Reiniciar mi avance".
 - Desbloqueo, nivel actual, niveles completados, progreso y posición se CALCULAN; nunca se guardan como columna.
-- Ranking: niveles completados DESC, temas aprobados DESC, `dense_rank`; solo correos verificados; nunca expone correos.
+- Ranking: niveles completados DESC, temas aprobados DESC, `dense_rank`; solo correos verificados si la verificación está encendida; nunca expone correos.
 - Sincronización (`sync_progress`): sube lo pendiente, fusiona (aprobado = OR, mayor puntaje e intentos, `passed_at` más antiguo) y devuelve el avance completo. Si la generación no coincide (teléfono nuevo o reinicio en otro teléfono) responde `replace`. Se dispara al terminar un ejercicio, al abrir la app, al volver a primer plano, al reconectar, al iniciar sesión, al entrar a Ranking y con "Sincronizar ahora".
 - Fila pendiente = `synced_at IS NULL OR synced_at <> updated_at`; queda sincronizada cuando la nube tiene el mismo contenido (`reconcile`).
 - "Reiniciar mi avance" requiere conexión: borra en la nube (sube `progress_generation`) y luego en el teléfono.

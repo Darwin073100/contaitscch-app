@@ -11,7 +11,7 @@ export function RegisterScreen() {
     useRegisterViewModel();
 
   return (
-    <AuthLayout step={0} onSwitch={openLogin}>
+    <AuthLayout onSwitch={openLogin}>
       <Card padding="lg">
         <Column gap="lg">
           <FormTextField
@@ -120,7 +120,7 @@ export function RegisterScreen() {
 
       {formError && <Callout variant="plain" tone="danger" icon="wifi-off" text={formError} />}
       <Button
-        label="Crear Cuenta y Recibir Código"
+        label="Crear Cuenta"
         leftIcon="send-outline"
         loading={submitting}
         onPress={submit}

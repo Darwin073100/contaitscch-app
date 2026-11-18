@@ -60,13 +60,19 @@ describe('LoginUseCase', () => {
   it('usa la sal y las iteraciones del servidor y guarda usuario y sesión', async () => {
     const { useCase, calls, savedUsers, sessions } = setup(
       ok({ salt: 'sal-de-ana', iterations: 75000 }),
-      ok({ userId: 'id-1', apiToken: 'token-1', emailVerified: true, profile }),
+      ok({ userId: 'id-1', apiToken: 'token-1', emailVerified: true, verificationRequired: true, profile }),
     );
 
     const result = await useCase.execute({ email: ' ANA@correo.com', password: 'secreta123' });
 
     expect(result).toEqual(
-      ok({ userId: 'id-1', apiToken: 'token-1', email: 'ana@correo.com', emailVerified: true }),
+      ok({
+        userId: 'id-1',
+        apiToken: 'token-1',
+        email: 'ana@correo.com',
+        emailVerified: true,
+        verificationRequired: true,
+      }),
     );
     expect(calls).toEqual([
       'params:ana@correo.com',
@@ -80,13 +86,19 @@ describe('LoginUseCase', () => {
   it('con el correo sin verificar abre sesión igual, marcada como no verificada', async () => {
     const { useCase, sessions } = setup(
       ok({ salt: 's', iterations: 60000 }),
-      ok({ userId: 'id-1', apiToken: 't', emailVerified: false, profile }),
+      ok({ userId: 'id-1', apiToken: 't', emailVerified: false, verificationRequired: true, profile }),
     );
 
     await useCase.execute({ email: 'ana@correo.com', password: 'x' });
 
     expect(sessions).toEqual([
-      { userId: 'id-1', apiToken: 't', email: 'ana@correo.com', emailVerified: false },
+      {
+        userId: 'id-1',
+        apiToken: 't',
+        email: 'ana@correo.com',
+        emailVerified: false,
+        verificationRequired: true,
+      },
     ]);
   });
 
@@ -112,7 +124,7 @@ describe('LoginUseCase', () => {
   it('al abrir sesión trae el avance de la nube (después de guardar la sesión)', async () => {
     const { useCase, calls } = setup(
       ok({ salt: 'sal', iterations: 60000 }),
-      ok({ userId: 'id-1', apiToken: 'token-1', emailVerified: true, profile }),
+      ok({ userId: 'id-1', apiToken: 'token-1', emailVerified: true, verificationRequired: true, profile }),
     );
 
     await useCase.execute({ email: 'ana@correo.com', password: 'secreta123' });

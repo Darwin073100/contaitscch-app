@@ -19,6 +19,7 @@ export const pending: Session = {
   apiToken: 'token-1',
   email: 'ana@correo.com',
   emailVerified: false,
+  verificationRequired: true,
 };
 
 /**

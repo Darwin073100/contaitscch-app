@@ -184,6 +184,14 @@ plano.
 
 ## Autenticación sin Supabase Auth (hash en la app)
 
+> **Verificación de correo opcional (17 nov 2026).** Está apagada mientras se elige proveedor de correo
+> (se planea Resend). Un solo interruptor en Postgres: `private.settings.email_verification_required`
+> (migración `20261117000100_optional_email_verification.sql`). `register` y `login` devuelven
+> `verification_required`; la sesión lo guarda y el guard usa `canEnterApp` (verificado o no requerido).
+> Apagada: se entra al curso al registrarse, el ranking incluye a todos y un correo ya registrado
+> siempre responde `email_taken` (nadie puede reemplazar una cuenta sin verificar). Para encenderla:
+> `update private.settings set email_verification_required = true;` (no hace falta publicar la app).
+
 La app deriva el hash con PBKDF2-SHA256 y una sal aleatoria por usuario; Supabase solo recibe y compara ese hash mediante funciones RPC llamadas con el SDK, sin usar Supabase Auth. La contraseña en texto plano nunca sale del teléfono ni se guarda en SQLite.
 
 | Paso          | En la app                                                                                             | En Supabase (RPC vía `supabase.rpc`)                                                                                     |
@@ -578,24 +586,24 @@ flowchart TD
 
 ## Reglas de negocio
 
-| Regla                     | Definición                                                                                    | Dónde vive                                    |
-| ------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| Aprobar un ejercicio      | `aciertos >= pass_mark` (tema: todas las preguntas; examen: 8 de 10)                          | `ProgressRules.isPassing`                     |
-| Avance tras un intento    | +1 intento, mejor puntaje, aprobar nunca se deshace, `passed_at` la primera vez               | `ProgressRules.applyResult`                   |
-| Tema desbloqueado         | El primero del curso, o el anterior en el orden global está aprobado                          | `CourseProgressPolicy`                        |
-| Tema por aprobar          | Desbloqueado con intentos y sin aprobar                                                       | `CourseProgressPolicy`                        |
-| Nivel                     | Completado con sus 4 temas; abierto si su primer tema lo está; actual = el del siguiente tema | `CourseProgressPolicy`                        |
-| Examen integrador         | Disponible con los 24 temas; estados Bloqueado / Disponible / Por aprobar / Aprobado          | `QuizAccessPolicy`, `GetFinalExamStatus`      |
-| Nunca revelar la correcta | `StartQuiz` no entrega la clave; `CheckAnswer` dice si acertó y da `feedback` solo al acertar | `quizzes/domain`                              |
-| Fusión entre teléfonos    | Ver "Sincronización"                                                                          | `mergeProgress`, `reconcile`, `sync_progress` |
-| Ranking                   | Niveles completados DESC, temas aprobados DESC, `dense_rank`; solo correos verificados        | Vista `private.ranking`                       |
+| Regla                     | Definición                                                                                                       | Dónde vive                                    |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| Aprobar un ejercicio      | `aciertos >= pass_mark` (tema: todas las preguntas; examen: 8 de 10)                                             | `ProgressRules.isPassing`                     |
+| Avance tras un intento    | +1 intento, mejor puntaje, aprobar nunca se deshace, `passed_at` la primera vez                                  | `ProgressRules.applyResult`                   |
+| Tema desbloqueado         | El primero del curso, o el anterior en el orden global está aprobado                                             | `CourseProgressPolicy`                        |
+| Tema por aprobar          | Desbloqueado con intentos y sin aprobar                                                                          | `CourseProgressPolicy`                        |
+| Nivel                     | Completado con sus 4 temas; abierto si su primer tema lo está; actual = el del siguiente tema                    | `CourseProgressPolicy`                        |
+| Examen integrador         | Disponible con los 24 temas; estados Bloqueado / Disponible / Por aprobar / Aprobado                             | `QuizAccessPolicy`, `GetFinalExamStatus`      |
+| Nunca revelar la correcta | `StartQuiz` no entrega la clave; `CheckAnswer` dice si acertó y da `feedback` solo al acertar                    | `quizzes/domain`                              |
+| Fusión entre teléfonos    | Ver "Sincronización"                                                                                             | `mergeProgress`, `reconcile`, `sync_progress` |
+| Ranking                   | Niveles completados DESC, temas aprobados DESC, `dense_rank`; solo verificados si la verificación está encendida | Vista `private.ranking`                       |
 
 ## Navegación
 
 ```text
-RootNavigator (guard: ¿hay user_id + api_token + email_verified?)
-├── (auth)           registro (Tus datos · Verificación) · verificar-correo · login
-└── sesión verificada
+RootNavigator (guard canEnterApp: sesión + (email_verified o verificación no requerida))
+├── (auth)           registro · verificar-correo (solo si el servidor pide verificación) · login
+└── sesión que puede entrar
     ├── (tabs)       Niveles · Aprender (?level=N) · Glosario · Ranking · Perfil
     ├── tema/[topicId]        Lección de 4 pasos → "Ir al ejercicio"
     ├── ejercicio/[quizId]    Ejercicio del tema o examen (900) → resultado

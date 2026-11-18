@@ -8,6 +8,7 @@ const session: Session = {
   apiToken: 't1',
   email: 'ana@correo.com',
   emailVerified: true,
+  verificationRequired: true,
 };
 
 function client(response: RpcResponse | (() => never)) {

@@ -25,7 +25,7 @@ describe('GetCurrentUserUseCase', () => {
   it('devuelve el perfil del usuario con sesión', async () => {
     const result = await new GetCurrentUserUseCase(
       users,
-      session({ userId: 'u1', apiToken: 't', email: ana.email, emailVerified: true }),
+      session({ userId: 'u1', apiToken: 't', email: ana.email, emailVerified: true, verificationRequired: true }),
     ).execute();
 
     expect(result).toEqual(ana);

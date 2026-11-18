@@ -1,6 +1,7 @@
 import { AppState } from 'react-native';
 
 import type { Container } from './container';
+import { canEnterApp } from '@/core/session/SessionStore';
 
 /** Avisa cuando la app vuelve a primer plano. Devuelve la función para dejar de escuchar. */
 export type ForegroundSource = (listener: () => void) => () => void;
@@ -23,7 +24,7 @@ export function startAutoSync(
   onForeground: ForegroundSource = appForeground,
 ): () => void {
   const sync = () => {
-    if (container.session.current()?.emailVerified) void container.progress.syncProgress.execute();
+    if (canEnterApp(container.session.current())) void container.progress.syncProgress.execute();
   };
 
   const stops = [

@@ -16,6 +16,8 @@ const SessionSchema = z.object({
   apiToken: z.string().min(1),
   email: z.string().min(1),
   emailVerified: z.boolean(),
+  // Sesiones guardadas antes de que la verificación fuera opcional: se respeta la verificación
+  verificationRequired: z.boolean().default(true),
 });
 
 /**

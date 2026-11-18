@@ -19,6 +19,7 @@ const pending: Session = {
   apiToken: 't',
   email: 'ana@correo.com',
   emailVerified: false,
+  verificationRequired: true,
 };
 
 /** Rutas falsas con los mismos nombres que src/app: cada una solo pinta su nombre. */
@@ -54,6 +55,12 @@ describe('RootNavigator (guard de sesión)', () => {
     await open(pending);
 
     expect(screen.getByText('Verificación')).toBeTruthy();
+  });
+
+  it('sin verificación requerida: entra al curso aunque el correo no esté verificado', async () => {
+    await open({ ...pending, verificationRequired: false }, '/verificar-correo');
+
+    expect(screen.getByText('Aprender')).toBeTruthy();
   });
 
   it('sesión verificada: abre el curso y no deja volver al registro', async () => {
