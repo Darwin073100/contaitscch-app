@@ -41,6 +41,7 @@ Notas del entorno:
 
 - TS 6 no carga `@types/*` solo: si se agrega uno, añadirlo a `compilerOptions.types` en `tsconfig.json`.
 - `react-native-css-interop` es dependencia directa a propósito (pnpm no lo expone); su versión debe ser la que pide `nativewind`.
+- `babel-preset-expo` es devDependency directa a propósito: `babel.config.js` lo usa y, con pnpm, sin ella el build de EAS falla en `createBundleReleaseJsAndAssets` (`Cannot find module 'babel-preset-expo'`). Su versión, la que pide `expo`. `eas.json` fija pnpm 12.15.0 (perfil `base`) para que EAS instale igual que en local.
 - ESLint se queda en v9 hasta que `eslint-plugin-react` (de `eslint-config-expo`) soporte v10.
 - Variables públicas en `.env.local` (no la leas): `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
 - Rutas tipadas: `.expo/types/router.d.ts` lo regenera `npm run start`. Si el typecheck marca una ruta nueva como desconocida, hay que arrancar el servidor una vez.

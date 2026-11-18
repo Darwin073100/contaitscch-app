@@ -4,7 +4,11 @@
     "appVersionSource": "remote"
   },
   "build": {
+    "base": {
+      "pnpm": "12.15.0"
+    },
     "preview": {
+      "extends": "base",
       "distribution": "internal",
       "environment": "preview",
       "channel": "preview",
@@ -14,6 +18,7 @@
       }
     },
     "production": {
+      "extends": "base",
       "environment": "production",
       "channel": "production",
       "autoIncrement": true,
