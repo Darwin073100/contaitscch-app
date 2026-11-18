@@ -1,6 +1,7 @@
 # 05 — Registro: Tus Datos y Verificación (`auth`)
 
 - **Estado:** maquetación implementada (solo `presentation`). Sin dominio, datos ni red todavía.
+- **Actualización (17 nov 2026):** la verificación de correo ahora es opcional y está apagada; ver `spec/07_auth_optional_email_verification_spec.md`.
 - **Fecha:** 1 de noviembre de 2026
 - **Fuente:** `docs/design/register.png`, `docs/design/registro-verificacion.png`; historias "Registro de usuario" y "Verificar correo electrónico" de `docs/USER_STORIES.md`; sección "Autenticación sin Supabase Auth" de `docs/ARCHITECTURE.md`.
 - **Depende de:** `spec/01_ui_components_spec.md` (kit `@/shared/ui`).
