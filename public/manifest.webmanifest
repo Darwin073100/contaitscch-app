@@ -1,0 +1,20 @@
+{
+  "name": "CONTAITSCCH",
+  "short_name": "CONTAITSCCH",
+  "description": "Aprende contabilidad desde cero (ITSCCH).",
+  "lang": "es-MX",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0F2A44",
+  "theme_color": "#0F2A44",
+  "icons": [
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

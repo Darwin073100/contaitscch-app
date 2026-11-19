@@ -1,0 +1,2 @@
+# App de una sola página: cualquier ruta (/tema/101, /ranking…) abre index.html y Expo Router la resuelve
+/*    /index.html   200

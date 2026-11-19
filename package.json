@@ -83,7 +83,9 @@
     "content:validate": "tsx scripts/validate-content.ts",
     "db:generate": "drizzle-kit generate",
     "build:apk": "npx eas-cli@latest build --platform android --profile preview",
-    "update:preview": "npx eas-cli@latest update --channel preview --environment preview --platform android"
+    "update:preview": "npx eas-cli@latest update --channel preview --environment preview --platform android",
+    "build:web": "node scripts/build-web.mjs",
+    "deploy:web": "npx eas-cli@latest deploy --prod"
   },
   "private": true,
   "jest": {

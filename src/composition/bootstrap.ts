@@ -8,6 +8,7 @@ import { NetInfoConnectivity } from '@/core/network/NetInfoConnectivity';
 import { createSupabaseClient } from '@/core/network/supabaseClient';
 import { SecureSessionStore } from '@/core/session/SecureSessionStore';
 import { secureStorage } from '@/core/session/secureStorage';
+import { setupWebApp } from '@/core/web/setupWebApp';
 
 import { startAutoSync } from './autoSync';
 import { createContainer, type Container } from './container';
@@ -25,8 +26,9 @@ export function bootstrap(): Promise<Container> {
 }
 
 async function start(): Promise<Container> {
+  await setupWebApp();
   const remote = createSupabaseClient();
-  const db = openAppDatabase();
+  const db = await openAppDatabase();
   const clock = new SystemClock();
   await migrateDatabase(db);
   await new ContentSeeder(db, new SqliteUnitOfWork(db), clock).seedIfNeeded(loadCourse());
