@@ -7,6 +7,7 @@ import {
   Text,
   View,
   useWindowDimensions,
+  type ImageLoadEvent,
   type ImageSourcePropType,
   type LayoutChangeEvent,
 } from 'react-native';
@@ -27,10 +28,20 @@ const ZOOM_SIDE_PADDING = 16;
 /** Borde del recuadro (`border`, 1 px por lado): la imagen va por dentro. */
 const BOX_BORDER = 1;
 
-/** Proporción real de la imagen (ancho / alto); 3:2 si no se puede leer. */
+/**
+ * Proporción real de la imagen (ancho / alto); 3:2 si no se puede leer. En web (react-native-web)
+ * `Image.resolveAssetSource` no existe: ahí se corrige con el tamaño que da `onLoad`.
+ */
 function aspectRatioOf(source: ImageSourcePropType): number {
-  const asset = Image.resolveAssetSource(source);
+  const asset =
+    typeof Image.resolveAssetSource === 'function' ? Image.resolveAssetSource(source) : null;
   return asset?.width && asset.height ? asset.width / asset.height : DEFAULT_ASPECT_RATIO;
+}
+
+/** Proporción que reporta la imagen al cargar, o null si no la trae. */
+function aspectRatioOnLoad(event: ImageLoadEvent): number | null {
+  const { width, height } = event.nativeEvent.source ?? {};
+  return width && height ? width / height : null;
 }
 
 /**
@@ -45,7 +56,13 @@ export function Figure({ source, alt }: FigureProps) {
   const [boxWidth, setBoxWidth] = useState(0);
   const insets = useSafeAreaInsets();
   const window = useWindowDimensions();
-  const ratio = aspectRatioOf(source);
+  const [loadedRatio, setLoadedRatio] = useState<number | null>(null);
+  const ratio = loadedRatio ?? aspectRatioOf(source);
+
+  const onImageLoad = (event: ImageLoadEvent) => {
+    const real = aspectRatioOnLoad(event);
+    if (real && Math.abs(real - ratio) > 0.001) setLoadedRatio(real);
+  };
 
   const onBoxLayout = (event: LayoutChangeEvent) => {
     const width = Math.floor(event.nativeEvent.layout.width) - BOX_BORDER * 2;
@@ -71,6 +88,7 @@ export function Figure({ source, alt }: FigureProps) {
               source={source}
               style={{ width: boxWidth, height: boxWidth / ratio }}
               resizeMode="contain"
+              onLoad={onImageLoad}
             />
           )}
           <View className="absolute bottom-2.5 right-2.5 flex-row items-center gap-1.5 rounded-full bg-navy px-3 py-1.5">

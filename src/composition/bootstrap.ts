@@ -21,7 +21,11 @@ let started: Promise<Container> | null = null;
  * arranca la sincronización automática del avance.
  */
 export function bootstrap(): Promise<Container> {
-  started ??= start();
+  // Si falla, "Reintentar" vuelve a empezar desde cero
+  started ??= start().catch((error: unknown) => {
+    started = null;
+    throw error;
+  });
   return started;
 }
 

@@ -12,6 +12,7 @@ import {
   type LoginFormInput,
   type LoginFormValues,
 } from '../forms/loginFormSchema';
+import { unexpectedErrorMessage } from './unexpectedError';
 
 const formErrors: Record<LoginError, string> = {
   INVALID_CREDENTIALS: 'El correo o la contraseña no coinciden. Revisa e intenta de nuevo.',
@@ -39,8 +40,12 @@ export function useLoginViewModel() {
   const onValid = async (values: LoginFormValues) => {
     setFormError(null);
     // Calcula el hash PBKDF2 (~1 s) y restaura el avance: el botón muestra "cargando"
-    const result = await auth.login.execute(values);
-    if (!result.ok) setFormError(formErrors[result.error]);
+    try {
+      const result = await auth.login.execute(values);
+      if (!result.ok) setFormError(formErrors[result.error]);
+    } catch (error) {
+      setFormError(unexpectedErrorMessage(error));
+    }
   };
 
   // Sin argumentos: el evento de RN no es el BaseSyntheticEvent que espera handleSubmit.

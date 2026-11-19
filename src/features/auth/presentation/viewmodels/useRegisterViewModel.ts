@@ -13,6 +13,7 @@ import {
   type RegisterFormInput,
   type RegisterFormValues,
 } from '../forms/registerFormSchema';
+import { unexpectedErrorMessage } from './unexpectedError';
 
 const formErrors: Record<Exclude<RegisterUserError, 'EMAIL_TAKEN'>, string> = {
   NETWORK: 'Necesitas conexión a internet para crear tu cuenta. Revisa tu red e intenta de nuevo.',
@@ -42,7 +43,13 @@ export function useRegisterViewModel() {
   const onValid = async ({ city, ...values }: RegisterFormValues) => {
     setFormError(null);
     // Calcula el hash PBKDF2 (~1 s): el botón muestra "cargando" mientras tanto
-    const created = await auth.registerUser.execute({ ...values, city: city || null });
+    let created: Awaited<ReturnType<typeof auth.registerUser.execute>>;
+    try {
+      created = await auth.registerUser.execute({ ...values, city: city || null });
+    } catch (error) {
+      setFormError(unexpectedErrorMessage(error));
+      return;
+    }
     if (!created.ok) {
       if (created.error === 'EMAIL_TAKEN') {
         setError('email', { message: 'Este correo ya tiene una cuenta. Inicia sesión con él.' });

@@ -33,6 +33,7 @@ export { NumberedList } from './NumberedList';
 export { PodiumCard, type PodiumPlace } from './PodiumCard';
 export { RankRow } from './RankRow';
 export { SectionHeader } from './SectionHeader';
+export { StartupError } from './StartupError';
 
 // Indicadores
 export { Badge } from './Badge';
