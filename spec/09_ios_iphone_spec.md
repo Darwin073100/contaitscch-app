@@ -2,67 +2,18 @@
 
 - **Estado:** 18 de noviembre de 2026. **Ruta elegida: versión web** que se agrega a la pantalla de
   inicio (sección 0), gratuita. La app nativa de iOS (secciones 1 a 6) queda para cuando haya cuenta
-  de Apple (I1); la corrección de sesión de la fase 1 sigue pendiente para esa ruta.
+  de Apple (I1). La corrección de sesión de la fase 1 ya está en el código compartido (spec 10, D9).
 - **Antecedentes:** `spec/08_produccion_supabase_y_apk_spec.md` (APK, EAS Build y EAS Update ya funcionando).
 
 ## 0. Versión web para iPhone (elegida)
 
 Instalar una app nativa en iPhones ajenos exige el Apple Developer Program (99 USD/año). La alternativa
-gratuita es la versión web de la misma app: el alumno abre un enlace en Safari y toca _Compartir →
-Agregar a inicio_. Es el mismo código offline-first: SQLite en el navegador, el mismo avance pendiente
-y la misma sincronización.
+gratuita es la versión web de la misma app, que el alumno agrega a la pantalla de inicio desde Safari.
 
-**Cómo funciona sin red**
-
-| Pieza                   | En la web                                                                                                                                       |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| Avance y contenido      | `expo-sqlite` en un Web Worker, guardado en el almacenamiento privado del navegador (OPFS, `AccessHandlePoolVFS`). Se abre con `client.web.ts`. |
-| Sesión                  | `secureStorage.web.ts` (localStorage). Solo `user_id` + `api_token`, nunca la contraseña.                                                       |
-| Abrir la app sin red    | Service worker (`dist/sw.js`, lo genera `scripts/build-web.mjs`) que guarda los ~8 MB de la app la primera vez.                                 |
-| SharedArrayBuffer       | SQLite lo necesita y exige COOP/COEP. El service worker agrega esos encabezados (el hosting no los manda); la primera visita recarga una vez.   |
-| Red y sincronización    | NetInfo usa `navigator.onLine` y un `HEAD /` que el service worker deja pasar a la red. `autoSync` sin cambios.                                 |
-| Almacenamiento duradero | `navigator.storage.persist()`; WebKit lo concede sobre todo a las apps agregadas a inicio.                                                      |
-
-Archivos solo para web (Metro elige `.web.ts` en el bundle web; Android e iOS no los ven):
-`src/core/database/client.web.ts`, `src/core/session/secureStorage.web.ts`,
-`src/core/web/setupWebApp.web.ts`, `public/` (`index.html`, `manifest.webmanifest`, `_headers`,
-`_redirects`), `scripts/build-web.mjs`, y en `metro.config.js` la extensión `wasm` y los encabezados
-del servidor de desarrollo. `app.json`: `web.output` pasó de `server` a `single` (app de una sola página).
-
-Cambios compartidos con Android (mismo resultado en el teléfono): `openAppDatabase()` ahora es `async`
-(en Android sigue abriendo con `openDatabaseSync`) y `Logo` recibe su tamaño en números (en web,
-`Image` ignoraba el tamaño de `className`). Llegan a Android por EAS Update.
-
-**Prueba en Chrome (18 nov, servidor sin COOP/COEP como EAS Hosting, Supabase local):** primera visita
-aislada por el service worker, registro, recarga con la sesión y la base intactas, apertura con el
-servidor apagado, aprobar N1-L1 sin red ("Sin conexión · 1 cambio") y al reconectar "Avance
-sincronizado". Sin errores en la consola. **Falta probarlo en Safari de un iPhone real.**
-
-**Publicar (usuario):**
-
-1. `npm run build:web` (usa las variables de `.env.local`: deben apuntar a Supabase en la nube).
-2. `npm run deploy:web`. La primera vez EAS pide el subdominio (por ejemplo `contaitscch` →
-   `https://contaitscch.expo.app`). Expo Hosting es gratuito con el plan Free.
-3. Cada corrección: repetir 1 y 2. Los iPhones toman la versión nueva al segundo arranque.
-
-**Prueba en iPhone (iOS 16.4 o superior):**
-
-| #   | Caso                                                                 | Esperado                                                                |
-| --- | -------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| W1  | Abrir el enlace en Safari                                            | Carga (puede recargar una vez sola) y muestra el registro               |
-| W2  | _Compartir → Agregar a inicio_ y abrir desde el ícono                | Pantalla completa, ícono y nombre CONTAITSCCH; la isla no tapa la barra |
-| W3  | Registrarse o iniciar sesión **dentro del ícono**                    | Entra a Niveles (el ícono no comparte datos con la pestaña de Safari)   |
-| W4  | Modo avión, cerrar la app por completo y abrirla                     | Abre sin red con la sesión y el avance                                  |
-| W5  | Con modo avión, aprobar un tema                                      | "Sin conexión · 1 cambio"                                               |
-| W6  | Quitar el modo avión y volver a la app                               | "Avance sincronizado"; el ranking lo refleja y el Android lo recupera   |
-| W7  | Formularios con el teclado abierto, modo oscuro, infografía ampliada | Se ve y se usa bien                                                     |
-| W8  | Publicar una corrección y abrir la app dos veces                     | Aparece el cambio                                                       |
-
-Instrucción para probadores: agregar a inicio, iniciar sesión ahí y usar solo ese ícono. Si borran los
-datos de Safari se pierde lo no sincronizado; lo sincronizado vuelve al iniciar sesión.
-
-Si SQLite fallara en Safari (W1 o W4), el plan B es guardar el avance en IndexedDB solo en web, con el
-mismo contrato de repositorios.
+Todo lo de la versión web (cómo funciona, archivos, reglas para no afectar Android, pruebas, publicación
+y problemas resueltos) está en **`spec/10_version_web_safari_spec.md`**. El primer diseño descrito aquí
+(expo-sqlite con OPFS y encabezados COOP/COEP) se reemplazó por sql.js + IndexedDB: OPFS no funcionaba
+en iPhone.
 
 ## 1. Objetivo
 

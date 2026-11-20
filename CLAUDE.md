@@ -34,7 +34,7 @@ Proyecto escolar: priorizar soluciones gratuitas y simples.
 - `npx supabase test db` — pruebas pgTAP de RPC y permisos (`supabase/tests/*.test.sql`)
 - `npm run build:apk` — APK de prueba en EAS Build (lo lanza el usuario: usa su cuota y su cuenta)
 - `npm run update:preview -- --message "…"` — publica JS y contenido al canal `preview` de EAS Update (lo lanza el usuario)
-- `npm run build:web` — versión web para iPhone (spec 09, sección 0): `expo export` a `dist/` + service worker. Usa `.env.local`
+- `npm run build:web` — versión web para iPhone (spec 10): `expo export` a `dist/` + service worker. Usa `.env.local`
 - `npm run deploy:web` — publica `dist/` en Expo Hosting (lo lanza el usuario)
 
 Antes de decir que algo está terminado: `npm run typecheck && npm run lint && npm test`.
@@ -45,7 +45,7 @@ Notas del entorno:
 - `react-native-css-interop` es dependencia directa a propósito (pnpm no lo expone); su versión debe ser la que pide `nativewind`.
 - `babel-preset-expo` y `@babel/plugin-transform-react-jsx` son devDependencies directas a propósito: Babel resuelve por nombre desde la raíz del proyecto lo que piden `babel.config.js` y `react-native-css-interop/babel` (vía `nativewind/babel`), y con pnpm sin ellas el build de EAS falla en `createBundleReleaseJsAndAssets` (`Cannot find module …`). La versión de `babel-preset-expo`, la que pide `expo`. `eas.json` fija pnpm 12.15.0 (perfil `base`) para que EAS instale igual que en local.
 - En local la caché de Metro oculta esos fallos. Para probar el bundle como EAS: `npx expo export:embed --platform android --dev false --reset-cache --entry-file node_modules/expo-router/entry.js --bundle-output <tmp>/index.android.bundle --assets-dest <tmp>/res`.
-- Versión web: los archivos `.web.ts` (`client`, `secureStorage`, `setupWebApp`) solo entran al bundle web; Android e iOS no los ven. En web, `Image` ignora el tamaño de `className`: dar `width`/`height` en `style`; y no existe `Image.resolveAssetSource` (usar `onLoad`). En web la base es **sql.js** en memoria guardada en IndexedDB (`client.web.ts`, `webSnapshotStore.ts`), no expo-sqlite: su OPFS bloquea los archivos y Safari en iPhone no los suelta. Sin COOP/COEP ni SharedArrayBuffer.
+- Versión web: los archivos `.web.ts` (`client`, `secureStorage`, `setupWebApp`) solo entran al bundle web; Android e iOS no los ven. En web, `Image` ignora el tamaño de `className`: dar `width`/`height` en `style`; y no existe `Image.resolveAssetSource` (usar `onLoad`). En web la base es **sql.js** en memoria guardada en IndexedDB (`client.web.ts`, `webSnapshotStore.ts`), no expo-sqlite: su OPFS bloquea los archivos y Safari en iPhone no los suelta. Sin COOP/COEP ni SharedArrayBuffer. Antes de tocar algo compartido, leer las reglas de `spec/10_version_web_safari_spec.md` (sección 5).
 - Windows: si la terminal abre el proyecto como `c:\…` (unidad en minúscula), `expo export --platform web` falla con `Unable to resolve "c:\C:\…"`. `build:web` lo corrige; a mano, entrar con `cd C:/…`.
 - ESLint se queda en v9 hasta que `eslint-plugin-react` (de `eslint-config-expo`) soporte v10.
 - Variables públicas en `.env.local` (no la leas): `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
