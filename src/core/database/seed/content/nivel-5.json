@@ -83,6 +83,62 @@
               }
             ],
             "feedback": "PEPS: primeras entradas, primeras salidas."
+          },
+          {
+            "id": 50103,
+            "sortOrder": 3,
+            "statement": "Inventario inicial $15,000, compras $40,000, devoluciones sobre compras $2,000 e inventario final $11,000. El costo de ventas es:",
+            "options": [
+              {
+                "id": 501031,
+                "text": "$42,000",
+                "isCorrect": true
+              },
+              {
+                "id": 501032,
+                "text": "$44,000",
+                "isCorrect": false
+              },
+              {
+                "id": 501033,
+                "text": "$40,000",
+                "isCorrect": false
+              },
+              {
+                "id": 501034,
+                "text": "$53,000",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Compras netas = $40,000 − $2,000 = $38,000; costo = $15,000 + $38,000 − $11,000 = $42,000."
+          },
+          {
+            "id": 50104,
+            "sortOrder": 4,
+            "statement": "El conteo físico encuentra $3,000 menos de mercancía de lo que dicen los registros. ¿Qué debe sospechar primero el negocio?",
+            "options": [
+              {
+                "id": 501041,
+                "text": "Que las ventas fueron mayores",
+                "isCorrect": false
+              },
+              {
+                "id": 501042,
+                "text": "Faltantes, robo o mercancía dañada: el conteo físico es lo que permite distinguirlo",
+                "isCorrect": true
+              },
+              {
+                "id": 501043,
+                "text": "Que la fórmula del costo de ventas está mal",
+                "isCorrect": false
+              },
+              {
+                "id": 501044,
+                "text": "Nada: las diferencias son normales y se ignoran",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Lo que no está en el almacén ni se devolvió, se vendió… o se perdió, y el conteo físico es lo que permite distinguirlo."
           }
         ]
       }
@@ -165,6 +221,62 @@
               }
             ],
             "feedback": "El desembolso ocurrió al comprar el bien; la depreciación solo distribuye su costo."
+          },
+          {
+            "id": 50203,
+            "sortOrder": 3,
+            "statement": "Un vehículo costó $180,000, tiene valor de desecho de $20,000 y vida útil de 8 años. Su depreciación anual en línea recta es:",
+            "options": [
+              {
+                "id": 502031,
+                "text": "$22,500",
+                "isCorrect": false
+              },
+              {
+                "id": 502032,
+                "text": "$20,000",
+                "isCorrect": true
+              },
+              {
+                "id": 502033,
+                "text": "$25,000",
+                "isCorrect": false
+              },
+              {
+                "id": 502034,
+                "text": "$180,000",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "($180,000 − $20,000) ÷ 8 = $20,000 por año."
+          },
+          {
+            "id": 50204,
+            "sortOrder": 4,
+            "statement": "Después de 3 años, el vehículo anterior tiene una depreciación acumulada de $60,000. Su valor en libros es:",
+            "options": [
+              {
+                "id": 502041,
+                "text": "$180,000",
+                "isCorrect": false
+              },
+              {
+                "id": 502042,
+                "text": "$120,000",
+                "isCorrect": true
+              },
+              {
+                "id": 502043,
+                "text": "$60,000",
+                "isCorrect": false
+              },
+              {
+                "id": 502044,
+                "text": "$20,000",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Valor en libros = costo − depreciación acumulada = $180,000 − $60,000 = $120,000."
           }
         ]
       }
@@ -247,6 +359,62 @@
               }
             ],
             "feedback": "Es dinero ajeno que el negocio debe entregar: una obligación."
+          },
+          {
+            "id": 50303,
+            "sortOrder": 3,
+            "statement": "Un trabajador tiene percepciones de $9,000, ISR retenido de $800, cuota de seguro social de $450 y un descuento de $500 por un préstamo personal. Su sueldo neto es:",
+            "options": [
+              {
+                "id": 503031,
+                "text": "$9,000",
+                "isCorrect": false
+              },
+              {
+                "id": 503032,
+                "text": "$7,250",
+                "isCorrect": true
+              },
+              {
+                "id": 503033,
+                "text": "$7,750",
+                "isCorrect": false
+              },
+              {
+                "id": 503034,
+                "text": "$8,200",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Neto = $9,000 − $800 − $450 − $500 = $7,250."
+          },
+          {
+            "id": 50304,
+            "sortOrder": 4,
+            "statement": "Las cuotas de seguridad social que corresponden al patrón son:",
+            "options": [
+              {
+                "id": 503041,
+                "text": "Una deducción del sueldo del trabajador",
+                "isCorrect": false
+              },
+              {
+                "id": 503042,
+                "text": "Parte del costo de personal del negocio, además de las percepciones",
+                "isCorrect": true
+              },
+              {
+                "id": 503043,
+                "text": "Un ingreso para el negocio",
+                "isCorrect": false
+              },
+              {
+                "id": 503044,
+                "text": "Un pago que hace el trabajador de su bolsillo",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "El gasto del negocio es el total de percepciones más las cuotas y aportaciones que corresponden al patrón."
           }
         ]
       }
@@ -329,6 +497,62 @@
               }
             ],
             "feedback": "10,000 − 6,500 = $3,500 se entera al SAT."
+          },
+          {
+            "id": 50403,
+            "sortOrder": 3,
+            "statement": "Las ventas del mes sin IVA son $120,000 y las compras y gastos acreditables sin IVA son $75,000, con tasa general del 16%. El IVA por pagar del mes es:",
+            "options": [
+              {
+                "id": 504031,
+                "text": "$19,200",
+                "isCorrect": false
+              },
+              {
+                "id": 504032,
+                "text": "$7,200",
+                "isCorrect": true
+              },
+              {
+                "id": 504033,
+                "text": "$12,000",
+                "isCorrect": false
+              },
+              {
+                "id": 504034,
+                "text": "$31,200",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Trasladado $120,000 × 16% = $19,200; acreditable $75,000 × 16% = $12,000; por pagar $19,200 − $12,000 = $7,200."
+          },
+          {
+            "id": 50404,
+            "sortOrder": 4,
+            "statement": "En un mes, un negocio acreditó más IVA del que trasladó. ¿Qué ocurre?",
+            "options": [
+              {
+                "id": 504041,
+                "text": "Debe pagar la diferencia de todos modos",
+                "isCorrect": false
+              },
+              {
+                "id": 504042,
+                "text": "Puede tener saldo a favor, conforme a las reglas vigentes",
+                "isCorrect": true
+              },
+              {
+                "id": 504043,
+                "text": "El SAT lo multa por acreditar de más",
+                "isCorrect": false
+              },
+              {
+                "id": 504044,
+                "text": "Pierde la diferencia para siempre",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Si acreditó más de lo que trasladó, puede tener saldo a favor, conforme a las reglas vigentes."
           }
         ]
       }

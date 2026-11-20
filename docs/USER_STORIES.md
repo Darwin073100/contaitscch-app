@@ -102,7 +102,7 @@ Especificaciones:
 - Se aprueba respondiendo bien todas las preguntas.
 - Al comprobar, la aplicación solo marca si la opción elegida es correcta o no; nunca revela la correcta.
 - La retroalimentación se muestra solo al acertar.
-- La aplicación debe mostrar una barra de progreso (por ejemplo, pregunta 1 de 2).
+- La aplicación debe mostrar una barra de progreso (por ejemplo, pregunta 1 de 4).
 - Si no aprueba, el tema queda "por aprobar" y puede volver a tomar la lección y el ejercicio.
 - Un tema aprobado nunca se pierde, aunque después repruebe el ejercicio.
 

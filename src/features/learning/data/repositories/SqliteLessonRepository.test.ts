@@ -12,7 +12,7 @@ describe('SqliteLessonRepository', () => {
       level: { id: 1, order: 1 },
       topic: { id: 101, title: '¿Qué es la contabilidad?', order: 1 },
       objective: expect.stringContaining('Definir la contabilidad'),
-      quiz: { questionCount: 2, passMark: 2 },
+      quiz: { questionCount: 4, passMark: 4 },
     });
     expect(lesson?.body.explanation).toHaveLength(3);
     expect(lesson?.body.example.title).toBe('La papelería de Ana');

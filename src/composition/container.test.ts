@@ -1,3 +1,5 @@
+import { RandomShuffler } from '@/core/random/Shuffler';
+
 import type { Container } from './container';
 import { createTestContainer } from './testing/createTestContainer';
 
@@ -25,7 +27,7 @@ describe('avance del curso (integración sobre SQLite)', () => {
     const events: string[] = [];
     container.events.subscribe((e) => events.push(e.type));
 
-    const result = await answer(container, 104, 2);
+    const result = await answer(container, 104, 4);
 
     expect(result.ok && result.value).toMatchObject({ passedNow: true, levelJustCompleted: 1 });
     expect(events).toEqual(['ProgressChanged', 'LevelCompleted']);
@@ -37,6 +39,14 @@ describe('avance del curso (integración sobre SQLite)', () => {
     ]);
     const syllabus = await container.learning.getSyllabus.execute({ levelId: 2 });
     expect(syllabus.ok && syllabus.value.activeTopic?.id).toBe(201);
+  });
+
+  it('con las opciones revueltas al azar se califica igual (por id de opción)', async () => {
+    const container = await createTestContainer({ shuffler: new RandomShuffler() });
+
+    const result = await answer(container, 101, 4);
+
+    expect(result.ok && result.value).toMatchObject({ passedNow: true, score: 4, total: 4 });
   });
 
   it('reprobar deja el tema por aprobar y el siguiente bloqueado', async () => {

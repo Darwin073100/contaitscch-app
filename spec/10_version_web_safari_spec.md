@@ -62,6 +62,7 @@ repositorios, el `SqliteUnitOfWork` y las pruebas no cambian.
 | Archivo                                 | Qué hace                                                                                                           |
 | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | `src/core/database/client.web.ts`       | Abre sql.js, carga la copia de IndexedDB, activa `foreign_keys` y guarda tras cada escritura                       |
+| `src/core/database/sqlJsDatabase.ts`    | Conecta sql.js con Drizzle (`foreign_keys` y esquema); la usan `client.web.ts` y su prueba                         |
 | `src/core/database/webSnapshotStore.ts` | Lee y escribe la copia de la base en IndexedDB (solo lo importa `client.web.ts`)                                   |
 | `src/core/database/sqlJsInline.d.ts`    | Tipos para `sql.js/dist/sql-wasm-inline.js`                                                                        |
 | `src/core/session/secureStorage.web.ts` | Sesión en `localStorage`                                                                                           |
@@ -113,6 +114,12 @@ repositorios, el `SqliteUnitOfWork` y las pruebas no cambian.
    la web llamaba a `…/rest/v1/rest/v1/rpc/…`, recibía 404 y mostraba "Necesitas conexión").
 8. **Versiones fijas:** `sql.js` 1.16.0 y `@types/sql.js` 1.4.11 (no había tipos más nuevos con más de un
    día). Al subirlas, repetir la verificación de la sección 6.
+
+9. **Contenido del curso (agregar preguntas):** funciona igual en Android y en web; al subir
+   `manifest.version`, `ContentSeeder` actualiza la base en los dos. Agrega o actualiza preguntas por id
+   y **nunca las borra**: solo agregar al final con ids nuevos (`pregunta = ejercicio×100 + orden`) y no
+   quitar ni renumerar las existentes. Supabase acepta `best_score` de 0 a 20: máximo 20 preguntas por
+   ejercicio, o hay que migrar esa restricción. Lo prueba `src/core/database/sqlJsDatabase.test.ts`.
 
 ## 6. Verificación antes de publicar
 

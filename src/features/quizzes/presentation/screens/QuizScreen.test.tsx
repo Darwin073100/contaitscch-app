@@ -44,9 +44,9 @@ describe('QuizScreen (ejercicio del tema 101)', () => {
     mockContainer = await createTestContainer();
   });
 
-  it('acierta las 2 preguntas: tema aprobado y siguiente tema', async () => {
+  it('acierta las 4 preguntas: tema aprobado y siguiente tema', async () => {
     await renderScreen(101);
-    expect(await screen.findByText('1 de 2')).toBeTruthy();
+    expect(await screen.findByText('1 de 4')).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Comprobar' })).toBeDisabled();
 
     await pick('B');
@@ -55,14 +55,20 @@ describe('QuizScreen (ejercicio del tema 101)', () => {
     expect(screen.getByText(/registrar, clasificar, resumir e interpretar/)).toBeTruthy();
     await press('Siguiente pregunta');
 
-    expect(screen.getByText('2 de 2')).toBeTruthy();
-    await pick('B');
-    await press('Comprobar');
-    await screen.findByText('Correcto');
-    await press('Ver resultado');
+    for (const [n, letter] of [
+      [2, 'B'],
+      [3, 'B'],
+      [4, 'D'],
+    ] as const) {
+      expect(screen.getByText(`${n} de 4`)).toBeTruthy();
+      await pick(letter);
+      await press('Comprobar');
+      await screen.findByText('Correcto');
+      await press(n < 4 ? 'Siguiente pregunta' : 'Ver resultado');
+    }
 
     expect(await screen.findByText('¡Tema aprobado!')).toBeTruthy();
-    expect(screen.getByLabelText('Aciertos: 2/2')).toBeTruthy();
+    expect(screen.getByLabelText('Aciertos: 4/4')).toBeTruthy();
     await press('Siguiente tema');
     expect(router.dismissTo).toHaveBeenCalledWith({
       pathname: '/tema/[topicId]',
@@ -75,7 +81,7 @@ describe('QuizScreen (ejercicio del tema 101)', () => {
 
   it('una respuesta incorrecta no revela la correcta y obliga a retomar la lección', async () => {
     await renderScreen(101);
-    await screen.findByText('1 de 2');
+    await screen.findByText('1 de 4');
 
     await pick('A');
     await press('Comprobar');
@@ -85,10 +91,16 @@ describe('QuizScreen (ejercicio del tema 101)', () => {
     expect(screen.queryByText(/registrar, clasificar, resumir e interpretar/)).toBeNull();
     await press('Siguiente pregunta');
 
-    await pick('B');
-    await press('Comprobar');
-    await screen.findByText('Correcto');
-    await press('Ver resultado');
+    for (const [n, letter] of [
+      [2, 'B'],
+      [3, 'B'],
+      [4, 'D'],
+    ] as const) {
+      await pick(letter);
+      await press('Comprobar');
+      await screen.findByText('Correcto');
+      await press(n < 4 ? 'Siguiente pregunta' : 'Ver resultado');
+    }
 
     expect(await screen.findByText('Aún no apruebas este tema')).toBeTruthy();
     await press('Volver a tomar la lección');

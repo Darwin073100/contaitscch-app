@@ -1,3 +1,5 @@
+import { keepOrder, type Shuffler } from '@/core/random/Shuffler';
+
 import { FINAL_EXAM_ID } from '../entities/Quiz';
 import {
   courseFrom,
@@ -7,7 +9,7 @@ import {
 } from '../testing/fakes';
 import { StartQuizUseCase } from './StartQuizUseCase';
 
-const setup = (passed: number[] = []) => {
+const setup = (passed: number[] = [], shuffler: Shuffler = keepOrder) => {
   const progress = new InMemoryQuizProgressRepository();
   for (const quizId of passed) {
     progress.rows.set(quizId, {
@@ -24,7 +26,7 @@ const setup = (passed: number[] = []) => {
     gradableQuiz(102),
     gradableQuiz(FINAL_EXAM_ID, { questions: 10, passMark: 8 }),
   ]);
-  return new StartQuizUseCase(reader, courseFrom(progress, [101, 102]));
+  return new StartQuizUseCase(reader, courseFrom(progress, [101, 102]), shuffler);
 };
 
 describe('StartQuizUseCase', () => {
@@ -38,6 +40,20 @@ describe('StartQuizUseCase', () => {
       101011, 101012, 101013, 101014,
     ]);
     expect(result.value).not.toHaveProperty('answerKey');
+    expect(JSON.stringify(result.value)).not.toContain('correct');
+  });
+
+  it('revuelve las opciones de cada pregunta y conserva el orden de las preguntas', async () => {
+    const reverse: Shuffler = { shuffle: (items) => [...items].reverse() };
+
+    const result = await setup([], reverse).execute({ quizId: 101 });
+
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.value.questions.map((q) => q.id)).toEqual([10101, 10102]);
+    expect(result.value.questions[0].options.map((o) => o.id)).toEqual([
+      101014, 101013, 101012, 101011,
+    ]);
     expect(JSON.stringify(result.value)).not.toContain('correct');
   });
 

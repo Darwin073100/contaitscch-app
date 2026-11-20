@@ -43,7 +43,7 @@ describe('ContentSeeder', () => {
     expect(db.select().from(topics).all()).toHaveLength(24);
     // 24 ejercicios de tema + examen integrador
     expect(db.select().from(quizzes).all()).toHaveLength(25);
-    expect(db.select().from(questions).all()).toHaveLength(24 * 2 + 10);
+    expect(db.select().from(questions).all()).toHaveLength(24 * 4 + 10);
     expect(db.select().from(glossaryTerms).all()).toHaveLength(course.glossary.length);
     expect(db.select().from(contentMeta).get()?.version).toBe(course.version);
   });
@@ -54,7 +54,7 @@ describe('ContentSeeder', () => {
     expect(db.select().from(quizzes).where(eq(quizzes.id, 101)).get()).toMatchObject({
       kind: 'topic',
       topicId: 101,
-      passMark: 2,
+      passMark: 4,
     });
     expect(db.select().from(quizzes).where(eq(quizzes.id, FINAL_EXAM_ID)).get()).toMatchObject({
       kind: 'final',

@@ -6,6 +6,7 @@ import {
   testClock,
 } from '@/core/database/testing/createSeededTestDatabase';
 import type { RemoteClient } from '@/core/network/RpcClient';
+import { keepOrder, type Shuffler } from '@/core/random/Shuffler';
 import { SecureSessionStore } from '@/core/session/SecureSessionStore';
 import type { Session } from '@/core/session/SessionStore';
 import { memoryStorage } from '@/core/session/testing/memoryStorage';
@@ -21,6 +22,8 @@ export type TestContainerOptions = {
   remote?: RemoteClient;
   /** Por defecto sin red (como `remote`). */
   connectivity?: Connectivity;
+  /** Por defecto `keepOrder`: las opciones salen en el orden del contenido y se eligen por letra. */
+  shuffler?: Shuffler;
 };
 
 export const testUserSession: Session = {
@@ -73,5 +76,6 @@ export async function createTestContainer(options: TestContainerOptions = {}): P
     clock: testClock,
     remote: options.remote ?? offlineRemote,
     connectivity: options.connectivity ?? offline,
+    shuffler: options.shuffler ?? keepOrder,
   });
 }

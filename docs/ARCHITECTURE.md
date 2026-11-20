@@ -595,6 +595,7 @@ flowchart TD
 | Nivel                     | Completado con sus 4 temas; abierto si su primer tema lo está; actual = el del siguiente tema                    | `CourseProgressPolicy`                        |
 | Examen integrador         | Disponible con los 24 temas; estados Bloqueado / Disponible / Por aprobar / Aprobado                             | `QuizAccessPolicy`, `GetFinalExamStatus`      |
 | Nunca revelar la correcta | `StartQuiz` no entrega la clave; `CheckAnswer` dice si acertó y da `feedback` solo al acertar                    | `quizzes/domain`                              |
+| Opciones revueltas        | En cada intento las opciones salen en otro orden; las preguntas no. Se califica por id de opción                 | `StartQuizUseCase` + `core/random/Shuffler`   |
 | Fusión entre teléfonos    | Ver "Sincronización"                                                                                             | `mergeProgress`, `reconcile`, `sync_progress` |
 | Ranking                   | Niveles completados DESC, temas aprobados DESC, `dense_rank`; solo verificados si la verificación está encendida | Vista `private.ranking`                       |
 

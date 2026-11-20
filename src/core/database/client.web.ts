@@ -1,9 +1,8 @@
-import { drizzle } from 'drizzle-orm/sql-js';
 import type { Database, SqlValue } from 'sql.js';
 import initSqlJs from 'sql.js/dist/sql-wasm-inline.js';
 
 import type { AppDatabase } from './database';
-import * as schema from './schema';
+import { connectSqlJsDatabase } from './sqlJsDatabase';
 import { loadSnapshot, saveSnapshot } from './webSnapshotStore';
 
 /** Espera tras una escritura antes de guardar: agrupa las de un mismo ejercicio o siembra. */
@@ -26,9 +25,9 @@ export async function openAppDatabase(): Promise<AppDatabase> {
   const SQL = await initSqlJs();
   const snapshot = await loadSnapshot().catch(() => null);
   const client = new SQL.Database(snapshot ?? undefined);
-  client.exec('PRAGMA foreign_keys = ON;');
+  const db = connectSqlJsDatabase(client);
   persistWrites(client);
-  return drizzle(client, { schema }) as unknown as AppDatabase;
+  return db;
 }
 
 /** Observa las sentencias del cliente y guarda la base poco después de cada escritura. */

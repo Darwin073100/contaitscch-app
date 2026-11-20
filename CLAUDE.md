@@ -82,11 +82,12 @@ Patrones en uso: Repository, Use Case (`execute()`), DI, Unit of Work, Policy pu
 
 ## Reglas de negocio
 
-- Cada tema se estudia en 4 pasos (objetivo + infografía, explicación, ejemplo resuelto, repaso) y termina con un ejercicio de opción múltiple. Aprobar = `aciertos >= pass_mark`; en temas, todas las preguntas (2/2).
+- Cada tema se estudia en 4 pasos (objetivo + infografía, explicación, ejemplo resuelto, repaso) y termina con un ejercicio de opción múltiple. Aprobar = `aciertos >= pass_mark`; en temas, todas las preguntas (4/4: 2 originales + 2 de dificultad extra, contenido v4).
 - Desbloqueo **secuencial global** (N1-L1 … N6-L4): un tema se abre al aprobar el anterior, aunque sea de otro nivel. Un tema con intentos sin aprobar queda "por aprobar" y se vuelve a tomar la lección.
 - Nivel completado = sus 4 temas aprobados; nivel abierto = su primer tema desbloqueado. Nivel actual = el del primer tema sin aprobar.
 - Examen integrador (id 900): disponible con los 24 temas aprobados; se aprueba con 8 de 10.
 - **Nunca se revela la opción correcta**: al comprobar solo se marca la elegida; la retroalimentación solo aparece al acertar; el examen no tiene retroalimentación.
+- Las opciones de cada pregunta se revuelven en cada intento (`StartQuizUseCase` con el puerto `Shuffler` de `core/random`); las preguntas conservan su orden. Se califica por id de opción. Las pruebas usan `keepOrder` (lo pone `createTestContainer`).
 - Avance guardado en `quiz_progress` (aprobado, mejor puntaje, intentos, `passed_at`). **Aprobar nunca se deshace**, salvo "Reiniciar mi avance".
 - Desbloqueo, nivel actual, niveles completados, progreso y posición se CALCULAN; nunca se guardan como columna.
 - Ranking: niveles completados DESC, temas aprobados DESC, `dense_rank`; solo correos verificados si la verificación está encendida; nunca expone correos.

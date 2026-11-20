@@ -167,9 +167,9 @@ describe('contenido del bundle', () => {
     expect(GlossarySchema.parse(glossaryJson)).toHaveLength(33);
   });
 
-  it('cada ejercicio de tema tiene 2 preguntas con retroalimentación', () => {
+  it('cada ejercicio de tema tiene 4 preguntas con retroalimentación', () => {
     for (const t of levels.flatMap((l) => l.topics)) {
-      expect(t.quiz.questions).toHaveLength(2);
+      expect(t.quiz.questions).toHaveLength(4);
       expect(t.quiz.questions.every((q) => q.feedback)).toBe(true);
     }
   });

@@ -1,3 +1,4 @@
+import type { Shuffler } from '@/core/random/Shuffler';
 import { err, ok, type Result } from '@/core/result/Result';
 
 import type { Quiz } from '../entities/Quiz';
@@ -7,11 +8,17 @@ import type { QuizReader } from '../repositories/QuizReader';
 
 export type StartQuizError = 'QUIZ_NOT_FOUND' | 'QUIZ_LOCKED';
 
-/** Preguntas del ejercicio de un tema o del examen integrador, sin la clave de respuestas. */
+/**
+ * Preguntas del ejercicio de un tema o del examen integrador, sin la clave de respuestas.
+ * Las opciones de cada pregunta salen en otro orden en cada intento: así la letra de la respuesta
+ * correcta no se memoriza (en el contenido suele ser la B). Las preguntas conservan su orden, porque
+ * algunas se apoyan en la anterior. Se califica por id de opción, así que el orden no afecta.
+ */
 export class StartQuizUseCase {
   constructor(
     private readonly quizzes: QuizReader,
     private readonly course: CourseProgressSource,
+    private readonly shuffler: Shuffler,
   ) {}
 
   async execute({ quizId }: { quizId: number }): Promise<Result<Quiz, StartQuizError>> {
@@ -20,6 +27,12 @@ export class StartQuizUseCase {
     if (!canTakeQuiz(quiz, await this.course.execute())) return err('QUIZ_LOCKED');
 
     const { answerKey: _answerKey, ...visible } = quiz;
-    return ok(visible);
+    return ok({
+      ...visible,
+      questions: visible.questions.map((q) => ({
+        ...q,
+        options: this.shuffler.shuffle(q.options),
+      })),
+    });
   }
 }

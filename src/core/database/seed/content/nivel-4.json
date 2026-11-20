@@ -83,6 +83,62 @@
               }
             ],
             "feedback": "La renta sostiene la operación, pero no depende de una venta específica: es un gasto."
+          },
+          {
+            "id": 40103,
+            "sortOrder": 3,
+            "statement": "Una costurera vende un vestido en $1,200 y la tela le costó $500. ¿Cuál es la utilidad bruta de esa venta?",
+            "options": [
+              {
+                "id": 401031,
+                "text": "$1,200",
+                "isCorrect": false
+              },
+              {
+                "id": 401032,
+                "text": "$700",
+                "isCorrect": true
+              },
+              {
+                "id": 401033,
+                "text": "$500",
+                "isCorrect": false
+              },
+              {
+                "id": 401034,
+                "text": "$1,700",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Utilidad bruta = precio de venta menos lo que costó lo vendido: $1,200 − $500 = $700."
+          },
+          {
+            "id": 40104,
+            "sortOrder": 4,
+            "statement": "Una tienda compra $20,000 de mercancía y vende la mitad. ¿Cuánto de esa compra es costo de ventas?",
+            "options": [
+              {
+                "id": 401041,
+                "text": "$20,000: toda la compra",
+                "isCorrect": false
+              },
+              {
+                "id": 401042,
+                "text": "Solo el costo de la parte vendida: $10,000",
+                "isCorrect": true
+              },
+              {
+                "id": 401043,
+                "text": "$0, porque aún no se vende todo",
+                "isCorrect": false
+              },
+              {
+                "id": 401044,
+                "text": "$20,000 más la renta del mes",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "La compra no vendida es inventario (activo); solo se vuelve costo la parte que efectivamente se vendió."
           }
         ]
       }
@@ -165,6 +221,62 @@
               }
             ],
             "feedback": "50,000 − 30,000 = 20,000 de utilidad bruta; 20,000 − 12,000 = $8,000."
+          },
+          {
+            "id": 40203,
+            "sortOrder": 3,
+            "statement": "Un negocio tiene una utilidad bruta sana, pero termina el mes con pérdida. ¿Qué indica eso con mayor probabilidad?",
+            "options": [
+              {
+                "id": 402031,
+                "text": "Que el precio o el costo es el problema",
+                "isCorrect": false
+              },
+              {
+                "id": 402032,
+                "text": "Que el problema está en los gastos, no en el precio ni en el costo",
+                "isCorrect": true
+              },
+              {
+                "id": 402033,
+                "text": "Que el balance está mal hecho",
+                "isCorrect": false
+              },
+              {
+                "id": 402034,
+                "text": "Que no hubo ventas en el mes",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Una utilidad bruta sana con pérdida final indica que el problema está en los gastos."
+          },
+          {
+            "id": 40204,
+            "sortOrder": 4,
+            "statement": "¿Qué cuenta NO pertenece al estado de resultados?",
+            "options": [
+              {
+                "id": 402041,
+                "text": "Ventas",
+                "isCorrect": false
+              },
+              {
+                "id": 402042,
+                "text": "Costo de ventas",
+                "isCorrect": false
+              },
+              {
+                "id": 402043,
+                "text": "Caja",
+                "isCorrect": true
+              },
+              {
+                "id": 402044,
+                "text": "Gastos de operación",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "En el estado de resultados solo van ingresos, costos y gastos del periodo; Caja es cuenta del balance."
           }
         ]
       }
@@ -247,6 +359,62 @@
               }
             ],
             "feedback": "Vence a más de un año, por lo que se clasifica como pasivo no circulante."
+          },
+          {
+            "id": 40303,
+            "sortOrder": 3,
+            "statement": "Un cliente debe $6,500 y pagará dentro de 45 días. En el balance general, la cuenta de Clientes es:",
+            "options": [
+              {
+                "id": 403031,
+                "text": "Activo no circulante",
+                "isCorrect": false
+              },
+              {
+                "id": 403032,
+                "text": "Activo circulante",
+                "isCorrect": true
+              },
+              {
+                "id": 403033,
+                "text": "Pasivo circulante",
+                "isCorrect": false
+              },
+              {
+                "id": 403034,
+                "text": "Capital contable",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Se convierte en dinero en menos de un año: es activo circulante."
+          },
+          {
+            "id": 40304,
+            "sortOrder": 4,
+            "statement": "Un negocio tiene activo total de $200,000 y pasivo total de $120,000. Su capital contable es:",
+            "options": [
+              {
+                "id": 403041,
+                "text": "$320,000",
+                "isCorrect": false
+              },
+              {
+                "id": 403042,
+                "text": "$80,000",
+                "isCorrect": true
+              },
+              {
+                "id": 403043,
+                "text": "$120,000",
+                "isCorrect": false
+              },
+              {
+                "id": 403044,
+                "text": "$200,000",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Capital = Activo − Pasivo = $200,000 − $120,000 = $80,000."
           }
         ]
       }
@@ -329,6 +497,62 @@
               }
             ],
             "feedback": "Comprar bienes duraderos para el negocio es una actividad de inversión."
+          },
+          {
+            "id": 40403,
+            "sortOrder": 3,
+            "statement": "La dueña aporta $25,000 en efectivo al negocio. En el estado de flujo de efectivo, esa entrada es actividad de:",
+            "options": [
+              {
+                "id": 404031,
+                "text": "Operación",
+                "isCorrect": false
+              },
+              {
+                "id": 404032,
+                "text": "Inversión",
+                "isCorrect": false
+              },
+              {
+                "id": 404033,
+                "text": "Financiamiento",
+                "isCorrect": true
+              },
+              {
+                "id": 404034,
+                "text": "No se clasifica",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Las aportaciones de los dueños son entradas de financiamiento."
+          },
+          {
+            "id": 40404,
+            "sortOrder": 4,
+            "statement": "Capital inicial $50,000; utilidad del periodo $12,000; retiros de la dueña $4,000; sin aportaciones nuevas. El capital final es:",
+            "options": [
+              {
+                "id": 404041,
+                "text": "$58,000",
+                "isCorrect": true
+              },
+              {
+                "id": 404042,
+                "text": "$66,000",
+                "isCorrect": false
+              },
+              {
+                "id": 404043,
+                "text": "$46,000",
+                "isCorrect": false
+              },
+              {
+                "id": 404044,
+                "text": "$62,000",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Capital final = inicial + utilidad − retiros = $50,000 + $12,000 − $4,000 = $58,000."
           }
         ]
       }

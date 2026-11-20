@@ -83,6 +83,62 @@
               }
             ],
             "feedback": "Margen neto = utilidad neta entre ventas: es la ganancia que queda por peso vendido."
+          },
+          {
+            "id": 60103,
+            "sortOrder": 3,
+            "statement": "Activo circulante $90,000 y pasivo circulante $45,000. ¿Cuál es la liquidez corriente y qué significa?",
+            "options": [
+              {
+                "id": 601031,
+                "text": "0.5: no alcanza para pagar sus deudas cortas",
+                "isCorrect": false
+              },
+              {
+                "id": 601032,
+                "text": "2.0: puede cubrir sus deudas cortas 2 veces",
+                "isCorrect": true
+              },
+              {
+                "id": 601033,
+                "text": "2.0: la mitad de los bienes se financió con deuda",
+                "isCorrect": false
+              },
+              {
+                "id": 601034,
+                "text": "$45,000: no hay razón que calcular",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "$90,000 ÷ $45,000 = 2.0: lo convertible pronto en dinero cubre 2 veces lo que vence pronto."
+          },
+          {
+            "id": 60104,
+            "sortOrder": 4,
+            "statement": "Dos tiendas tienen el mismo margen neto (8%), pero la tienda A tiene un endeudamiento del 70% y la tienda B del 20%. ¿Qué se puede concluir?",
+            "options": [
+              {
+                "id": 601041,
+                "text": "Nada: el margen es el mismo",
+                "isCorrect": false
+              },
+              {
+                "id": 601042,
+                "text": "La tienda A está más apalancada: financió más de sus bienes con deuda y carga más riesgo financiero",
+                "isCorrect": true
+              },
+              {
+                "id": 601043,
+                "text": "La tienda B gana más dinero",
+                "isCorrect": false
+              },
+              {
+                "id": 601044,
+                "text": "La tienda A tiene más liquidez",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Endeudamiento = pasivo total ÷ activo total: A financió el 70% con deuda y B solo el 20%."
           }
         ]
       }
@@ -165,6 +221,62 @@
               }
             ],
             "feedback": "La renta se paga igual se venda poco o mucho: es fija."
+          },
+          {
+            "id": 60203,
+            "sortOrder": 3,
+            "statement": "Un producto se vende en $120, su costo variable es $70 por unidad y los costos fijos son $25,000 al mes. ¿Cuál es el punto de equilibrio en unidades y en pesos?",
+            "options": [
+              {
+                "id": 602031,
+                "text": "500 unidades; $60,000",
+                "isCorrect": true
+              },
+              {
+                "id": 602032,
+                "text": "208 unidades; $25,000",
+                "isCorrect": false
+              },
+              {
+                "id": 602033,
+                "text": "500 unidades; $25,000",
+                "isCorrect": false
+              },
+              {
+                "id": 602034,
+                "text": "357 unidades; $42,840",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Margen = $120 − $70 = $50; $25,000 ÷ $50 = 500 unidades; 500 × $120 = $60,000."
+          },
+          {
+            "id": 60204,
+            "sortOrder": 4,
+            "statement": "Si el negocio suma un gasto fijo nuevo de $5,000 al mes, sin cambiar el precio ni el costo variable, el punto de equilibrio:",
+            "options": [
+              {
+                "id": 602041,
+                "text": "Baja",
+                "isCorrect": false
+              },
+              {
+                "id": 602042,
+                "text": "Sube, porque hay más costos fijos que cubrir con el mismo margen",
+                "isCorrect": true
+              },
+              {
+                "id": 602043,
+                "text": "No cambia",
+                "isCorrect": false
+              },
+              {
+                "id": 602044,
+                "text": "Se vuelve cero",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Más fijos con el mismo margen por unidad exigen vender más unidades para cubrirlos."
           }
         ]
       }
@@ -243,6 +355,62 @@
               {
                 "id": 603024,
                 "text": "Guardar las facturas en casa",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "La información contable del cliente es reservada: solo se comparte con su autorización o por obligación legal."
+          },
+          {
+            "id": 60303,
+            "sortOrder": 3,
+            "statement": "Un cliente pide al contador ocultar una deuda de $40,000 para que el banco vea un mejor balance. ¿Cuál es la respuesta profesional?",
+            "options": [
+              {
+                "id": 603031,
+                "text": "Ocultarla: ayudar al cliente es hacer lo que pide",
+                "isCorrect": false
+              },
+              {
+                "id": 603032,
+                "text": "Negarse y explicarlo por escrito: el balance debe mostrar las deudas reales; ocultarlas engaña al banco y expone al cliente a consecuencias legales y fiscales",
+                "isCorrect": true
+              },
+              {
+                "id": 603033,
+                "text": "Ocultar la mitad de la deuda",
+                "isCorrect": false
+              },
+              {
+                "id": 603034,
+                "text": "Registrar la deuda como ingreso",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Ayudar es proteger al cliente también de las consecuencias de un registro falso."
+          },
+          {
+            "id": 60304,
+            "sortOrder": 4,
+            "statement": "El contador comparte las cifras de ventas de un cliente con otro empresario \"solo como referencia\". Esto rompe:",
+            "options": [
+              {
+                "id": 603041,
+                "text": "La devengación",
+                "isCorrect": false
+              },
+              {
+                "id": 603042,
+                "text": "La confidencialidad",
+                "isCorrect": true
+              },
+              {
+                "id": 603043,
+                "text": "La partida doble",
+                "isCorrect": false
+              },
+              {
+                "id": 603044,
+                "text": "El punto de equilibrio",
                 "isCorrect": false
               }
             ],
@@ -329,6 +497,62 @@
               }
             ],
             "feedback": "La herramienta da velocidad y orden; el juicio contable sigue siendo humano."
+          },
+          {
+            "id": 60403,
+            "sortOrder": 3,
+            "statement": "Un CFDI NO es:",
+            "options": [
+              {
+                "id": 604031,
+                "text": "Un archivo con estructura y folio fiscal que la autoridad puede validar",
+                "isCorrect": false
+              },
+              {
+                "id": 604032,
+                "text": "Un PDF cualquiera",
+                "isCorrect": true
+              },
+              {
+                "id": 604033,
+                "text": "Un comprobante emitido conforme a los requisitos del SAT",
+                "isCorrect": false
+              },
+              {
+                "id": 604034,
+                "text": "La factura electrónica oficial en México",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "La factura electrónica no es un PDF cualquiera: es un archivo con estructura y folio fiscal validable."
+          },
+          {
+            "id": 60404,
+            "sortOrder": 4,
+            "statement": "Un sistema anota una venta en la cuenta equivocada porque así se configuró. ¿De quién es la responsabilidad del error?",
+            "options": [
+              {
+                "id": 604041,
+                "text": "Del sistema, siempre",
+                "isCorrect": false
+              },
+              {
+                "id": 604042,
+                "text": "Del SAT",
+                "isCorrect": false
+              },
+              {
+                "id": 604043,
+                "text": "De la persona que lo configuró y clasificó: el sistema procesa lo que se le captura",
+                "isCorrect": true
+              },
+              {
+                "id": 604044,
+                "text": "De nadie: los sistemas no se equivocan",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "El sistema procesa lo que se le captura; una cuenta mal elegida produce estados financieros malos, solo que más rápido."
           }
         ]
       }

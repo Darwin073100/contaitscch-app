@@ -84,6 +84,62 @@
               }
             ],
             "feedback": "Primero los cargos; después, con sangría, los abonos, y al final el concepto."
+          },
+          {
+            "id": 30103,
+            "sortOrder": 3,
+            "statement": "Un asiento registra una compra, pero no tiene fecha ni concepto. ¿Por qué es un problema?",
+            "options": [
+              {
+                "id": 301031,
+                "text": "No es problema si las cantidades cuadran",
+                "isCorrect": false
+              },
+              {
+                "id": 301032,
+                "text": "Meses después nadie podrá auditar ni entender por qué se hizo ese movimiento",
+                "isCorrect": true
+              },
+              {
+                "id": 301033,
+                "text": "El diario lo rechaza automáticamente",
+                "isCorrect": false
+              },
+              {
+                "id": 301034,
+                "text": "Las cantidades cambian solas con el tiempo",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "El concepto y la fecha son lo que permite auditar el registro después."
+          },
+          {
+            "id": 30104,
+            "sortOrder": 4,
+            "statement": "Una compra de $9,000 se paga $5,000 en efectivo y $4,000 a crédito. El registro correcto en un solo asiento es:",
+            "options": [
+              {
+                "id": 301041,
+                "text": "Cargo a Inventarios $9,000; abono a Caja $5,000 y a Proveedores $4,000",
+                "isCorrect": true
+              },
+              {
+                "id": 301042,
+                "text": "Cargo a Caja $5,000; abono a Inventarios $9,000",
+                "isCorrect": false
+              },
+              {
+                "id": 301043,
+                "text": "Cargo a Proveedores $4,000; abono a Caja $9,000",
+                "isCorrect": false
+              },
+              {
+                "id": 301044,
+                "text": "Dos asientos separados obligatoriamente, uno por cada forma de pago",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Un asiento compuesto admite varias cuentas en uno o ambos lados, siempre que cargos igualen abonos."
           }
         ]
       }
@@ -166,6 +222,62 @@
               }
             ],
             "feedback": "El pasivo es de naturaleza acreedora: su saldo normal aparece en el Haber."
+          },
+          {
+            "id": 30203,
+            "sortOrder": 3,
+            "statement": "En el mayor, la cuenta de Clientes tiene cargos por $25,000 y abonos por $18,000. Su saldo es:",
+            "options": [
+              {
+                "id": 302031,
+                "text": "$7,000 deudor",
+                "isCorrect": true
+              },
+              {
+                "id": 302032,
+                "text": "$7,000 acreedor",
+                "isCorrect": false
+              },
+              {
+                "id": 302033,
+                "text": "$43,000 deudor",
+                "isCorrect": false
+              },
+              {
+                "id": 302034,
+                "text": "$0",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "$25,000 − $18,000 = $7,000; manda el Debe: saldo deudor, lo que aún deben los clientes."
+          },
+          {
+            "id": 30204,
+            "sortOrder": 4,
+            "statement": "Si al mayorizar se anota un cargo en el lado del Haber de la cuenta, ¿qué ocurre?",
+            "options": [
+              {
+                "id": 302041,
+                "text": "Nada: el saldo queda igual",
+                "isCorrect": false
+              },
+              {
+                "id": 302042,
+                "text": "El saldo se invierte y todo el trabajo posterior queda descuadrado",
+                "isCorrect": true
+              },
+              {
+                "id": 302043,
+                "text": "El diario se borra",
+                "isCorrect": false
+              },
+              {
+                "id": 302044,
+                "text": "La cuenta se cierra automáticamente",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Un solo lado cambiado invierte el saldo y descuadra todo el trabajo posterior."
           }
         ]
       }
@@ -248,6 +360,62 @@
               }
             ],
             "feedback": "Si la operación nunca se registró, no hay cargos ni abonos que descuadren: la balanza sigue en igualdad."
+          },
+          {
+            "id": 30303,
+            "sortOrder": 3,
+            "statement": "La balanza de comprobación cuadra, pero una venta de $5,000 se registró dos veces por error. ¿Qué demuestra esto?",
+            "options": [
+              {
+                "id": 303031,
+                "text": "Que la balanza detecta todos los errores",
+                "isCorrect": false
+              },
+              {
+                "id": 303032,
+                "text": "Que la balanza comprueba la igualdad aritmética, no que cada operación esté bien registrada",
+                "isCorrect": true
+              },
+              {
+                "id": 303033,
+                "text": "Que el negocio perdió $5,000",
+                "isCorrect": false
+              },
+              {
+                "id": 303034,
+                "text": "Que el balance saldrá con pérdida",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Registrar una operación dos veces no descuadra: la balanza cuadra la forma, no el fondo."
+          },
+          {
+            "id": 30304,
+            "sortOrder": 4,
+            "statement": "En una balanza, la columna de saldos deudores suma $900 más que la de acreedores. ¿Cuál es el primer paso más útil?",
+            "options": [
+              {
+                "id": 303041,
+                "text": "Suponer que es una pérdida de $900",
+                "isCorrect": false
+              },
+              {
+                "id": 303042,
+                "text": "Buscar un asiento sin cuadrar, una mayorización en el lado contrario o una suma mal hecha",
+                "isCorrect": true
+              },
+              {
+                "id": 303043,
+                "text": "Cerrar las cuentas",
+                "isCorrect": false
+              },
+              {
+                "id": 303044,
+                "text": "Desechar la balanza y empezar de cero",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "La diferencia revela un error de registro, de mayorización o de suma: ahí hay que buscar."
           }
         ]
       }
@@ -331,6 +499,62 @@
               }
             ],
             "feedback": "El cierre traslada el resultado al capital y reinicia las cuentas de resultados para el siguiente periodo."
+          },
+          {
+            "id": 30403,
+            "sortOrder": 3,
+            "statement": "Una tienda prepara sus estados financieros antes de hacer los ajustes del mes. ¿Cuál es el riesgo?",
+            "options": [
+              {
+                "id": 304031,
+                "text": "Ninguno: los ajustes son opcionales",
+                "isCorrect": false
+              },
+              {
+                "id": 304032,
+                "text": "Los ingresos y gastos quedan en el periodo equivocado y el resultado sale falso",
+                "isCorrect": true
+              },
+              {
+                "id": 304033,
+                "text": "La balanza de comprobación no cuadrará",
+                "isCorrect": false
+              },
+              {
+                "id": 304034,
+                "text": "El SAT rechazará los estados financieros",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Sin ajustes, gastos e ingresos quedan en el periodo equivocado y el resultado sale falso."
+          },
+          {
+            "id": 30404,
+            "sortOrder": 4,
+            "statement": "Ordena correctamente estas etapas: 1) estados financieros, 2) ajustes, 3) diario, 4) balanza de comprobación.",
+            "options": [
+              {
+                "id": 304041,
+                "text": "3, 4, 2, 1",
+                "isCorrect": true
+              },
+              {
+                "id": 304042,
+                "text": "1, 2, 3, 4",
+                "isCorrect": false
+              },
+              {
+                "id": 304043,
+                "text": "4, 3, 2, 1",
+                "isCorrect": false
+              },
+              {
+                "id": 304044,
+                "text": "2, 3, 4, 1",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Primero el diario, luego la balanza, después los ajustes y al final los estados financieros."
           }
         ]
       }

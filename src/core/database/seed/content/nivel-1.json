@@ -84,6 +84,62 @@
               }
             ],
             "feedback": "Comunica cuánto se tiene, cuánto se debe y si se gana o se pierde, sin necesidad de estar presente."
+          },
+          {
+            "id": 10103,
+            "sortOrder": 3,
+            "statement": "Un negocio guarda todas sus facturas en una caja, ordenadas por mes, pero nunca las registra en ningún libro ni sistema. Según la lección, ¿cuál es el problema?",
+            "options": [
+              {
+                "id": 101031,
+                "text": "Las facturas se vencen si no se registran",
+                "isCorrect": false
+              },
+              {
+                "id": 101032,
+                "text": "No hay información confiable: sin registrar, clasificar, resumir e interpretar no hay contabilidad, solo papeles guardados",
+                "isCorrect": true
+              },
+              {
+                "id": 101033,
+                "text": "El SAT multa automáticamente por guardar facturas en caja",
+                "isCorrect": false
+              },
+              {
+                "id": 101034,
+                "text": "Ninguno: guardar las facturas ordenadas ya es llevar la contabilidad",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Guardar papeles no es contabilidad si nunca se registran, se ordenan ni se interpretan."
+          },
+          {
+            "id": 10104,
+            "sortOrder": 4,
+            "statement": "¿Cuál de los siguientes NO es un requisito para que una operación se registre en contabilidad?",
+            "options": [
+              {
+                "id": 101041,
+                "text": "Tener un comprobante (nota, factura o recibo)",
+                "isCorrect": false
+              },
+              {
+                "id": 101042,
+                "text": "Medirse en dinero",
+                "isCorrect": false
+              },
+              {
+                "id": 101043,
+                "text": "Registrarse en orden cronológico",
+                "isCorrect": false
+              },
+              {
+                "id": 101044,
+                "text": "Publicarse en redes sociales",
+                "isCorrect": true
+              }
+            ],
+            "feedback": "Toda operación necesita comprobante, medirse en dinero y registrarse en orden; publicarla no es un requisito contable."
           }
         ]
       }
@@ -166,6 +222,62 @@
               }
             ],
             "feedback": "Los registros nacen cuando las operaciones son tantas que la memoria ya no basta."
+          },
+          {
+            "id": 10203,
+            "sortOrder": 3,
+            "statement": "Un comerciante de 1490 anota en su libro: \"debo a Marco 20 monedas por tela\" y en otra página: \"tengo tela que vale 20 monedas\". ¿Qué muestra este apunte?",
+            "options": [
+              {
+                "id": 102031,
+                "text": "Que inventó la factura",
+                "isCorrect": false
+              },
+              {
+                "id": 102032,
+                "text": "La lógica de la partida doble: cada operación tiene dos caras que deben cuadrar",
+                "isCorrect": true
+              },
+              {
+                "id": 102033,
+                "text": "Que usaba el sistema del SAT",
+                "isCorrect": false
+              },
+              {
+                "id": 102034,
+                "text": "Que guardaba su dinero en dos cajas distintas",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Es la partida doble en acción: algo que entra y algo que sale, y ambas caras deben cuadrar."
+          },
+          {
+            "id": 10204,
+            "sortOrder": 4,
+            "statement": "¿Qué sigue igual desde Pacioli hasta hoy, aunque hayan cambiado los libros de arcilla por las aplicaciones?",
+            "options": [
+              {
+                "id": 102041,
+                "text": "Los libros siguen siendo de arcilla",
+                "isCorrect": false
+              },
+              {
+                "id": 102042,
+                "text": "La pregunta central: ¿de dónde salió el valor y a dónde fue?",
+                "isCorrect": true
+              },
+              {
+                "id": 102043,
+                "text": "Ya no se necesitan comprobantes",
+                "isCorrect": false
+              },
+              {
+                "id": 102044,
+                "text": "El SAT valida todo automáticamente",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Cambió el soporte —arcilla, papel, computadora—, no la lógica: la pregunta central sigue siendo la misma."
           }
         ]
       }
@@ -248,6 +360,62 @@
               }
             ],
             "feedback": "La contabilidad administrativa sirve a la dirección y se adapta a sus necesidades."
+          },
+          {
+            "id": 10303,
+            "sortOrder": 3,
+            "statement": "La dueña de una tienda compara qué día de la semana vende más para decidir su horario de apertura. ¿Qué rama de la contabilidad está usando y por qué?",
+            "options": [
+              {
+                "id": 103031,
+                "text": "Fiscal, porque calcula impuestos",
+                "isCorrect": false
+              },
+              {
+                "id": 103032,
+                "text": "Administrativa, porque es información interna para decidir, sin formato obligatorio",
+                "isCorrect": true
+              },
+              {
+                "id": 103033,
+                "text": "Financiera, porque esa información va al banco",
+                "isCorrect": false
+              },
+              {
+                "id": 103034,
+                "text": "De auditoría, porque verifica los registros",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Es uso interno y mira al futuro: contabilidad administrativa."
+          },
+          {
+            "id": 10304,
+            "sortOrder": 4,
+            "statement": "Un proveedor quiere vender a crédito y pide el resumen financiero de la tienda. El proveedor es un usuario ____ y la información que recibe viene de la contabilidad ____.",
+            "options": [
+              {
+                "id": 103041,
+                "text": "interno / administrativa",
+                "isCorrect": false
+              },
+              {
+                "id": 103042,
+                "text": "externo / financiera",
+                "isCorrect": true
+              },
+              {
+                "id": 103043,
+                "text": "externo / fiscal",
+                "isCorrect": false
+              },
+              {
+                "id": 103044,
+                "text": "interno / financiera",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "El proveedor decide desde fuera: usuario externo; la información formal para externos es la contabilidad financiera."
           }
         ]
       }
@@ -330,6 +498,62 @@
               }
             ],
             "feedback": "La devengación registra las operaciones cuando ocurren, no cuando entra o sale el efectivo."
+          },
+          {
+            "id": 10403,
+            "sortOrder": 3,
+            "statement": "La dueña saca $3,000 de la caja del negocio para pagar la colegiatura de su hijo y lo anota como \"gasto de la tienda\". ¿Cuál es el registro correcto?",
+            "options": [
+              {
+                "id": 104031,
+                "text": "Gasto del negocio, porque el dinero salió de la caja",
+                "isCorrect": false
+              },
+              {
+                "id": 104032,
+                "text": "Retiro personal del dueño, registrado aparte de los gastos del negocio",
+                "isCorrect": true
+              },
+              {
+                "id": 104033,
+                "text": "Ingreso del negocio",
+                "isCorrect": false
+              },
+              {
+                "id": 104034,
+                "text": "No se registra nada, porque es dinero de la familia",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Por el principio de entidad, el retiro personal no es gasto del negocio: se registra aparte."
+          },
+          {
+            "id": 10404,
+            "sortOrder": 4,
+            "statement": "Se compra una máquina para el taller por $48,000 en efectivo. Según el postulado de valuación, la máquina se registra por:",
+            "options": [
+              {
+                "id": 104041,
+                "text": "Lo que la dueña cree que vale",
+                "isCorrect": false
+              },
+              {
+                "id": 104042,
+                "text": "Su costo real en pesos: $48,000",
+                "isCorrect": true
+              },
+              {
+                "id": 104043,
+                "text": "El precio al que se podría vender en el futuro",
+                "isCorrect": false
+              },
+              {
+                "id": 104044,
+                "text": "Su precio en dólares",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Valuación: todo se mide en dinero, en la moneda del país, por lo que realmente costó."
           }
         ]
       }

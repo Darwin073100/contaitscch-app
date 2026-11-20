@@ -5,7 +5,7 @@ export const FINAL_EXAM_ID = 900;
 
 export type QuizKind = 'topic' | 'final';
 
-/** En orden A–D. */
+/** En el contenido van en orden A–D; StartQuiz las entrega revueltas en cada intento. */
 export type QuizOption = { id: number; text: string };
 
 export type QuizQuestion = { id: number; statement: string; options: QuizOption[] };

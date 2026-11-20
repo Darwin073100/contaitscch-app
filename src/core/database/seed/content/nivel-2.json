@@ -83,6 +83,62 @@
               }
             ],
             "feedback": "El catálogo ordena y da un código único a cada cuenta del sistema."
+          },
+          {
+            "id": 20103,
+            "sortOrder": 3,
+            "statement": "En la cuenta T de Caja hay cargos por $3,200 y abonos por $1,900. ¿Cuál es el saldo y qué significa?",
+            "options": [
+              {
+                "id": 201031,
+                "text": "$1,300 deudor: hay $1,300 en efectivo, que debe coincidir con el dinero físico de la caja",
+                "isCorrect": true
+              },
+              {
+                "id": 201032,
+                "text": "$1,300 acreedor: el negocio debe $1,300",
+                "isCorrect": false
+              },
+              {
+                "id": 201033,
+                "text": "$5,100 deudor: es la suma de todos los movimientos",
+                "isCorrect": false
+              },
+              {
+                "id": 201034,
+                "text": "$0: los cargos cancelan a los abonos",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Saldo = $3,200 − $1,900 = $1,300 deudor: debe coincidir con el dinero físico de la caja."
+          },
+          {
+            "id": 20104,
+            "sortOrder": 4,
+            "statement": "Una tienda crea las cuentas \"Clientes Ometepec\" y \"Clientes Acapulco\" en lugar de una sola cuenta \"Clientes\", sin anotarlas en ninguna lista. Según la lección, ¿qué exige el catálogo de cuentas?",
+            "options": [
+              {
+                "id": 201041,
+                "text": "Nada: cada quien puede nombrar las cuentas como quiera",
+                "isCorrect": false
+              },
+              {
+                "id": 201042,
+                "text": "Que todas las cuentas estén en una lista ordenada y codificada, para poder sumarlas y compararlas",
+                "isCorrect": true
+              },
+              {
+                "id": 201043,
+                "text": "Que no se creen cuentas nuevas",
+                "isCorrect": false
+              },
+              {
+                "id": 201044,
+                "text": "Que las cuentas se escriban en inglés",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Sin catálogo, cada quien nombraría las cuentas a su manera y la información no se podría sumar ni comparar."
           }
         ]
       }
@@ -165,6 +221,62 @@
               }
             ],
             "feedback": "Los derechos de cobro forman parte del activo."
+          },
+          {
+            "id": 20203,
+            "sortOrder": 3,
+            "statement": "Una empresa tiene activos por $250,000 y capital por $90,000. Sus pasivos son:",
+            "options": [
+              {
+                "id": 202031,
+                "text": "$340,000",
+                "isCorrect": false
+              },
+              {
+                "id": 202032,
+                "text": "$160,000",
+                "isCorrect": true
+              },
+              {
+                "id": 202033,
+                "text": "$90,000",
+                "isCorrect": false
+              },
+              {
+                "id": 202034,
+                "text": "$250,000",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Pasivo = Activo − Capital = $250,000 − $90,000 = $160,000."
+          },
+          {
+            "id": 20204,
+            "sortOrder": 4,
+            "statement": "La dueña aporta al negocio una computadora que vale $15,000. ¿Qué pasa con la ecuación contable?",
+            "options": [
+              {
+                "id": 202041,
+                "text": "El activo sube $15,000 y el capital sube $15,000; la ecuación se mantiene",
+                "isCorrect": true
+              },
+              {
+                "id": 202042,
+                "text": "Solo sube el activo y la ecuación se rompe",
+                "isCorrect": false
+              },
+              {
+                "id": 202043,
+                "text": "Sube el pasivo $15,000",
+                "isCorrect": false
+              },
+              {
+                "id": 202044,
+                "text": "Nada cambia, porque no hubo dinero en efectivo",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Entra un bien (activo +$15,000) aportado por la dueña (capital +$15,000): ambos lados crecen igual."
           }
         ]
       }
@@ -247,6 +359,62 @@
               }
             ],
             "feedback": "Al salir dinero, el activo disminuye, y un activo disminuye con un abono."
+          },
+          {
+            "id": 20303,
+            "sortOrder": 3,
+            "statement": "Se vende mercancía a crédito por $6,000. ¿Qué cuentas se mueven y cómo?",
+            "options": [
+              {
+                "id": 203031,
+                "text": "Cargo a Caja y abono a Ventas",
+                "isCorrect": false
+              },
+              {
+                "id": 203032,
+                "text": "Cargo a Clientes y abono a Ventas",
+                "isCorrect": true
+              },
+              {
+                "id": 203033,
+                "text": "Cargo a Ventas y abono a Clientes",
+                "isCorrect": false
+              },
+              {
+                "id": 203034,
+                "text": "Cargo a Proveedores y abono a Caja",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Nace el derecho de cobro (activo Clientes, cargo) y el ingreso Ventas (abono)."
+          },
+          {
+            "id": 20304,
+            "sortOrder": 4,
+            "statement": "El negocio paga $2,500 de renta en efectivo. ¿Cuál afirmación es correcta?",
+            "options": [
+              {
+                "id": 203041,
+                "text": "Cargo a Renta y abono a Bancos",
+                "isCorrect": true
+              },
+              {
+                "id": 203042,
+                "text": "Cargo a Bancos y abono a Renta",
+                "isCorrect": false
+              },
+              {
+                "id": 203043,
+                "text": "Abono a Renta y abono a Bancos",
+                "isCorrect": false
+              },
+              {
+                "id": 203044,
+                "text": "Cargo a Renta y cargo a Bancos",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "El gasto aumenta con cargo; el activo disminuye con abono."
           }
         ]
       }
@@ -329,6 +497,62 @@
               }
             ],
             "feedback": "Aumenta el activo Equipo (cargo) y aumenta el pasivo Proveedores (abono)."
+          },
+          {
+            "id": 20403,
+            "sortOrder": 3,
+            "statement": "Un asiento tiene cargos por $3,000 y abonos por $2,500. ¿Qué significa?",
+            "options": [
+              {
+                "id": 204031,
+                "text": "El negocio ganó $500",
+                "isCorrect": false
+              },
+              {
+                "id": 204032,
+                "text": "Hay un error, con seguridad: los cargos deben igualar a los abonos",
+                "isCorrect": true
+              },
+              {
+                "id": 204033,
+                "text": "Es normal cuando se paga en efectivo",
+                "isCorrect": false
+              },
+              {
+                "id": 204034,
+                "text": "La cuenta quedó cerrada",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "La partida doble es autocontrol: si no cuadran, hay un error."
+          },
+          {
+            "id": 20404,
+            "sortOrder": 4,
+            "statement": "Un cliente paga $4,000 de lo que debía por una venta a crédito anterior. El registro correcto es:",
+            "options": [
+              {
+                "id": 204041,
+                "text": "Cargo a Clientes y abono a Ventas",
+                "isCorrect": false
+              },
+              {
+                "id": 204042,
+                "text": "Cargo a Caja y abono a Clientes",
+                "isCorrect": true
+              },
+              {
+                "id": 204043,
+                "text": "Cargo a Ventas y abono a Caja",
+                "isCorrect": false
+              },
+              {
+                "id": 204044,
+                "text": "Cargo a Proveedores y abono a Caja",
+                "isCorrect": false
+              }
+            ],
+            "feedback": "Entra efectivo (cargo a Caja) y baja el derecho de cobro (abono a Clientes); la venta ya se había registrado antes."
           }
         ]
       }

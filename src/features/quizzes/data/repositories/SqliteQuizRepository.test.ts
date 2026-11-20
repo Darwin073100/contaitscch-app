@@ -9,8 +9,8 @@ describe('SqliteQuizRepository', () => {
 
     const quiz = await repo.findQuiz(101);
 
-    expect(quiz).toMatchObject({ id: 101, kind: 'topic', topicId: 101, passMark: 2 });
-    expect(quiz?.questions.map((q) => q.id)).toEqual([10101, 10102]);
+    expect(quiz).toMatchObject({ id: 101, kind: 'topic', topicId: 101, passMark: 4 });
+    expect(quiz?.questions.map((q) => q.id)).toEqual([10101, 10102, 10103, 10104]);
     expect(quiz?.questions[0].options.map((o) => o.id)).toEqual([101011, 101012, 101013, 101014]);
     expect(quiz?.questions[0].statement).toBe(
       '¿Qué hace la contabilidad con las operaciones de un negocio?',

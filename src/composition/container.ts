@@ -2,6 +2,7 @@
 // Vive fuera de src/app porque Expo Router trata cada archivo de src/app como una ruta.
 // Es el único lugar que importa rutas internas de las features (data/ y domain/).
 import type { Clock } from '@/core/clock/Clock';
+import { RandomShuffler, type Shuffler } from '@/core/random/Shuffler';
 import type { Connectivity } from '@/core/connectivity/Connectivity';
 import type { AppDatabase } from '@/core/database/database';
 import { SqliteUnitOfWork } from '@/core/database/SqliteUnitOfWork';
@@ -92,6 +93,8 @@ export type ContainerDeps = {
   clock: Clock;
   remote: RemoteClient;
   connectivity: Connectivity;
+  /** Orden de las opciones en cada intento; por omisión, aleatorio. Las pruebas pasan keepOrder. */
+  shuffler?: Shuffler;
 };
 
 export function createContainer({
@@ -100,6 +103,7 @@ export function createContainer({
   clock,
   remote,
   connectivity,
+  shuffler = new RandomShuffler(),
 }: ContainerDeps): Container {
   const uow = new SqliteUnitOfWork(db);
   const events = new InMemoryDomainEventBus();
@@ -147,7 +151,7 @@ export function createContainer({
       getLevelsOverview: new GetLevelsOverviewUseCase(levels, getCourseProgress),
     },
     quizzes: {
-      startQuiz: new StartQuizUseCase(quizzes, getCourseProgress),
+      startQuiz: new StartQuizUseCase(quizzes, getCourseProgress, shuffler),
       checkAnswer: new CheckAnswerUseCase(quizzes),
       submitQuiz: new SubmitQuizUseCase(
         quizzes,
