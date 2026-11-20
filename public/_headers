@@ -1,9 +1,3 @@
-# Netlify / Cloudflare Pages. SQLite en el navegador necesita SharedArrayBuffer (aislamiento de origen).
-# "require-corp" porque Safari no soporta "credentialless". Mismos valores que metro.config.js.
-/*
-  Cross-Origin-Embedder-Policy: require-corp
-  Cross-Origin-Opener-Policy: same-origin
-
 # El service worker siempre se revisa en la red, así se detectan las versiones nuevas
 /sw.js
   Cache-Control: no-cache

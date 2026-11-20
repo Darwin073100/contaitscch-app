@@ -1,38 +1,85 @@
-import { openDatabaseAsync } from 'expo-sqlite';
+import { drizzle } from 'drizzle-orm/sql-js';
+import type { Database, SqlValue } from 'sql.js';
+import initSqlJs from 'sql.js/dist/sql-wasm-inline.js';
 
-import { connectDatabase, type AppDatabase } from './database';
+import type { AppDatabase } from './database';
+import * as schema from './schema';
+import { loadSnapshot, saveSnapshot } from './webSnapshotStore';
 
-const DATABASE_NAME = 'contaitscch.db';
-/** Intentos para abrir la base mientras otra página la suelta (≈ 6 s en total). */
-const OPEN_ATTEMPTS = 12;
-const OPEN_RETRY_MS = 500;
+/** Espera tras una escritura antes de guardar: agrupa las de un mismo ejercicio o siembra. */
+const SAVE_DELAY_MS = 300;
+const WRITE_SQL = /^\s*(insert|update|delete|replace|create|drop|alter|commit|end)\b/i;
+const TX_START = /^\s*begin\b/i;
+const TX_END = /^\s*(commit|end|rollback)\b/i;
 
 /**
- * Versión web (spec 09): SQLite corre en un Web Worker y se guarda en el almacenamiento privado del
- * navegador (OPFS). La API síncrona que usa Drizzle solo funciona cuando el worker ya cargó, por eso
- * aquí se abre con openDatabaseAsync. Sin WAL: en el navegador no hay memoria compartida entre procesos.
+ * Versión web (spec 09): SQLite con sql.js, en memoria, guardada completa en IndexedDB después de
+ * cada escritura y al pasar a segundo plano.
  *
- * OPFS deja abrir los archivos de la base a una sola página a la vez. Al recargar, la página anterior
- * puede tardar en soltarlos, así que se reintenta unos segundos. Si otra pestaña tiene la app abierta,
- * no se suelta nunca: se avisa con un mensaje claro.
+ * No se usa expo-sqlite en web: guarda en OPFS con archivos de acceso exclusivo que una pestaña
+ * congelada (Safari en iPhone) nunca suelta, y la app ya no abría ("The object is in an invalid
+ * state"). sql.js no bloquea nada, no necesita SharedArrayBuffer ni encabezados COOP/COEP, y tiene la
+ * misma API síncrona que usa Drizzle. Si la app está abierta en dos pestañas, gana la última que
+ * guarde; el avance igual se sincroniza con la nube.
  */
 export async function openAppDatabase(): Promise<AppDatabase> {
-  let lastError: unknown;
-  for (let attempt = 0; attempt < OPEN_ATTEMPTS; attempt++) {
-    try {
-      return connectDatabase(await openDatabaseAsync(DATABASE_NAME));
-    } catch (error) {
-      lastError = error;
-      await new Promise((resolve) => setTimeout(resolve, OPEN_RETRY_MS));
-    }
-  }
-  throw new Error(describeOpenError(lastError));
+  const SQL = await initSqlJs();
+  const snapshot = await loadSnapshot().catch(() => null);
+  const client = new SQL.Database(snapshot ?? undefined);
+  client.exec('PRAGMA foreign_keys = ON;');
+  persistWrites(client);
+  return drizzle(client, { schema }) as unknown as AppDatabase;
 }
 
-function describeOpenError(error: unknown): string {
-  const message = error instanceof Error ? error.message : String(error);
-  if (/Access Handle|NoModificationAllowed|InvalidState/i.test(message)) {
-    return 'CONTAITSCCH ya está abierta en otra pestaña o ventana de este navegador. Ciérrala y toca Reintentar.';
-  }
-  return `No se pudo abrir la base de datos del navegador: ${message}`;
+/** Observa las sentencias del cliente y guarda la base poco después de cada escritura. */
+function persistWrites(client: Database): void {
+  let inTransaction = false;
+  let timer: ReturnType<typeof setTimeout> | null = null;
+  let saving = Promise.resolve();
+
+  const save = () => {
+    timer = null;
+    // Nunca a medio camino de una transacción: se reintenta cuando termine
+    if (inTransaction) {
+      schedule();
+      return;
+    }
+    const data = client.export();
+    saving = saving.then(() => saveSnapshot(data)).catch(() => {});
+  };
+  const schedule = () => {
+    if (timer === null) timer = setTimeout(save, SAVE_DELAY_MS);
+  };
+  const flush = () => {
+    if (timer === null) return;
+    clearTimeout(timer);
+    save();
+  };
+  const observe = (sql: string) => {
+    if (TX_START.test(sql)) inTransaction = true;
+    else if (TX_END.test(sql)) inTransaction = false;
+    if (WRITE_SQL.test(sql)) schedule();
+  };
+
+  const prepare = client.prepare.bind(client);
+  client.prepare = (sql: string, params?: SqlValue[]) => {
+    observe(sql);
+    return prepare(sql, params);
+  };
+  const exec = client.exec.bind(client);
+  client.exec = (sql: string, params?: SqlValue[]) => {
+    observe(sql);
+    return exec(sql, params);
+  };
+  const run = client.run.bind(client);
+  client.run = (sql: string, params?: SqlValue[]) => {
+    observe(sql);
+    return run(sql, params);
+  };
+
+  // iOS puede cerrar la app en segundo plano sin avisar: se guarda al salir de la vista
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') flush();
+  });
+  window.addEventListener('pagehide', flush);
 }

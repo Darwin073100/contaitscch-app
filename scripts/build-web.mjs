@@ -51,7 +51,7 @@ const CACHE = 'contaitscch-${version}';
 const PRECACHE = ${JSON.stringify(precache)};
 
 // Archivo por archivo y sin fallar: si uno no se guarda (cuota, red, error de Safari), el service
-// worker se activa igual (la página necesita sus encabezados COOP/COEP) y ese archivo se pide a la red.
+// worker se activa igual y ese archivo se pide a la red.
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches
@@ -75,17 +75,10 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// SQLite en el navegador necesita aislamiento de origen; se agrega aquí para no depender del hosting.
 // Se arma una respuesta nueva: Safari rechaza respuestas con redirecciones en una navegación.
-// La página (navegación) va con no-store: así el navegador no la guarda en su caché de atrás/adelante
-// con la base abierta, y la página nueva puede abrir SQLite (OPFS solo deja una a la vez).
-function isolate(response, navigation) {
+function plain(response) {
   if (!response || response.type === 'opaque') return response;
-  const headers = new Headers(response.headers);
-  headers.set('Cross-Origin-Embedder-Policy', 'require-corp');
-  headers.set('Cross-Origin-Opener-Policy', 'same-origin');
-  if (navigation) headers.set('Cache-Control', 'no-store');
-  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers: response.headers });
 }
 
 self.addEventListener('fetch', (event) => {
@@ -98,12 +91,12 @@ self.addEventListener('fetch', (event) => {
   if (request.mode === 'navigate') {
     // App de una sola página: cualquier ruta abre index.html guardado
     event.respondWith(
-      caches.match('/', { cacheName: CACHE }).then((cached) => cached || fetch(request)).then((response) => isolate(response, true)),
+      caches.match('/', { cacheName: CACHE }).then((cached) => cached || fetch(request)).then(plain),
     );
     return;
   }
   event.respondWith(
-    caches.match(request, { cacheName: CACHE, ignoreSearch: true }).then((cached) => cached || fetch(request)).then((response) => isolate(response, false)),
+    caches.match(request, { cacheName: CACHE, ignoreSearch: true }).then((cached) => cached || fetch(request)),
   );
 });
 `;

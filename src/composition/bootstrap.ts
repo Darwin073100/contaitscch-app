@@ -1,5 +1,9 @@
+import { eq } from 'drizzle-orm';
+
 import { SystemClock } from '@/core/clock/Clock';
 import { openAppDatabase } from '@/core/database/client';
+import type { AppDatabase } from '@/core/database/database';
+import { users } from '@/core/database/schema';
 import { migrateDatabase } from '@/core/database/migrate';
 import { ContentSeeder } from '@/core/database/seed/ContentSeeder';
 import { loadCourse } from '@/core/database/seed/loadCourse';
@@ -38,6 +42,7 @@ async function start(): Promise<Container> {
   await new ContentSeeder(db, new SqliteUnitOfWork(db), clock).seedIfNeeded(loadCourse());
   const session = new SecureSessionStore(secureStorage);
   await session.load();
+  await dropOrphanSession(db, session);
   const container = createContainer({
     db,
     session,
@@ -48,4 +53,16 @@ async function start(): Promise<Container> {
   // Vive lo que vive la app: no hace falta detenerla
   startAutoSync(container);
   return container;
+}
+
+/**
+ * Sesión sin su usuario en SQLite: la base local se perdió (navegador que borró sus datos, cambio de
+ * almacenamiento en la versión web, Llavero de iOS que sobrevive a desinstalar). Se cierra la sesión
+ * y al volver a entrar se restauran el perfil y el avance desde la nube.
+ */
+async function dropOrphanSession(db: AppDatabase, session: SecureSessionStore): Promise<void> {
+  const current = session.current();
+  if (!current) return;
+  const user = db.select({ id: users.id }).from(users).where(eq(users.id, current.userId)).get();
+  if (!user) await session.clear();
 }
